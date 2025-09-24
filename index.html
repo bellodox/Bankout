@@ -860,12 +860,12 @@ function reshuffleRound(){
 function endRound_Bankout(winnerIdx){
   const W = state.players[winnerIdx];
   W.wins += 1;
-  log(`Round won by Player ${winnerIdx===0?'A':'B'}. Score: A ${state.players[0].wins} - B ${state.players[1].wins}`);
+  log(`Round won by ${getPlayerName(winnerIdx)}. Score: ${getPlayerName(0)} ${state.players[0].wins} - ${getPlayerName(1)} ${state.players[1].wins}`);
   render();
   if(W.wins>=2){
     state.matchOver = true;
     state.ended = true;
-    log(`Match over. Winner: Player ${winnerIdx===0?'A':'B'}.`);
+    log(`Match over. Winner: ${getPlayerName(winnerIdx)}.`);
     showModal('game-over-modal');
     el.winnerText.textContent = `${getPlayerName(winnerIdx)} wins the match!`;
     render();
@@ -903,9 +903,9 @@ function endRound_Blitz(){
   
   // Log round completion with winner information
   if (roundWinnerIdx !== null) {
-    log(`Round ${state.round} complete. ${getPlayerName(roundWinnerIdx)} wins the round! Totals — A:${fmt(a)} B:${fmt(b)} | Total Pot: ${fmt(state.totalPot)}`);
+    log(`Round ${state.round} complete. ${getPlayerName(roundWinnerIdx)} wins the round! Totals — ${getPlayerName(0)}:${fmt(a)} ${getPlayerName(1)}:${fmt(b)} | Total Pot: ${fmt(state.totalPot)}`);
   } else {
-    log(`Round ${state.round} complete. Totals tied — A:${fmt(a)} B:${fmt(b)} | Total Pot: ${fmt(state.totalPot)}`);
+    log(`Round ${state.round} complete. Totals tied — ${getPlayerName(0)}:${fmt(a)} ${getPlayerName(1)}:${fmt(b)} | Total Pot: ${fmt(state.totalPot)}`);
   }
   
   if(state.round>=3){
@@ -923,7 +923,7 @@ function endRound_Blitz(){
       const finalWinnings = state.totalPot;
       state.players[winnerIdx].bank = finalWinnings;
       
-      log(`Match over. Winner: Player ${winner} collects ${fmt(finalWinnings)}!`);
+      log(`Match over. Winner: ${getPlayerName(winnerIdx)} collects ${fmt(finalWinnings)}!`);
       showModal('game-over-modal');
       el.winnerText.textContent = `${getPlayerName(winnerIdx)} wins the match and collects ${fmt(finalWinnings)}!`;
       render();
@@ -938,7 +938,7 @@ function endRound_Blitz(){
   state.deck = buildDeck();
   state.discard = [];
   el.lastDraw.textContent = '—';
-  log(`Starting Round ${state.round}. Carry-over — A:${fmt(state.players[0].bank)} B:${fmt(state.players[1].bank)}`);
+  log(`Starting Round ${state.round}. Carry-over — ${getPlayerName(0)}:${fmt(state.players[0].bank)} ${getPlayerName(1)}:${fmt(state.players[1].bank)}`);
   render();
   
   // Auto-start AI turn if applicable
@@ -962,11 +962,11 @@ function maybeEndRound(){
       // Award total pot to Sudden Death winner (only if we came from Blitz mode)
       if (state.totalPot > 0) {
         state.players[winnerIdx].bank = state.totalPot;
-        log(`Sudden Death — Winner: Player ${winnerIdx===0?'A':'B'} collects ${fmt(state.totalPot)}!`);
+        log(`Sudden Death — Winner: ${getPlayerName(winnerIdx)} collects ${fmt(state.totalPot)}!`);
         showModal('game-over-modal');
         el.winnerText.textContent = `${getPlayerName(winnerIdx)} wins Sudden Death and collects ${fmt(state.totalPot)}!`;
       } else {
-        log(`Sudden Death — Winner: Player ${winnerIdx===0?'A':'B'} by reaching $1,000.`);
+        log(`Sudden Death — Winner: ${getPlayerName(winnerIdx)} by reaching $1,000.`);
         showModal('game-over-modal');
         el.winnerText.textContent = `${getPlayerName(winnerIdx)} wins!`;
       }
