@@ -1676,9 +1676,11 @@ function calculateBustRisk(counts, player) {
     p_bust += counts.jacks / deckSize;
   }
   
-  // Latent Ace risk (if no Queen to auto-play) - extreme penalty
+  // Latent Ace risk (if no Queen to auto-play) - dynamic penalty based on deck size
   if (player.latent > 0 && !player.hand.includes('Q')) {
-    p_bust += 0.8; // Very high penalty for certain bust
+    const deckSize = state.deck.length;
+    const deckRiskFactor = Math.max(0.1, Math.min(0.8, 0.8 * (deckSize / 52))); // Scale penalty with deck size
+    p_bust += deckRiskFactor; // Dynamic penalty based on remaining cards
   }
   
   // Additional risk for Alert + latent combination
@@ -1728,7 +1730,9 @@ function evaluateActionEV(action, risks, player, opponent) {
         ev = Math.max(player.temp * 0.1, player.temp - 50) - 100; // Negative EV with Queen
         rationale = 'ABSOLUTELY NO BANKING WITH QUEEN PROTECTION';
       } else {
-        ev = Math.max(player.temp * 0.1, player.temp - 40); // EXTREMELY conservative banking
+        // Less conservative banking - scale with loot amount
+        const baseBankEV = player.temp < 20 ? player.temp - 10 : Math.max(player.temp * 0.3, player.temp - 20);
+        ev = baseBankEV;
         
         // Bonus for banking in Blitz mode to build the pot
         if (state.mode === 'blitz') {
@@ -1836,8 +1840,14 @@ function aiDecideAction(risks, player, opponent) {
         if (action === 'bank') finalEV *= 1.1;
         if (action === 'draw') finalEV *= 0.8;
       } else {
-        // Extremely aggressive when behind in Blitz
-        if (action === 'draw') finalEV *= 2.0;
+        // Extremely aggressive when behind in Blitz - reduce latent Ace penalty
+        if (action === 'draw') {
+          finalEV *= 2.0;
+          // Reduce latent Ace penalty when behind in Blitz
+          if (player.latent > 0 && !player.hand.includes('Q')) {
+            finalEV += 30; // Bonus to counteract latent risk when behind
+          }
+        }
         if (action === 'king') finalEV *= 1.8;
       }
     }
@@ -1856,9 +1866,19 @@ function aiDecideAction(risks, player, opponent) {
   
   // Sort by EV descending
   actionEvaluations.sort((a, b) => b.ev - a.ev);
-  
+
+  // Force draw for small loot amounts when risk is moderate
+  const topAction = actionEvaluations[0];
+  if (topAction.action === 'bank' && player.temp < 20 && risks.p_bust < 0.5) {
+    const drawAction = actionEvaluations.find(a => a.action === 'draw');
+    if (drawAction && drawAction.ev > -10) { // Only override if draw isn't terrible
+      drawAction.rationale += ' (forced draw for small loot)';
+      return drawAction;
+    }
+  }
+
   // Return top action with rationale
-  return actionEvaluations[0];
+  return topAction;
 }
 
 /* ========= Event Wiring ========= */
