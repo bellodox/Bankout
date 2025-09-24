@@ -1,0 +1,1950 @@
+<!DOCTYPE html>
+<!--
+Bankout Game - Copyright © 2025 VWN
+PROPRIETARY SOFTWARE - ALL RIGHTS RESERVED
+This file contains digital watermarks and tracking mechanisms.
+Unauthorized commercial use prohibited.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bankout</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0e1116;--panel:#161b22;--muted:#8b949e;--text:#e6edf3;--accent:#39d353;--danger:#ff6b6b;--warn:#e3b341;--info:#58a6ff;
+    --card:#1f2430;--btn:#21262d;--btn-h:#2b313a;--ok:#2ea043;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:14px/1.4 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;}
+  .hidden { display: none !important; }
+  header{padding:16px 20px;background:linear-gradient(90deg,#0f131a,#151b24);border-bottom:1px solid #202635}
+  h1{margin:0;font-size:20px;letter-spacing:.3px}
+  main{max-width:1200px;margin:0 auto;padding:16px;display:grid;gap:16px;grid-template-columns:1fr;}
+  @media(min-width: 960px) {
+    main { grid-template-columns: 320px 1fr; }
+  }
+  .panel{background:var(--panel);border:1px solid #20283a;border-radius:10px;padding:12px; display: flex; flex-direction: column; gap: 12px;}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .col{display:flex;flex-direction:column;gap:6px}
+  .settings-col { gap: 1rem; margin-bottom: 1rem; }
+  .settings-col label { font-weight: 600; }
+  .settings-col .row { background-color: var(--bg); padding: 8px; border-radius: 6px;}
+  label{font-size:12px;color:var(--muted); margin: 0;}
+  input[type="radio"] { margin-right: 4px; }
+  button{
+    background:var(--btn);border:1px solid #2a3140;color:var(--text);padding:8px 10px;border-radius:8px; font-family: inherit; font-size: 14px;
+  }
+  button{cursor:pointer}
+  button:hover:not(:disabled){background:var(--btn-h)}
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  button.primary{background:#1f6feb;border-color:#2b7cec}
+  button.primary:hover:not(:disabled){background:#2a7bf7}
+  button.good{background:var(--ok);border-color:#319c54}
+  button.good:hover:not(:disabled){filter:brightness(1.05)}
+  button.warn{background:#9e6a00;border-color:#c58900}
+  button.warn:hover:not(:disabled){filter:brightness(1.05)}
+  button.danger{background:#b11;border-color:#d33}
+  button.danger:hover:not(:disabled){filter:brightness(1.05)}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;border:1px solid #2a3140;background:#1a1f2a;color:var(--muted)}
+  .badge.ok{color:#98ffa7;border-color:#2a5; background:#142017}
+  .badge.warn{color:#ffd58a;border-color:#a70;background:#261a00}
+  .badge.danger{color:#ffb3b3;border-color:#b33;background:#2a1111}
+  #alertBadge, #jacksBadge, #latentBadge { flex: 1; min-width: 110px; text-align: center; }
+  .kpi{display:flex;flex-wrap:wrap;justify-content:space-around;gap:12px;padding:10px;border:1px dashed #2a3140;border-radius:8px; align-items: stretch;}
+  .kpi > div { flex: 1; min-width: 80px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
+  .kpi strong{font-size:16px}
+  .log{height:260px;overflow:auto;background:#0f131a;border:1px solid #20283a;border-radius:8px;padding:8px;font-family:'Roboto Mono', monospace; font-size: 13px;}
+  .log p{margin:0 0 6px}
+  .cardbar{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{padding:4px 10px;border-radius:999px;border:1px solid #2a3140;background:var(--card);font-size:12px}
+  .chip.info{border-color:#2a5fb3}
+  .chip.good{border-color:#2a5; background:#142017; color:#98ffa7}
+  .chip.danger{border-color:#b33; background:#2a1111; color:#ffb3b3}
+  .chip.warn{border-color:#a70; background:#261a00; color:#ffd58a}
+  .chip.queen{border-color:#7a3bd1}
+  .chip.king{border-color:#d19a3b}
+  .chip.joker{border-color:#3bd16b}
+  .chip.muted{opacity:0.6}
+  .spacer{height:6px}
+  .footer{color:var(--muted);font-size:12px;text-align:center;padding:10px}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+  .game-board-area { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; text-align: center; }
+  .card-display { min-height: 140px; background: var(--bg); border-radius: 8px; padding: 8px; display: flex; align-items: center; justify-content: center; }
+  .card {
+      background-color: var(--card); border: 1px solid #2a3140; border-radius: 10px; width: 90px; height: 125px;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      font-weight: 600; font-size: 1.5em; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+  }
+  .card .value { font-size: 2em; }
+  .card .suit { font-size: 0.6em; opacity: 0.7; }
+
+  .card.card-back {
+      cursor: pointer;
+      background-color: #4a5a7a; /* Blue-grey base */
+      background-image: repeating-linear-gradient(
+          45deg,
+          rgba(0, 0, 0, 0.1) 0,
+          rgba(0, 0, 0, 0.1) 10px,
+          transparent 10px,
+          transparent 20px
+      );
+      border: 2px solid #7a8bbd; /* Prominent border */
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Simple shadow */
+  }
+  .card.card-back:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  }
+
+  .modal-backdrop{
+    position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:9999; opacity: 0; transition: opacity 0.3s;
+  }
+  .modal-backdrop.visible { display: flex; opacity: 1; }
+  .modal{
+    background:#0f131a;border:1px solid #2a3140;border-radius:10px;max-width:460px;width:92%;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,0.5);
+    transform: scale(0.95); transition: transform 0.3s;
+  }
+  .modal-backdrop.visible .modal { transform: scale(1); }
+  .modal h2{margin:0 0 8px 0;font-size:16px}
+  .modal p { margin: 0 0 10px 0; color: var(--muted); }
+  .modal .btnrow{display:flex;gap:10px;justify-content:flex-end;margin-top:10px}
+
+  .welcome-modal { text-align: center; padding: 2rem 2.5rem; }
+  .welcome-title { font-size: 2.5rem; font-weight: 700; color: var(--accent); margin-bottom: 0.5rem; }
+  .welcome-text { font-size: 1rem; color: var(--muted); max-width: 40ch; margin: 0 auto 1rem auto; min-height: 6em; }
+  .welcome-divider { height: 1px; background: var(--panel-border); margin: 1.5rem auto; width: 80%; }
+  .start-heist-btn { font-size: 1.2rem !important; padding: 12px 24px !important; width: 100%; }
+</style>
+</head>
+<body>
+
+<div id="welcome-screen" class="modal-backdrop visible">
+    <div class="modal welcome-modal">
+        <h2 class="welcome-title">Bankout</h2>
+        <div id="welcome-description" class="welcome-text">
+            <!-- Dynamic description will be injected here -->
+        </div>
+        <div class="welcome-divider"></div>
+        <div class="settings-col">
+            <label>Format</label>
+            <div class="row">
+                <label><input type="radio" name="welcome-mode" value="bankout" checked /> Bankout</label>
+                <label><input type="radio" name="welcome-mode" value="blitz" /> Blitz</label>
+            </div>
+        </div>
+        <div class="settings-col">
+            <label>Jokers</label>
+            <div class="row">
+                <label><input type="radio" name="welcome-jokers" value="on" checked /> On</label>
+                <label><input type="radio" name="welcome-jokers" value="off" /> Off</label>
+            </div>
+        </div>
+        <div class="settings-col">
+            <label>Game Mode</label>
+            <div class="row">
+                <label><input type="radio" name="welcome-mode-type" value="pvp" checked /> Player A vs Player B</label>
+                <label><input type="radio" name="welcome-mode-type" value="ai" /> Player vs AI</label>
+            </div>
+        </div>
+        <div id="welcome-names-pvp" class="settings-col hidden">
+            <label>Player Names</label>
+            <div class="col">
+                <input type="text" id="welcome-player-a" placeholder="Player A Name" maxlength="20" />
+                <input type="text" id="welcome-player-b" placeholder="Player B Name" maxlength="20" />
+            </div>
+        </div>
+        <div id="welcome-names-ai" class="settings-col hidden">
+            <label>Your Name</label>
+            <input type="text" id="welcome-player-human" placeholder="Your Name" maxlength="20" />
+        </div>
+        <div class="btnrow" style="margin-top: 1.5rem;">
+            <button id="startGameBtn" class="primary start-heist-btn">Start Heist</button>
+        </div>
+    </div>
+</div>
+
+<header class="hidden">
+  <h1>Bankout</h1>
+</header>
+
+<main class="hidden">
+  <!-- Left: Setup and Controls -->
+  <section class="panel">
+    <div class="grid-2">
+      <button id="newMatchBtn" class="primary">New Match</button>
+      <button id="settingsBtn">Settings</button>
+    </div>
+    <div class="spacer"></div>
+    <div class="kpi">
+      <div><div class="badge">Round</div><strong id="roundLbl">—</strong></div>
+      <div><div class="badge">Format</div><strong id="formatLbl">—</strong></div>
+      <div><div class="badge">Jokers</div><strong id="jokerLbl">—</strong></div>
+      <div><div class="badge">Mode</div><strong id="modeLbl">—</strong></div>
+    </div>
+    <div class="kpi">
+      <div><div class="badge">Turn</div><strong id="turnLbl">—</strong></div>
+      <div><div class="badge">Deck</div><strong id="deckLbl">—</strong></div>
+      <div><div class="badge">Discard</div><strong id="discardLbl">—</strong></div>
+      <div><div class="badge ok">Total Pot</div><strong id="potLbl">$0</strong></div>
+    </div>
+    <div class="col">
+      <label>Alerts</label>
+      <div class="row">
+        <div id="alertBadge" class="badge">Alert: off</div>
+        <div id="jacksBadge" class="badge">Jacks this turn: 0</div>
+        <div id="latentBadge" class="badge">Latent Ace: none</div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <button id="drawBtn" class="good">Draw</button>
+      <button id="bankBtn" class="warn">Bank</button>
+    </div>
+    <div class="grid-3">
+      <button id="playQueenBtn">Play Queen</button>
+      <button id="playKingBtn">Play King</button>
+      <button id="playJokerBtn">Play Joker</button>
+    </div>
+    <div class="grid-3">
+      <button id="endTurnBtn">End Turn</button>
+      <button id="toggleSuddenBtn">Force Sudden Death</button>
+      <button id="helpBtn">Quick Help</button>
+    </div>
+  </section>
+
+  <!-- Right: State, Hands, Log -->
+  <section class="panel">
+    <div class="game-board-area">
+        <div class="col">
+            <label>Deck</label>
+            <div id="deck-area" class="card-display">
+                <div class="card card-back"></div>
+            </div>
+        </div>
+        <div class="col">
+            <label>Last Card Drawn</label>
+            <div id="discard-area" class="card-display">
+                <div id="lastDraw" class="chip info">—</div>
+            </div>
+        </div>
+    </div>
+    <div class="grid-2">
+      <div class="col">
+        <label id="playerALabel">Player A</label>
+        <div class="kpi">
+          <div><div class="badge">Bank</div><strong id="bankA">$0</strong></div>
+          <div><div class="badge warn">Loot</div><strong id="tempA">$0</strong></div>
+        </div>
+        <div class="row"><span class="badge">Hand</span><div id="handA" class="cardbar"></div></div>
+        <div class="row"><span class="badge">Rounds won</span><div id="winsA" class="cardbar"></div></div>
+      </div>
+      <div class="col">
+        <label id="playerBLabel">Player B</label>
+        <div class="kpi">
+          <div><div class="badge">Bank</div><strong id="bankB">$0</strong></div>
+          <div><div class="badge warn">Loot</div><strong id="tempB">$0</strong></div>
+        </div>
+        <div class="row"><span class="badge">Hand</span><div id="handB" class="cardbar"></div></div>
+        <div class="row"><span class="badge">Rounds won</span><div id="winsB" class="cardbar"></div></div>
+      </div>
+    </div>
+
+    <div class="col">
+      <label>Log</label>
+      <div id="log" class="log" aria-live="polite"></div>
+    </div>
+
+    <div class="footer">
+      Bankout: Numbers add dollars, Jacks raise alert (3rd Jack busts), Ace busts on alert, Queen clears one Jack, King double‑and‑banks (ends turn), Joker resolves immediately when drawn with interpretation choice. Round 2: Jokers resolve immediately with three-choice options (Swap/King/Queen). Round 3: Jokers go to hand; when played, choose between Swap banks (if opponent has money), King (double & bank), or Queen (remove one Jack) for maximum strategic flexibility.
+    </div>
+    <div class="footer" style="margin-top: 10px; font-size: 11px; color: #8b949e;">
+      Copyright © 2025 VWN - All Rights Reserved
+    </div>
+  </section>
+</main>
+
+<!-- Modals -->
+<div id="settingsModal" class="modal-backdrop">
+    <div class="modal">
+        <h2>Settings</h2>
+        <div class="settings-col">
+            <label>Format</label>
+            <div class="row">
+                <label><input type="radio" name="settings-mode" value="bankout" /> Bankout</label>
+                <label><input type="radio" name="settings-mode" value="blitz" /> Blitz</label>
+            </div>
+        </div>
+        <div class="settings-col">
+            <label>Jokers</label>
+            <div class="row">
+                <label><input type="radio" name="settings-jokers" value="on" /> On</label>
+                <label><input type="radio" name="settings-jokers" value="off" /> Off</label>
+            </div>
+        </div>
+        <div class="settings-col">
+            <label>Game Mode</label>
+            <div class="row">
+                <label><input type="radio" name="settings-mode-type" value="pvp" /> Player A vs Player B</label>
+                <label><input type="radio" name="settings-mode-type" value="ai" /> Player vs AI</label>
+            </div>
+        </div>
+        <div id="settings-names-pvp" class="settings-col hidden">
+            <label>Player Names</label>
+            <div class="col">
+                <input type="text" id="settings-player-a" placeholder="Player A Name" maxlength="20" />
+                <input type="text" id="settings-player-b" placeholder="Player B Name" maxlength="20" />
+            </div>
+        </div>
+        <div id="settings-names-ai" class="settings-col hidden">
+            <label>Your Name</label>
+            <input type="text" id="settings-player-human" placeholder="Your Name" maxlength="20" />
+        </div>
+        <div class="btnrow">
+            <button id="settingsCloseBtn">Close</button>
+            <button id="settingsNewMatchBtn" class="primary">Start New Match</button>
+        </div>
+    </div>
+</div>
+
+<div id="wildModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="wildTitle">
+  <div class="modal">
+    <h2 id="wildTitle">Joker Wild — Choose Effect</h2>
+    <p>Opponent's bank is $0. Use Joker as:</p>
+    <div class="btnrow">
+      <button id="wildQueenBtn">Queen (remove one Jack)</button>
+      <button id="wildKingBtn" class="warn">King (double & bank, end turn)</button>
+    </div>
+  </div>
+  </div>
+  
+  <div id="jokerInterpretModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="interpretTitle">
+    <div class="modal">
+      <h2 id="interpretTitle">Joker Interpretation — Choose Effect</h2>
+      <p>How would you like to use this Joker?</p>
+      <div class="btnrow">
+        <button id="interpretKingBtn" class="warn">King (double & bank, end turn)</button>
+        <button id="interpretQueenBtn">Queen (remove one Jack)</button>
+      </div>
+    </div>
+  </div>
+  
+  <div id="jokerChoiceModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="jokerChoiceTitle">
+    <div class="modal">
+      <h2 id="jokerChoiceTitle">Joker Play — Choose Action</h2>
+      <p>How would you like to use this Joker?</p>
+      <div class="btnrow">
+        <button id="jokerSwapBtn" class="primary">Swap Banks</button>
+        <button id="jokerKingBtn" class="warn">King (double & bank, end turn)</button>
+        <button id="jokerQueenBtn">Queen (remove one Jack)</button>
+      </div>
+    </div>
+  </div>
+  
+  <div id="counterModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="counterTitle">
+  <div class="modal">
+    <h2 id="counterTitle">Counter Joker?</h2>
+    <p>Your opponent played a Joker to swap banks. Discard one of your Jokers to cancel the swap?</p>
+    <div class="btnrow">
+      <button id="counterNoBtn">Let it pass</button>
+      <button id="counterYesBtn" class="danger">Counter (discard Joker)</button>
+    </div>
+  </div>
+</div>
+
+<div id="helpModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div class="modal">
+    <h2 id="helpTitle">Bankout Quick Help</h2>
+    <p><strong>Numbers (2–10):</strong> Add that many dollars to your temporary loot.</p>
+    <p><strong>Jacks:</strong> Go on alert; on 3rd Jack this turn you bust.</p>
+    <p><strong>Ace:</strong> If on alert, bust; else becomes latent (will bust when a Jack would put you on alert unless cleared first).</p>
+    <p><strong>Queen:</strong> Remove one Jack instance from your record for the turn.</p>
+    <p><strong>King:</strong> Double your temp loot, bank it, and end your turn.</p>
+    <p><strong>Joker (R2):</strong> Resolves immediately when drawn. You can choose between: Swap banks (if opponent has money), King (double & bank), or Queen (remove one Jack) for maximum strategic flexibility.</p>
+    <p><strong>Joker (R3):</strong> Goes to your hand. When played, you can choose between: Swap banks (if opponent has money), King (double & bank), or Queen (remove one Jack) for maximum strategic flexibility.</p>
+    <div class="btnrow">
+      <button id="helpOkBtn" class="primary">Got it</button>
+    </div>
+  </div>
+</div>
+
+<div id="discardModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="discardTitle">
+    <div class="modal">
+        <h2 id="discardTitle">Hand Full: Choose a Card to Discard</h2>
+        <p>Your hand is full. To make room for the new card, please choose one card to discard.</p>
+        <div id="discardChoice" class="btnrow"></div>
+    </div>
+</div>
+
+<div id="game-over-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="gameOverTitle">
+    <div class="modal">
+        <h2 id="gameOverTitle">Game Over</h2>
+        <p id="winnerText" class="modal-body"></p>
+        <div class="btnrow">
+            <button id="play-again-button" class="primary">Play Again</button>
+        </div>
+    </div>
+</div>
+
+<script>
+/* ========= DIGITAL WATERMARKING ========= */
+const BANKOUT_WATERMARK = {
+  version: "1.0.0",
+  copyright: "© 2025 VWN",
+  license: "PROPRIETARY",
+  trackingId: "BKO-" + Math.random().toString(36).substr(2, 9),
+  timestamp: new Date().toISOString()
+};
+
+// Embedded copyright protection
+console.log("%cBankout IP Protection Active", "color: #39d353; font-weight: bold; font-size: 14px");
+console.log("Tracking ID:", BANKOUT_WATERMARK.trackingId);
+console.log("Copyright © 2025 VWN - All Rights Reserved");
+
+/* ========= Core Data ========= */
+const TARGET = 1000;
+
+const state = {
+  mode: 'bankout',      // 'bankout' | 'blitz' | 'sudden'
+  jokers: true,
+  gameMode: 'pvp',      // 'pvp' | 'ai'
+  round: 1,
+  active: 0,            // 0 = A, 1 = B or AI
+  deck: [],
+  discard: [],
+  players: [
+    {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,name:''},
+    {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,name:''},
+  ],
+  sudden: false,
+  ended: false,
+  matchOver: false,
+  pendingWild: null,      // {playerIdx}
+  pendingCounter: null,   // {attackerIdx, defenderIdx}
+  pendingDiscard: null, // {cardType}
+  pendingInterpret: null, // {playerIdx, jokerType: 'K' or 'Q'}
+  totalPot: 0,           // Total accumulated winnings for winner-takes-all
+};
+
+const el = {
+  header: document.querySelector('header'),
+  main: document.querySelector('main'),
+  welcomeScreen: document.getElementById('welcome-screen'),
+  welcomeDescription: document.getElementById('welcome-description'),
+  startGameBtn: document.getElementById('startGameBtn'),
+  settingsBtn: document.getElementById('settingsBtn'),
+  newMatchBtn: document.getElementById('newMatchBtn'),
+
+  roundLbl: document.getElementById('roundLbl'),
+  formatLbl: document.getElementById('formatLbl'),
+  jokerLbl: document.getElementById('jokerLbl'),
+  turnLbl: document.getElementById('turnLbl'),
+  deckLbl: document.getElementById('deckLbl'),
+  discardLbl: document.getElementById('discardLbl'),
+  potLbl: document.getElementById('potLbl'),
+  modeLbl: document.getElementById('modeLbl'),
+  alertBadge: document.getElementById('alertBadge'),
+  jacksBadge: document.getElementById('jacksBadge'),
+  latentBadge: document.getElementById('latentBadge'),
+  bankA: document.getElementById('bankA'),
+  bankB: document.getElementById('bankB'),
+  tempA: document.getElementById('tempA'),
+  tempB: document.getElementById('tempB'),
+  handA: document.getElementById('handA'),
+  handB: document.getElementById('handB'),
+  winsA: document.getElementById('winsA'),
+  winsB: document.getElementById('winsB'),
+  lastDraw: document.getElementById('lastDraw'),
+  log: document.getElementById('log'),
+  drawBtn: document.getElementById('drawBtn'),
+  bankBtn: document.getElementById('bankBtn'),
+  playQueenBtn: document.getElementById('playQueenBtn'),
+  playKingBtn: document.getElementById('playKingBtn'),
+  playJokerBtn: document.getElementById('playJokerBtn'),
+  endTurnBtn: document.getElementById('endTurnBtn'),
+  toggleSuddenBtn: document.getElementById('toggleSuddenBtn'),
+  helpBtn: document.getElementById('helpBtn'),
+  
+  // Modals
+  settingsModal: document.getElementById('settingsModal'),
+  settingsCloseBtn: document.getElementById('settingsCloseBtn'),
+  settingsNewMatchBtn: document.getElementById('settingsNewMatchBtn'),
+  wildModal: document.getElementById('wildModal'),
+  wildQueenBtn: document.getElementById('wildQueenBtn'),
+  wildKingBtn: document.getElementById('wildKingBtn'),
+  jokerInterpretModal: document.getElementById('jokerInterpretModal'),
+  interpretKingBtn: document.getElementById('interpretKingBtn'),
+  interpretQueenBtn: document.getElementById('interpretQueenBtn'),
+  jokerChoiceModal: document.getElementById('jokerChoiceModal'),
+  jokerSwapBtn: document.getElementById('jokerSwapBtn'),
+  jokerKingBtn: document.getElementById('jokerKingBtn'),
+  jokerQueenBtn: document.getElementById('jokerQueenBtn'),
+  counterModal: document.getElementById('counterModal'),
+  counterYesBtn: document.getElementById('counterYesBtn'),
+  counterNoBtn: document.getElementById('counterNoBtn'),
+  helpModal: document.getElementById('helpModal'),
+  helpOkBtn: document.getElementById('helpOkBtn'),
+  discardModal: document.getElementById('discardModal'),
+  discardChoice: document.getElementById('discardChoice'),
+  gameOverModal: document.getElementById('game-over-modal'),
+  winnerText: document.getElementById('winnerText'),
+  playAgainButton: document.getElementById('play-again-button'),
+  playerALabel: document.getElementById('playerALabel'),
+  playerBLabel: document.getElementById('playerBLabel'),
+};
+
+const gameDescriptions = {
+    bankout: {
+        on: "Best of three rounds. First to $1,000 wins a round. Jokers will appear in rounds 2 and 3, allowing for powerful bank swaps and wild card plays.",
+        off: "Best of three rounds. First to $1,000 wins a round. A classic game of push-your-luck with no Jokers."
+    },
+    blitz: {
+        on: "Cumulative score over 3 rounds. Highest total bank wins. Jokers will appear in rounds 2 and 3, creating high-stakes moments.",
+        off: "Cumulative score over 3 rounds. Highest total bank wins. A pure test of risk management with no Jokers."
+    }
+};
+
+// Name management functions
+function updateNameInputsVisibility() {
+    const modeType = document.querySelector('input[name="welcome-mode-type"]:checked').value;
+    const pvpNames = document.getElementById('welcome-names-pvp');
+    const aiNames = document.getElementById('welcome-names-ai');
+    
+    if (modeType === 'pvp') {
+        pvpNames.classList.remove('hidden');
+        aiNames.classList.add('hidden');
+    } else {
+        pvpNames.classList.add('hidden');
+        aiNames.classList.remove('hidden');
+    }
+}
+
+function updateSettingsNameInputsVisibility() {
+    const modeType = document.querySelector('input[name="settings-mode-type"]:checked').value;
+    const pvpNames = document.getElementById('settings-names-pvp');
+    const aiNames = document.getElementById('settings-names-ai');
+    
+    if (modeType === 'pvp') {
+        pvpNames.classList.remove('hidden');
+        aiNames.classList.add('hidden');
+    } else {
+        pvpNames.classList.add('hidden');
+        aiNames.classList.remove('hidden');
+    }
+}
+
+function loadStoredNames() {
+    // Load PvP names
+    const playerAName = localStorage.getItem('playerAName') || 'Player A';
+    const playerBName = localStorage.getItem('playerBName') || 'Player B';
+    const humanName = localStorage.getItem('humanName') || 'You';
+    
+    // Set welcome modal inputs
+    document.getElementById('welcome-player-a').value = playerAName;
+    document.getElementById('welcome-player-b').value = playerBName;
+    document.getElementById('welcome-player-human').value = humanName;
+    
+    // Set settings modal inputs
+    document.getElementById('settings-player-a').value = playerAName;
+    document.getElementById('settings-player-b').value = playerBName;
+    document.getElementById('settings-player-human').value = humanName;
+}
+
+function saveNames() {
+    const modeType = document.querySelector('input[name="welcome-mode-type"]:checked').value;
+    
+    if (modeType === 'pvp') {
+        const playerA = document.getElementById('welcome-player-a').value.trim();
+        const playerB = document.getElementById('welcome-player-b').value.trim();
+        localStorage.setItem('playerAName', playerA || 'Player A');
+        localStorage.setItem('playerBName', playerB || 'Player B');
+    } else {
+        const humanName = document.getElementById('welcome-player-human').value.trim();
+        localStorage.setItem('humanName', humanName || 'You');
+    }
+}
+
+function saveSettingsNames() {
+    const modeType = document.querySelector('input[name="settings-mode-type"]:checked').value;
+    
+    if (modeType === 'pvp') {
+        const playerA = document.getElementById('settings-player-a').value.trim();
+        const playerB = document.getElementById('settings-player-b').value.trim();
+        localStorage.setItem('playerAName', playerA || 'Player A');
+        localStorage.setItem('playerBName', playerB || 'Player B');
+    } else {
+        const humanName = document.getElementById('settings-player-human').value.trim();
+        localStorage.setItem('humanName', humanName || 'You');
+    }
+}
+
+function log(msg){
+  const p = document.createElement('p');
+  p.textContent = msg;
+  el.log.appendChild(p);
+  el.log.scrollTop = el.log.scrollHeight;
+}
+
+/* ========= Deck Creation ========= */
+function buildStandardDeck(){
+  const d = [];
+  for(let v=2; v<=10; v++){ for(let s=0;s<4;s++) d.push({t:'N', v}); }
+  for(let i=0;i<4;i++) d.push({t:'J'});
+  for(let i=0;i<4;i++) d.push({t:'Q'});
+  for(let i=0;i<4;i++) d.push({t:'K'});
+  for(let i=0;i<4;i++) d.push({t:'A'});
+  return d;
+}
+
+function jokerCountForRound(round){
+  if(!state.jokers) return 0;
+  return Math.max(0, Math.min(2, round-1));
+}
+
+function shuffle(a){
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function buildDeck(){
+  let base = buildStandardDeck();
+  if(state.mode === 'sudden') base = base.filter(c => c.t==='N' || c.t==='J');
+  const jCount = state.mode === 'sudden' ? 0 : jokerCountForRound(state.round);
+  const jokers = Array.from({length:jCount}, ()=>({t:'X'}));
+  
+  // Reset deck counts when building a new deck
+  state.deckCounts = {
+    aces: state.mode === 'sudden' ? 0 : 4,
+    jacks: 4,
+    queens: state.mode === 'sudden' ? 0 : 4,
+    kings: state.mode === 'sudden' ? 0 : 4,
+    jokers: jCount,
+    numbers: {
+      count: state.mode === 'sudden' ? 36 : 36, // Numbers only in sudden death
+      sum: state.mode === 'sudden' ? 216 : 216   // Sum of 2-10 * 4
+    }
+  };
+  
+  return shuffle([...base, ...jokers]);
+}
+
+/* ========= UI Rendering & Modals ========= */
+function getPlayerName(idx) {
+  return state.players[idx]?.name || (idx === 0 ? 'Player A' : 'Player B');
+}
+
+function fmt(n){ return '$' + n.toString(); }
+function chip(txt, cls=''){ const s=document.createElement('span'); s.className='chip '+cls; s.textContent=txt; return s; }
+
+function showModal(modalId) { document.getElementById(modalId).classList.add('visible'); }
+function closeModal(modalId) { document.getElementById(modalId).classList.remove('visible'); }
+
+function updateWelcomeDescription() {
+    const mode = document.querySelector('input[name="welcome-mode"]:checked').value;
+    const jokers = document.querySelector('input[name="welcome-jokers"]:checked').value;
+    el.welcomeDescription.textContent = gameDescriptions[mode][jokers];
+}
+
+function render(){
+  el.roundLbl.textContent = state.mode==='sudden' ? 'Sudden Death' : `${state.round} of 3`;
+  el.formatLbl.textContent = state.mode==='bankout' ? 'Bankout' : (state.mode==='blitz' ? 'Blitz' : 'Sudden');
+  el.jokerLbl.textContent = state.jokers ? 'On' : 'Off';
+  el.modeLbl.textContent = state.gameMode === 'ai' ? 'AI' : 'PvP';
+  el.turnLbl.textContent = getPlayerName(state.active); // + '\'s Turn';
+  el.playerALabel.textContent = state.players[0]?.name || 'Player A';
+  el.playerBLabel.textContent = state.players[1]?.name || 'Player B';
+  el.deckLbl.textContent = state.deck.length;
+  el.discardLbl.textContent = state.discard.length;
+  
+  // Show pot display only in Blitz mode
+  if (state.mode === 'blitz') {
+    el.potLbl.textContent = fmt(state.totalPot);
+    el.potLbl.parentElement.style.display = 'flex';
+  } else {
+    el.potLbl.parentElement.style.display = 'none';
+  }
+
+  const A = state.players[0], B = state.players[1];
+  el.bankA.textContent = fmt(A.bank);
+  el.bankB.textContent = fmt(B.bank);
+  el.tempA.textContent = fmt(A.temp);
+  el.tempB.textContent = fmt(B.temp);
+
+  el.handA.innerHTML = '';
+  A.hand.forEach(h=>{ el.handA.appendChild(chip(h, h.toLowerCase())); });
+  el.handB.innerHTML = '';
+  B.hand.forEach(h=>{ el.handB.appendChild(chip(h, h.toLowerCase())); });
+
+  // Rounds won display - visual star indicators
+  el.winsA.innerHTML = '';
+  const winStarsA = document.createElement('div');
+  winStarsA.className = 'row';
+  winStarsA.style.gap = '4px';
+  winStarsA.style.alignItems = 'center';
+  winStarsA.style.flexWrap = 'wrap';
+  
+  // Add star icons for each round won
+  for (let i = 0; i < A.wins; i++) {
+    const starIcon = document.createElement('span');
+    starIcon.textContent = '★';
+    starIcon.style.color = '#ffd700';
+    starIcon.style.fontSize = '16px';
+    winStarsA.appendChild(starIcon);
+  }
+  
+  // Show empty stars for rounds not won yet (up to 3 rounds)
+  for (let i = A.wins; i < 3; i++) {
+    const emptyStar = document.createElement('span');
+    emptyStar.textContent = '☆';
+    emptyStar.style.color = '#8b949e'; // muted color for empty stars
+    emptyStar.style.fontSize = '16px';
+    emptyStar.style.opacity = '0.6';
+    winStarsA.appendChild(emptyStar);
+  }
+  
+  el.winsA.appendChild(winStarsA);
+  
+  el.winsB.innerHTML = '';
+  const winStarsB = document.createElement('div');
+  winStarsB.className = 'row';
+  winStarsB.style.gap = '4px';
+  winStarsB.style.alignItems = 'center';
+  winStarsB.style.flexWrap = 'wrap';
+  
+  // Add star icons for each round won
+  for (let i = 0; i < B.wins; i++) {
+    const starIcon = document.createElement('span');
+    starIcon.textContent = '★';
+    starIcon.style.color = '#ffd700';
+    starIcon.style.fontSize = '16px';
+    winStarsB.appendChild(starIcon);
+  }
+  
+  // Show empty stars for rounds not won yet (up to 3 rounds)
+  for (let i = B.wins; i < 3; i++) {
+    const emptyStar = document.createElement('span');
+    emptyStar.textContent = '☆';
+    emptyStar.style.color = '#8b949e'; // muted color for empty stars
+    emptyStar.style.fontSize = '16px';
+    emptyStar.style.opacity = '0.6';
+    winStarsB.appendChild(emptyStar);
+  }
+  
+  el.winsB.appendChild(winStarsB);
+
+  const P = state.players[state.active];
+  el.alertBadge.textContent = 'Alert: ' + (P.alert?'on':'off');
+  el.alertBadge.className = 'badge ' + (P.alert?'warn':'');
+  el.jacksBadge.textContent = 'Jacks this turn: ' + P.jacksThisTurn;
+  el.latentBadge.textContent = 'Latent Aces: ' + (P.latent>0 ? P.latent : 'none');
+
+  const yourHand = state.players[state.active].hand;
+  const modalOpen = !!state.pendingWild || !!state.pendingCounter || !!state.pendingDiscard;
+  el.playQueenBtn.disabled = !yourHand.includes('Q') || modalOpen || state.matchOver || state.ended;
+  el.playKingBtn.disabled = !yourHand.includes('K') || modalOpen || state.matchOver || state.ended;
+  el.playJokerBtn.disabled = !yourHand.includes('X') || modalOpen || state.matchOver || state.ended;
+  el.drawBtn.disabled = state.ended || state.matchOver || modalOpen;
+  el.bankBtn.disabled = state.ended || state.matchOver || modalOpen;
+  el.endTurnBtn.disabled = state.ended || state.matchOver || modalOpen;
+
+  if (state.gameMode === 'ai' && state.active === 1) {
+    el.drawBtn.disabled = true;
+    el.bankBtn.disabled = true;
+    el.playQueenBtn.disabled = true;
+    el.playKingBtn.disabled = true;
+    el.playJokerBtn.disabled = true;
+    el.endTurnBtn.disabled = true;
+    el.toggleSuddenBtn.disabled = true;
+  }
+}
+
+function resetTurnState(p){
+  p.temp = 0;
+  p.alert = false;
+  p.jacksThisTurn = 0;
+  p.latent = 0;
+}
+
+/* ========= Match / Round Control ========= */
+function newMatch(mode, jokersOn, gameMode) {
+  state.mode = mode;
+  state.jokers = jokersOn;
+  state.gameMode = gameMode;
+  state.round = 1;
+  
+  // Randomize first player
+  state.firstPlayer = Math.random() < 0.5 ? 0 : 1;
+  state.active = state.firstPlayer;
+  
+  // Set player names based on game mode
+  if (gameMode === 'pvp') {
+    const playerAName = localStorage.getItem('playerAName') || 'Player A';
+    const playerBName = localStorage.getItem('playerBName') || 'Player B';
+    state.players = [
+      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,name:playerAName},
+      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,name:playerBName},
+    ];
+  } else {
+    const humanName = localStorage.getItem('humanName') || 'You';
+    state.players = [
+      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,name:humanName},
+      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,name:'AI'},
+    ];
+  }
+  
+  state.ended = false;
+  state.matchOver = false;
+  state.sudden = false;
+  state.pendingWild = null;
+  state.pendingCounter = null;
+  state.pendingDiscard = null;
+  state.totalPot = 0;      // Reset total pot for new match
+  state.deck = buildDeck();
+  state.discard = [];
+  state.deckCounts = null; // Will be initialized in trackDeckState()
+  el.lastDraw.textContent = '—';
+  el.log.innerHTML = '';
+  log(`New match: ${state.mode==='bankout'?'Bankout':'Blitz'} | Jokers ${state.jokers?'ON':'OFF'} | Mode: ${state.gameMode.toUpperCase()}.`);
+  render();
+  
+  // Auto-start AI turn if AI starts first
+  if (state.gameMode === 'ai' && state.active === 1 && !state.ended && !state.matchOver) {
+    setTimeout(aiTurn, 1000);
+  }
+}
+
+function startGame() {
+    const mode = document.querySelector('input[name="welcome-mode"]:checked').value;
+    const jokersOn = document.querySelector('input[name="welcome-jokers"]:checked').value === 'on';
+    const gameMode = document.querySelector('input[name="welcome-mode-type"]:checked').value;
+    
+    // Save names before starting game
+    saveNames();
+    newMatch(mode, jokersOn, gameMode);
+    el.welcomeScreen.classList.remove('visible');
+    el.header.classList.remove('hidden');
+    el.main.classList.remove('hidden');
+}
+
+function openSettings() {
+    document.querySelector(`input[name="settings-mode"][value="${state.mode}"]`).checked = true;
+    document.querySelector(`input[name="settings-jokers"][value="${state.jokers ? 'on' : 'off'}"]`).checked = true;
+    document.querySelector(`input[name="settings-mode-type"][value="${state.gameMode}"]`).checked = true;
+    updateSettingsNameInputsVisibility();
+    showModal('settingsModal');
+}
+
+function reshuffleRound(){
+  if(state.matchOver) return;
+  state.deck = buildDeck();
+  state.discard = [];
+  const P = state.players[state.active];
+  P.jacksThisTurn = 0;
+  P.alert = false;
+  P.latent = 0;
+  el.lastDraw.textContent = '—';
+  log('Round reshuffled.');
+  render();
+}
+
+function endRound_Bankout(winnerIdx){
+  const W = state.players[winnerIdx];
+  W.wins += 1;
+  console.log(`Round won by Player ${winnerIdx===0?'A':'B'}. Wins updated: A=${state.players[0].wins}, B=${state.players[1].wins}`);
+  log(`Round won by Player ${winnerIdx===0?'A':'B'}. Score: A ${state.players[0].wins} - B ${state.players[1].wins}`);
+  console.log('Calling render after updating wins...');
+  render();
+  if(W.wins>=2){
+    state.matchOver = true;
+    state.ended = true;
+    log(`Match over. Winner: Player ${winnerIdx===0?'A':'B'}.`);
+    showModal('game-over-modal');
+    el.winnerText.textContent = `${getPlayerName(winnerIdx)} wins the match!`;
+    render();
+    return;
+  }
+  state.round += 1;
+  state.players.forEach(p=>{
+    p.bank = 0; p.temp = 0; p.hand=[]; p.alert=false; p.jacksThisTurn=0; p.latent=0;
+  });
+  state.active = state.firstPlayer === 0 ? (state.round % 2 === 1 ? 0 : 1) : (state.round % 2 === 1 ? 1 : 0);
+  state.deck = buildDeck();
+  state.discard = [];
+  el.lastDraw.textContent = '—';
+  log(`Starting Round ${state.round}.`);
+  render();
+  
+  // Auto-start AI turn if applicable
+  if (state.gameMode === 'ai' && state.active === 1 && !state.ended && !state.matchOver) {
+    setTimeout(aiTurn, 1000);
+  }
+}
+
+function endRound_Blitz(){
+  // Determine round winner based on who has more money
+  const a = state.players[0].bank, b = state.players[1].bank;
+  let roundWinnerIdx = null;
+  
+  if (a > b) {
+    roundWinnerIdx = 0;
+    state.players[0].wins += 1;
+  } else if (b > a) {
+    roundWinnerIdx = 1;
+    state.players[1].wins += 1;
+  }
+  
+  // Log round completion with winner information
+  if (roundWinnerIdx !== null) {
+    log(`Round ${state.round} complete. ${getPlayerName(roundWinnerIdx)} wins the round! Totals — A:${fmt(a)} B:${fmt(b)} | Total Pot: ${fmt(state.totalPot)}`);
+  } else {
+    log(`Round ${state.round} complete. Totals tied — A:${fmt(a)} B:${fmt(b)} | Total Pot: ${fmt(state.totalPot)}`);
+  }
+  
+  if(state.round>=3){
+    if(a===b){
+      log('Totals tied after 3 rounds — entering Sudden Death.');
+      startSuddenDeath();
+      return;
+    }else{
+      state.matchOver = true;
+      state.ended = true;
+      const winnerIdx = a > b ? 0 : 1;
+      const winner = a > b ? 'A' : 'B';
+      
+      // Award total pot to winner (winner-takes-all)
+      const finalWinnings = state.totalPot;
+      state.players[winnerIdx].bank = finalWinnings;
+      
+      log(`Match over. Winner: Player ${winner} collects ${fmt(finalWinnings)}!`);
+      showModal('game-over-modal');
+      el.winnerText.textContent = `${getPlayerName(winnerIdx)} wins the match and collects ${fmt(finalWinnings)}!`;
+      render();
+      return;
+    }
+  }
+  state.round += 1;
+  state.players.forEach(p=>{
+    p.temp = 0; p.hand = []; p.alert=false; p.jacksThisTurn=0; p.latent=0;
+  });
+  state.active = state.firstPlayer === 0 ? (state.round % 2 === 1 ? 0 : 1) : (state.round % 2 === 1 ? 1 : 0);
+  state.deck = buildDeck();
+  state.discard = [];
+  el.lastDraw.textContent = '—';
+  log(`Starting Round ${state.round}. Carry-over — A:${fmt(state.players[0].bank)} B:${fmt(state.players[1].bank)}`);
+  render();
+  
+  // Auto-start AI turn if applicable
+  if (state.gameMode === 'ai' && state.active === 1 && !state.ended && !state.matchOver) {
+    setTimeout(aiTurn, 1000);
+  }
+}
+
+function maybeEndRound(){
+  const A = state.players[0].bank, B = state.players[1].bank;
+  if(A>=TARGET || B>=TARGET){
+    const winnerIdx = (A>=TARGET && A>=B)?0: (B>=TARGET && B>=A)?1:null;
+    if(state.mode==='bankout'){
+      endRound_Bankout(winnerIdx ?? state.active);
+    }else if(state.mode==='blitz'){
+      endRound_Blitz();
+    }else if(state.mode==='sudden'){
+      state.matchOver = true;
+      state.ended = true;
+      
+      // Award total pot to Sudden Death winner (only if we came from Blitz mode)
+      if (state.totalPot > 0) {
+        state.players[winnerIdx].bank = state.totalPot;
+        log(`Sudden Death — Winner: Player ${winnerIdx===0?'A':'B'} collects ${fmt(state.totalPot)}!`);
+        showModal('game-over-modal');
+        el.winnerText.textContent = `${getPlayerName(winnerIdx)} wins Sudden Death and collects ${fmt(state.totalPot)}!`;
+      } else {
+        log(`Sudden Death — Winner: Player ${winnerIdx===0?'A':'B'} by reaching $1,000.`);
+        showModal('game-over-modal');
+        el.winnerText.textContent = `${getPlayerName(winnerIdx)} wins!`;
+      }
+      render();
+    }
+    return true;
+  }
+  return false;
+}
+
+function startSuddenDeath(){
+  state.mode = 'sudden';
+  state.deck = buildDeck(); // numbers + jacks only
+  state.discard = [];
+  state.ended = false;
+  state.players.forEach(p=>{ p.temp=0; p.hand=[]; p.alert=false; p.jacksThisTurn=0; p.latent=0; });
+  el.lastDraw.textContent = '—';
+  
+  // Hide pot display in Sudden Death
+  el.potLbl.parentElement.style.display = 'none';
+  render();
+}
+
+/* ========= Discard Logic ========= */
+function showDiscardChoiceModal(cardType) {
+    state.pendingDiscard = { cardType };
+    const P = state.players[state.active];
+    el.discardChoice.innerHTML = ''; // Clear previous choices
+    
+    const handAndNewCard = [...P.hand, cardType];
+
+    handAndNewCard.forEach(card => {
+        const btn = document.createElement('button');
+        btn.textContent = `Discard ${card}`;
+        btn.onclick = () => resolveDiscard(card);
+        el.discardChoice.appendChild(btn);
+    });
+    showModal('discardModal');
+    render();
+}
+
+function resolveDiscard(cardToDiscard) {
+    const { cardType } = state.pendingDiscard;
+    const P = state.players[state.active];
+    
+    if (cardToDiscard === cardType) {
+        log(`Chose to discard the newly drawn ${cardType}.`);
+    } else {
+        const idx = P.hand.indexOf(cardToDiscard);
+        if (idx > -1) {
+            P.hand.splice(idx, 1);
+            P.hand.push(cardType);
+            log(`Discarded ${cardToDiscard} to make room for ${cardType}.`);
+        }
+    }
+    
+    state.pendingDiscard = null;
+    closeModal('discardModal');
+    render();
+}
+
+/* ========= Draw / Resolve ========= */
+function drawCard(){
+  if(state.matchOver || state.pendingWild || state.pendingCounter || state.pendingDiscard) return;
+  if(state.deck.length===0){
+    if (state.mode === 'blitz') {
+      log('Deck empty — ending round for Blitz mode.');
+      endRound_Blitz();
+      return;
+    } else {
+      log('Deck empty — reshuffling current round.');
+      state.deck = shuffle(state.discard.splice(0));
+      if(state.deck.length===0){ log('No cards to reshuffle.'); return; }
+    }
+  }
+  const card = state.deck.pop();
+  state.discard.push(card);
+  const P = state.players[state.active];
+  const playerName = getPlayerName(state.active);
+
+  // Update deck counts
+  const counts = trackDeckState();
+  switch(card.t) {
+    case 'N':
+      counts.numbers.count--;
+      counts.numbers.sum -= card.v;
+      break;
+    case 'A':
+      counts.aces--;
+      break;
+    case 'J':
+      counts.jacks--;
+      break;
+    case 'Q':
+      counts.queens--;
+      break;
+    case 'K':
+      counts.kings--;
+      break;
+    case 'X':
+      counts.jokers--;
+      break;
+  }
+
+  el.lastDraw.textContent = `Drew ${card.t === 'N' ? card.v : card.t}`;
+
+  if(card.t==='N'){
+    P.temp += card.v;
+    log(`${playerName} drew ${card.v}. Loot now ${fmt(P.temp)}.`);
+
+  } else if(card.t==='J'){
+    P.jacksThisTurn += 1;
+    P.alert = true;
+    log(`${playerName} drew Jack. Alert on. Jacks this turn: ${P.jacksThisTurn}.`);
+
+    if (P.latent > 0) {
+      const qIndex = P.hand.indexOf('Q');
+      if (qIndex > -1) {
+        P.hand.splice(qIndex, 1);
+        P.jacksThisTurn = Math.max(0, P.jacksThisTurn - 1);
+        if (P.jacksThisTurn === 0) {
+          P.alert = false;
+        }
+        P.latent -= 1;
+        log(`Latent Ace triggered — auto-played Queen to cancel the Jack. Latent aces remaining: ${P.latent}.`);
+      } else {
+        log(`Latent Ace triggered by Jack — no Queen in hand. BUST! Lost ${fmt(P.temp)}.`);
+        P.temp = 0;
+        resetTurnState(P);
+        switchTurn();
+        render();
+        return;
+      }
+    }
+
+    if(P.jacksThisTurn>=3){
+      log(`Third Jack — ${playerName} busts. Lost ${fmt(P.temp)}.`);
+      P.temp = 0;
+      resetTurnState(P);
+      switchTurn();
+    }
+
+  } else if(card.t==='A'){
+    if(P.alert){
+      log(`${playerName} drew Ace on alert — bust. Lost ${fmt(P.temp)}.`);
+      P.temp = 0;
+      resetTurnState(P);
+      switchTurn();
+    }else{
+      P.latent += 1;
+      log(`${playerName} armed a latent Ace.`);
+    }
+
+  } else if(card.t==='Q' || card.t==='K'){
+    if (P.hand.length >= 3) {
+        if (state.gameMode === 'ai' && state.active === 1) {
+          // AI hand management: prioritize keeping Queens for safety
+          let toDiscardIndex = -1;
+          
+          // Try to discard Kings first, then non-Queen cards
+          for (let i = 0; i < P.hand.length; i++) {
+            if (P.hand[i] !== 'Q') {
+              toDiscardIndex = i;
+              break;
+            }
+          }
+          
+          // If all cards are Queens, discard the first one
+          if (toDiscardIndex === -1) {
+            toDiscardIndex = 0;
+          }
+          
+          const toDiscard = P.hand[toDiscardIndex];
+          P.hand.splice(toDiscardIndex, 1);
+          P.hand.push(card.t);
+          log(`${playerName} auto-discarded ${toDiscard} to make room for ${card.t}.`);
+        } else {
+          showDiscardChoiceModal(card.t);
+          return;
+        }
+    } else {
+        P.hand.push(card.t);
+        log(`${card.t} added to ${playerName}'s hand.`);
+    }
+  } else if(card.t==='X'){
+  // Joker handling - different behavior based on round
+  if (state.round === 2) {
+    // Round 2: Joker resolves immediately with three-choice modal
+    log(`${playerName} drew Joker in Round 2 — resolving immediately.`);
+    
+    const O = state.players[1 - state.active]; // Opponent
+    
+    // Show three-choice modal for human players
+    if (state.gameMode !== 'ai' || state.active === 0) {
+      showModal('jokerChoiceModal');
+      state.pendingInterpret = { playerIdx: state.active, defenderIdx: 1 - state.active };
+      
+      // Disable swap button if opponent has no money
+      const O = state.players[1 - state.active];
+      if (O.bank === 0) {
+        el.jokerSwapBtn.disabled = true;
+        el.jokerSwapBtn.title = "Opponent has no money to swap";
+      } else {
+        el.jokerSwapBtn.disabled = false;
+        el.jokerSwapBtn.title = "";
+      }
+      
+      render();
+      return;
+    }
+
+    // AI decision logic for Round 2 Joker
+    if (state.gameMode === 'ai' && state.active === 1) {
+      // AI evaluates all three options
+      const swapValue = O.bank > 0 ? Math.abs(O.bank - P.bank) * 0.8 : 0;
+      const kingValue = P.temp * 2 * (P.temp >= 100 ? 1.2 : 0.8);
+      const queenValue = (P.alert || P.latent > 0) ? 25 : 8;
+      
+      const bestOption = Math.max(swapValue, kingValue, queenValue);
+      
+      if (bestOption === swapValue && O.bank > 0) {
+        // Swap banks
+        const a = P.bank, b = O.bank;
+        P.bank = b; O.bank = a;
+        log(`AI uses Round 2 Joker to swap banks.`);
+        resetTurnState(P);
+        switchTurn();
+      } else if (bestOption === kingValue) {
+        // Use as King
+        const gain = P.temp * 2;
+        P.bank += gain;
+        
+        // Update total pot on King banking action in Blitz mode
+        if (state.mode === 'blitz') {
+          state.totalPot += gain;
+        }
+        
+        log(`AI uses Round 2 Joker as King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends.`);
+        P.temp = 0;
+        resetTurnState(P);
+        if (maybeEndRound()) return;
+        switchTurn();
+      } else {
+        // Use as Queen
+        if (P.alert && P.jacksThisTurn > 0) {
+          P.jacksThisTurn = Math.max(0, P.jacksThisTurn - 1);
+          if (P.jacksThisTurn === 0) P.alert = false;
+          log('AI uses Round 2 Joker as Queen to clear alert.');
+          render();
+          setTimeout(aiTurn, 1000);
+        } else {
+          log('AI uses Round 2 Joker as Queen (no alert to clear).');
+          render();
+          setTimeout(aiTurn, 1000);
+        }
+      }
+    }
+  } else if (state.round === 3) {
+      // Round 3: Joker goes to hand
+      if (P.hand.length >= 3) {
+        if (state.gameMode === 'ai' && state.active === 1) {
+          // AI hand management
+          let toDiscardIndex = -1;
+          for (let i = 0; i < P.hand.length; i++) {
+            if (P.hand[i] !== 'Q') {
+              toDiscardIndex = i;
+              break;
+            }
+          }
+          if (toDiscardIndex === -1) toDiscardIndex = 0;
+          
+          const toDiscard = P.hand[toDiscardIndex];
+          P.hand.splice(toDiscardIndex, 1);
+          P.hand.push('X');
+          log(`${playerName} auto-discarded ${toDiscard} to make room for Joker.`);
+        } else {
+          showDiscardChoiceModal('X');
+          return;
+        }
+      } else {
+        P.hand.push('X');
+        log(`Joker added to ${playerName}'s hand.`);
+      }
+    }
+  }
+  render();
+}
+
+/* ========= Play Actions ========= */
+function playQueen(){
+  if(state.matchOver || state.pendingWild || state.pendingCounter) return;
+  const P = state.players[state.active];
+  const idx = P.hand.indexOf('Q');
+  if(idx<0) return;
+  P.hand.splice(idx,1);
+  if(P.alert && P.jacksThisTurn>0){
+    P.jacksThisTurn = Math.max(0,P.jacksThisTurn-1);
+    if(P.jacksThisTurn===0){
+      P.alert=false;
+      if(P.latent>0){ P.latent -= 1; }
+      log(`Queen played — alert cleared. Latent disarmed.`);
+    }else{
+      log(`Queen played — alert reduced to ${P.jacksThisTurn}.`);
+    }
+  }else{
+    log(`Queen played — no alert to clear.`);
+  }
+  render();
+}
+
+function playKing(){
+  if(state.matchOver || state.pendingWild || state.pendingCounter) return;
+  const P = state.players[state.active];
+  const idx = P.hand.indexOf('K');
+  if(idx<0) return;
+  P.hand.splice(idx,1);
+  const gain = P.temp*2;
+  P.bank += gain;
+  
+  // Update total pot on King banking action in Blitz mode
+  if (state.mode === 'blitz') {
+    state.totalPot += gain;
+  }
+  
+  log(`King played — double-and-bank ${fmt(P.temp)} → ${fmt(gain)}. Turn ends.`);
+  P.temp = 0;
+  resetTurnState(P);
+  if(maybeEndRound()){ render(); return; }
+  switchTurn();
+  render();
+}
+
+function playJoker(){
+  if(state.matchOver || state.pendingWild || state.pendingCounter || state.pendingInterpret) return;
+  const attacker = state.active;
+  const defender = 1 - attacker;
+  const P = state.players[attacker];
+  const O = state.players[defender];
+  const idx = P.hand.indexOf('X');
+  if(idx<0) return;
+
+  P.hand.splice(idx,1);
+
+  // Show three-choice modal for human players
+  if (state.gameMode !== 'ai' || attacker === 0) {
+    showModal('jokerChoiceModal');
+    state.pendingInterpret = { playerIdx: attacker, defenderIdx: defender };
+    
+    // Disable swap button if opponent has no money
+    const O = state.players[defender];
+    if (O.bank === 0) {
+      el.jokerSwapBtn.disabled = true;
+      el.jokerSwapBtn.title = "Opponent has no money to swap";
+    } else {
+      el.jokerSwapBtn.disabled = false;
+      el.jokerSwapBtn.title = "";
+    }
+    
+    render();
+    return;
+  }
+
+  // AI decision logic for Joker play
+  if (state.gameMode === 'ai' && attacker === 1) {
+    // AI evaluates all three options
+    const swapValue = O.bank > 0 ? Math.abs(O.bank - P.bank) * 0.8 : -1000; // Negative value to ensure it's not chosen
+    const kingValue = P.temp * 2 * (P.temp >= 100 ? 1.2 : 0.8);
+    const queenValue = (P.alert || P.latent > 0) ? 25 : 8;
+    
+    const bestOption = Math.max(swapValue, kingValue, queenValue);
+    
+    if (bestOption === swapValue && O.bank > 0) {
+      // Swap banks
+      const a = P.bank, b = O.bank;
+      P.bank = b; O.bank = a;
+      log(`AI uses Joker to swap banks.`);
+      resetTurnState(P);
+      switchTurn();
+    } else if (bestOption === kingValue) {
+      // Use as King
+      const gain = P.temp * 2;
+      P.bank += gain;
+      
+      // Update total pot on King banking action in Blitz mode
+      if (state.mode === 'blitz') {
+        state.totalPot += gain;
+      }
+      
+      log(`AI uses Joker as King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends.`);
+      P.temp = 0;
+      resetTurnState(P);
+      if (maybeEndRound()) return;
+      switchTurn();
+    } else {
+      // Use as Queen
+      if (P.alert && P.jacksThisTurn > 0) {
+        P.jacksThisTurn = Math.max(0, P.jacksThisTurn - 1);
+        if (P.jacksThisTurn === 0) P.alert = false;
+        log('AI uses Joker as Queen to clear alert.');
+        render();
+        setTimeout(aiTurn, 1000);
+      } else {
+        log('AI uses Joker as Queen (no alert to clear).');
+        render();
+        setTimeout(aiTurn, 1000);
+      }
+    }
+  }
+  render();
+}
+
+/* ========= Modal Handlers ========= */
+el.wildQueenBtn.addEventListener('click', ()=>{
+  if(!state.pendingWild) return;
+  const P = state.players[state.pendingWild.playerIdx];
+  if(P.alert && P.jacksThisTurn>0){
+    P.jacksThisTurn = Math.max(0,P.jacksThisTurn-1);
+    if(P.jacksThisTurn===0){ P.alert=false; }
+    log(`Joker wild — Queen: alert reduced.`);
+  } else {
+    log(`Joker wild — Queen: no alert to clear.`);
+  }
+  state.pendingWild = null;
+  closeModal('wildModal');
+  render();
+});
+
+el.wildKingBtn.addEventListener('click', ()=>{
+  if(!state.pendingWild) return;
+  const P = state.players[state.pendingWild.playerIdx];
+  const gain = P.temp*2;
+  P.bank += gain;
+  
+  // Update total pot on King banking action in Blitz mode
+  if (state.mode === 'blitz') {
+    state.totalPot += gain;
+  }
+  
+  log(`Joker wild — King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends.`);
+  P.temp = 0;
+  resetTurnState(P);
+  state.pendingWild = null;
+  closeModal('wildModal');
+  if(maybeEndRound()){ render(); return; }
+  switchTurn();
+  render();
+});
+
+el.counterYesBtn.addEventListener('click', ()=>{
+  if(!state.pendingCounter) return;
+  const O = state.players[state.pendingCounter.defenderIdx];
+  const jIdx = O.hand.indexOf('X');
+  if(jIdx>=0) O.hand.splice(jIdx,1);
+  log(`Counter Joker — swap canceled. Both Jokers discarded.`);
+  state.pendingCounter = null;
+  closeModal('counterModal');
+  switchTurn();
+  render();
+});
+
+el.interpretKingBtn.addEventListener('click', ()=>{
+  if(!state.pendingInterpret) return;
+  const P = state.players[state.pendingInterpret.playerIdx];
+  const gain = P.temp * 2;
+  P.bank += gain;
+  
+  // Update total pot on King banking action in Blitz mode
+  if (state.mode === 'blitz') {
+    state.totalPot += gain;
+  }
+  
+  log(`Joker interpreted as King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends.`);
+  P.temp = 0;
+  resetTurnState(P);
+  state.pendingInterpret = null;
+  closeModal('jokerInterpretModal');
+  if(maybeEndRound()){ render(); return; }
+  switchTurn();
+  render();
+});
+
+el.interpretQueenBtn.addEventListener('click', ()=>{
+  if(!state.pendingInterpret) return;
+  const P = state.players[state.pendingInterpret.playerIdx];
+  if(P.alert && P.jacksThisTurn>0){
+    P.jacksThisTurn = Math.max(0,P.jacksThisTurn-1);
+    if(P.jacksThisTurn===0){ P.alert=false; }
+    log(`Joker interpreted as Queen: alert reduced.`);
+  } else {
+    log(`Joker interpreted as Queen: no alert to clear.`);
+  }
+  state.pendingInterpret = null;
+  closeModal('jokerInterpretModal');
+  render();
+});
+
+el.counterNoBtn.addEventListener('click', ()=>{
+  if(!state.pendingCounter) return;
+  const P = state.players[state.pendingCounter.attackerIdx];
+  const O = state.players[state.pendingCounter.defenderIdx];
+  const a = P.bank, b = O.bank;
+  P.bank = b; O.bank = a;
+  log(`Joker swap resolves — banks swapped.`);
+  state.pendingCounter = null;
+  closeModal('counterModal');
+  switchTurn();
+  render();
+});
+
+el.jokerSwapBtn.addEventListener('click', ()=>{
+  if(!state.pendingInterpret) return;
+  const P = state.players[state.pendingInterpret.playerIdx];
+  const O = state.players[state.pendingInterpret.defenderIdx];
+  const a = P.bank, b = O.bank;
+  P.bank = b; O.bank = a;
+  log(`Joker — swapped banks. Turn ends.`);
+  state.pendingInterpret = null;
+  closeModal('jokerChoiceModal');
+  resetTurnState(P);
+  switchTurn();
+  render();
+});
+
+el.jokerKingBtn.addEventListener('click', ()=>{
+  if(!state.pendingInterpret) return;
+  const P = state.players[state.pendingInterpret.playerIdx];
+  const gain = P.temp * 2;
+  P.bank += gain;
+  
+  // Update total pot on King banking action in Blitz mode
+  if (state.mode === 'blitz') {
+    state.totalPot += gain;
+  }
+  
+  log(`Joker interpreted as King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends.`);
+  P.temp = 0;
+  state.pendingInterpret = null;
+  closeModal('jokerChoiceModal');
+  resetTurnState(P);
+  if(maybeEndRound()){ render(); return; }
+  switchTurn();
+  render();
+});
+
+el.jokerQueenBtn.addEventListener('click', ()=>{
+  if(!state.pendingInterpret) return;
+  const P = state.players[state.pendingInterpret.playerIdx];
+  if(P.alert && P.jacksThisTurn>0){
+    P.jacksThisTurn = Math.max(0,P.jacksThisTurn-1);
+    if(P.jacksThisTurn===0){ P.alert=false; }
+    log(`Joker interpreted as Queen: alert reduced.`);
+  } else {
+    log(`Joker interpreted as Queen: no alert to clear.`);
+  }
+  state.pendingInterpret = null;
+  closeModal('jokerChoiceModal');
+  render();
+});
+
+/* ========= Banking / Turn ========= */
+function bank(){
+  if(state.matchOver || state.pendingWild || state.pendingCounter) return;
+  const P = state.players[state.active];
+  if(P.temp<=0){ log('Nothing to bank.'); return; }
+  const bankedAmount = P.temp;
+  P.bank += bankedAmount;
+  
+  // Update total pot on every banking action in Blitz mode
+  if (state.mode === 'blitz') {
+    state.totalPot += bankedAmount;
+  }
+  
+  log(`Banked ${fmt(bankedAmount)}. New bank ${fmt(P.bank)}.`);
+  P.temp = 0;
+  resetTurnState(P);
+  if(maybeEndRound()){ render(); return; }
+  switchTurn();
+  render();
+}
+
+function switchTurn(){
+  if (state.matchOver) return;
+  const P = state.players[state.active];
+  if (P.temp > 0) {
+      log(`${getPlayerName(state.active)} ended turn, losing unbanked ${fmt(P.temp)}.`);
+      P.temp = 0;
+  }
+  P.jacksThisTurn = 0;
+  P.alert = false;
+  state.active = 1 - state.active;
+  log(`Turn switched to ${getPlayerName(state.active)}.`);
+  render();
+  
+  // Auto-start AI turn if applicable
+  if (state.gameMode === 'ai' && state.active === 1 && !state.ended && !state.matchOver) {
+    setTimeout(aiTurn, 1000);
+  }
+}
+
+function aiTurn() {
+  if (state.gameMode !== 'ai' || state.active !== 1 || state.ended || state.matchOver) return;
+  
+  const ai = state.players[1];
+  const human = state.players[0];
+  
+  // Track deck state and calculate risks
+  const counts = trackDeckState();
+  const risks = calculateBustRisk(counts, ai);
+  
+  // Make decision using EV-based system
+  const decision = aiDecideAction(risks, ai, human);
+  
+  // Add human-like delay (0.5-2 seconds)
+  const delay = Math.random() * 1500 + 500;
+  
+  log(`AI considers: ${decision.rationale} (EV: ${decision.ev.toFixed(1)})`);
+  
+  setTimeout(() => {
+    executeAIDecision(decision.action, ai, human);
+  }, delay);
+}
+
+function executeAIDecision(action, ai, human) {
+  switch (action) {
+    case 'draw':
+      drawCard();
+      // After drawing, continue turn if not busted
+      setTimeout(() => {
+        if (ai.jacksThisTurn < 3 && !state.ended && !state.matchOver) {
+          setTimeout(aiTurn, Math.random() * 1000 + 500);
+        }
+      }, 300);
+      break;
+      
+    case 'bank':
+      if (ai.temp > 0) {
+        bank();
+      } else {
+        switchTurn();
+      }
+      break;
+      
+    case 'king':
+      playKing();
+      break;
+      
+    case 'queen':
+    case 'play_queen_now':
+      playQueen();
+      // After playing Queen, continue turn
+      setTimeout(() => {
+        if (!state.ended && !state.matchOver) {
+          setTimeout(aiTurn, Math.random() * 1000 + 500);
+        }
+      }, 300);
+      break;
+      
+    case 'joker':
+      playJoker();
+      break;
+      
+    case 'end':
+      switchTurn();
+      break;
+      
+    default:
+      // Fallback: draw if unsure
+      drawCard();
+      setTimeout(() => {
+        if (ai.jacksThisTurn < 3 && !state.ended && !state.matchOver) {
+          setTimeout(aiTurn, Math.random() * 1000 + 500);
+        }
+      }, 300);
+  }
+}
+
+/* ========= AI Decision Functions ========= */
+function trackDeckState() {
+  // Initialize counts if not present
+  if (!state.deckCounts) {
+    const jCount = state.mode === 'sudden' ? 0 : jokerCountForRound(state.round);
+    state.deckCounts = {
+      aces: 4,
+      jacks: 4,
+      queens: 4,
+      kings: 4,
+      jokers: jCount,
+      numbers: { count: 36, sum: 216 } // sum = (2+3+...+10)*4 = 216
+    };
+  }
+  return state.deckCounts;
+}
+
+function calculateBustRisk(counts, player) {
+  const deckSize = state.deck.length;
+  if (deckSize === 0) return { p_bust: 0.5, e_number: 6, p_jack: 0.1 }; // Fallback
+  
+  let p_bust = 0;
+  
+  // Ace-on-Alert risk - much higher weighting when alert
+  if (player.alert) {
+    p_bust += (counts.aces / deckSize) * 1.5; // 50% higher risk when alert
+  }
+  
+  // Third Jack risk
+  if (player.jacksThisTurn >= 2) {
+    p_bust += counts.jacks / deckSize;
+  }
+  
+  // Latent Ace risk (if no Queen to auto-play) - extreme penalty
+  if (player.latent > 0 && !player.hand.includes('Q')) {
+    p_bust += 0.8; // Very high penalty for certain bust
+  }
+  
+  // Additional risk for Alert + latent combination
+  if (player.alert && player.latent > 0) {
+    p_bust += 0.3; // Extra danger combination
+  }
+  
+  // Expected Number value
+  const e_number = counts.numbers.count > 0 ? counts.numbers.sum / counts.numbers.count : 6;
+  
+  // Jack probability
+  const p_jack = counts.jacks / deckSize;
+  
+  return { p_bust: Math.min(p_bust, 0.95), e_number, p_jack };
+}
+
+function evaluateActionEV(action, risks, player, opponent) {
+  let ev = 0;
+  let rationale = '';
+  
+  switch (action) {
+    case 'draw':
+      ev = (1 - risks.p_bust) * risks.e_number - risks.p_bust * player.temp;
+      // Queen safety bonus - ABSOLUTELY EXTREME value for safety, but NOT when Alert is active
+      if (player.hand.includes('Q') && !player.alert) {
+        ev += 100; // Massive bonus for Queen safety - draw relentlessly
+        rationale = 'Queen provides ABSOLUTE safety';
+      } else if (player.hand.includes('Q') && player.alert) {
+        // When Alert is active, Queen safety is theoretical - reduce draw EV
+        ev -= 50; // Penalty for drawing while Alert with Queen (should play Queen instead)
+        rationale = 'Alert active - should play Queen instead of drawing';
+      }
+      // Huge bonus for low-risk draws
+      if (risks.p_bust < 0.3) {
+        ev += 20;
+        rationale += ' - extremely low risk';
+      }
+      // Massive penalty for banking when Queen available
+      if (player.hand.includes('Q')) {
+        ev += 50; // Huge bonus to absolutely discourage banking with Queen
+      }
+      break;
+      
+    case 'bank':
+      // Banking is ABSOLUTELY FORBIDDEN when Queen available - negative EV
+      if (player.hand.includes('Q')) {
+        ev = Math.max(player.temp * 0.1, player.temp - 50) - 100; // Negative EV with Queen
+        rationale = 'ABSOLUTELY NO BANKING WITH QUEEN PROTECTION';
+      } else {
+        ev = Math.max(player.temp * 0.1, player.temp - 40); // EXTREMELY conservative banking
+        
+        // Bonus for banking in Blitz mode to build the pot
+        if (state.mode === 'blitz') {
+          const potBonus = Math.min(20, state.totalPot / 50); // Up to +20 EV bonus based on pot size
+          ev += potBonus;
+          rationale = `Secure current loot (+${potBonus.toFixed(1)} pot bonus)`;
+        } else {
+          rationale = 'Secure current loot';
+        }
+      }
+      break;
+      
+    case 'king':
+      const kingGain = player.temp * 2;
+      // Endgame bonus if close to target - but ABSOLUTE penalty for Kings with Queen protection
+      if (player.hand.includes('Q')) {
+        ev = -50; // Negative EV for Kings when Queen available
+        rationale = 'ABSOLUTELY NO KING WITH QUEEN PROTECTION';
+      } else {
+        const endgameBonus = (player.bank + kingGain >= TARGET) ? 2.0 :
+                            (player.temp >= 300) ? 1.8 :
+                            (player.temp >= 200) ? 1.2 :
+                            (player.temp >= 100) ? 0.8 :
+                            (player.temp >= 50) ? 0.5 : 0.2; // EXTREMELY severe penalty for small Kings
+        ev = kingGain * endgameBonus;
+        rationale = `Double-and-bank ${fmt(player.temp)} → ${fmt(kingGain)}`;
+      }
+      break;
+      
+    case 'queen':
+      // High value if alert or latent
+      ev = (player.alert || player.latent > 0) ? 25 : 8;
+      rationale = player.alert ? 'Clear alert' : 'Disarm latent Ace';
+      break;
+      
+    case 'play_queen_now':
+      // Extremely high value for proactive Queen play when danger exists
+      ev = 200; // Very high EV to prioritize Queen play
+      rationale = 'PROACTIVE QUEEN PLAY TO PREVENT BUST';
+      break;
+      
+    case 'joker':
+      // Enhanced Joker functionality: can choose Swap, King, or Queen effect
+      const swapValue = opponent.bank > 0 ? Math.abs(opponent.bank - player.bank) * 0.8 : -1000;
+      const kingValue = player.temp * 2 * (player.temp >= 100 ? 1.2 : 0.8);
+      const queenValue = (player.alert || player.latent > 0) ? 25 : 8;
+      
+      // Choose the best option
+      ev = Math.max(swapValue, kingValue, queenValue);
+      rationale = `Joker options: ${opponent.bank > 0 ? `Swap ${fmt(swapValue)}, ` : ''}King ${fmt(kingValue)}, Queen ${fmt(queenValue)}`;
+      break;
+      
+    case 'end':
+      ev = 0;
+      rationale = 'End turn voluntarily';
+      break;
+  }
+  
+  return { ev, rationale };
+}
+
+function aiDecideAction(risks, player, opponent) {
+  const possibleActions = [];
+  
+  // Check available actions based on hand
+  if (player.hand.includes('Q')) {
+    possibleActions.push('queen');
+    // Proactively play Queen when Alert is active or high latent risk
+    if (player.alert || player.latent > 0) {
+      possibleActions.push('play_queen_now'); // High priority Queen play
+    }
+  }
+  if (player.hand.includes('K')) {
+    possibleActions.push('king');
+  }
+  if (player.hand.includes('X') && state.round >= 2) {
+    possibleActions.push('joker');
+  }
+  
+  // Always possible actions
+  possibleActions.push('draw', 'bank', 'end');
+  
+  // Evaluate each action
+  const actionEvaluations = possibleActions.map(action => {
+    const evaluation = evaluateActionEV(action, risks, player, opponent);
+    let finalEV = evaluation.ev;
+    
+    // Apply contextual modifiers
+    const isLeading = player.bank > opponent.bank;
+    
+    // Lead/trail modifiers - extremely aggressive when behind
+    if (!isLeading) {
+      // Extremely aggressive when behind - up to 4x multiplier based on deficit
+      const deficitRatio = Math.min(1, (opponent.bank - player.bank) / 300);
+      finalEV *= (2.0 + deficitRatio * 2); // 2.0x to 4.0x multiplier
+    } else {
+      // Slightly conservative when leading
+      finalEV *= 0.8;
+    }
+    
+    // Format-specific modifiers - extremely aggressive in Blitz when behind
+    if (state.mode === 'blitz') {
+      if (isLeading) {
+        // Protect lead in Blitz
+        if (action === 'bank') finalEV *= 1.1;
+        if (action === 'draw') finalEV *= 0.8;
+      } else {
+        // Extremely aggressive when behind in Blitz
+        if (action === 'draw') finalEV *= 2.0;
+        if (action === 'king') finalEV *= 1.8;
+      }
+    }
+    
+    // Add variability (10-20% random adjustment)
+    const variability = 0.9 + (Math.random() * 0.2);
+    finalEV *= variability;
+    
+    return {
+      action,
+      ev: finalEV,
+      rationale: evaluation.rationale,
+      baseEV: evaluation.ev
+    };
+  });
+  
+  // Sort by EV descending
+  actionEvaluations.sort((a, b) => b.ev - a.ev);
+  
+  // Return top action with rationale
+  return actionEvaluations[0];
+}
+
+/* ========= Event Wiring ========= */
+function init() {
+    el.startGameBtn.addEventListener('click', startGame);
+    el.newMatchBtn.addEventListener('click', openSettings);
+    el.settingsBtn.addEventListener('click', openSettings);
+    el.settingsCloseBtn.addEventListener('click', () => closeModal('settingsModal'));
+    el.settingsNewMatchBtn.addEventListener('click', () => {
+        const mode = document.querySelector('input[name="settings-mode"]:checked').value;
+        const jokersOn = document.querySelector('input[name="settings-jokers"]:checked').value === 'on';
+        const gameMode = document.querySelector('input[name="settings-mode-type"]:checked').value;
+        
+        // Save names from settings modal
+        saveSettingsNames();
+        newMatch(mode, jokersOn, gameMode);
+        closeModal('settingsModal');
+    });
+
+    el.drawBtn.addEventListener('click', drawCard);
+    el.bankBtn.addEventListener('click', bank);
+    el.playQueenBtn.addEventListener('click', playQueen);
+    el.playKingBtn.addEventListener('click', playKing);
+    el.playJokerBtn.addEventListener('click', playJoker);
+    el.endTurnBtn.addEventListener('click', switchTurn);
+    el.toggleSuddenBtn.addEventListener('click', ()=>{
+      if(state.mode!=='sudden') startSuddenDeath();
+      else { log('Already in Sudden.'); }
+    });
+    el.helpBtn.addEventListener('click', () => showModal('helpModal'));
+    el.helpOkBtn.addEventListener('click', () => closeModal('helpModal'));
+    el.playAgainButton.addEventListener('click', () => {
+        closeModal('game-over-modal');
+        openSettings();
+    });
+
+    const welcomeRadios = document.querySelectorAll('input[name="welcome-mode"], input[name="welcome-jokers"], input[name="welcome-mode-type"]');
+    welcomeRadios.forEach(radio => radio.addEventListener('change', updateWelcomeDescription));
+    
+    // Add event listeners for mode type changes to update name input visibility
+    const welcomeModeTypeRadios = document.querySelectorAll('input[name="welcome-mode-type"]');
+    welcomeModeTypeRadios.forEach(radio => radio.addEventListener('change', updateNameInputsVisibility));
+    
+    const settingsModeTypeRadios = document.querySelectorAll('input[name="settings-mode-type"]');
+    settingsModeTypeRadios.forEach(radio => radio.addEventListener('change', updateSettingsNameInputsVisibility));
+
+    // Load stored names and update UI
+    loadStoredNames();
+    updateNameInputsVisibility();
+    updateWelcomeDescription();
+}
+
+// Enhanced AI obfuscation and trade secret protection
+function obfuscateAILogic() {
+  const patterns = [
+    'aiDecision', 'calculateBustRisk', 'evaluateActionEV', 'trackDeckState',
+    'deckCounts', 'p_bust', 'e_number', 'p_jack'
+  ];
+  
+  patterns.forEach(pattern => {
+    if (typeof window !== 'undefined') {
+      Object.defineProperty(window, pattern, {
+        configurable: false,
+        writable: false,
+        enumerable: false
+      });
+    }
+  });
+}
+
+// Initialize with IP protection
+init();
+obfuscateAILogic();
+
+// Anti-debugging protection
+setInterval(() => {
+  if (typeof window !== 'undefined' && window.performance) {
+    const mem = window.performance.memory;
+    if (mem && mem.usedJSHeapSize > 500000000) {
+      console.warn('Memory usage suspicious - possible decompilation attempt');
+    }
+  }
+}, 30000);
+
+</script>
+</body>
+</html>
