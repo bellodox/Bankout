@@ -860,9 +860,7 @@ function reshuffleRound(){
 function endRound_Bankout(winnerIdx){
   const W = state.players[winnerIdx];
   W.wins += 1;
-  console.log(`Round won by Player ${winnerIdx===0?'A':'B'}. Wins updated: A=${state.players[0].wins}, B=${state.players[1].wins}`);
   log(`Round won by Player ${winnerIdx===0?'A':'B'}. Score: A ${state.players[0].wins} - B ${state.players[1].wins}`);
-  console.log('Calling render after updating wins...');
   render();
   if(W.wins>=2){
     state.matchOver = true;
