@@ -1183,7 +1183,7 @@ function drawCard(){
     // AI decision logic for Round 2 Joker
     if (state.gameMode === 'ai' && state.active === 1) {
       // AI evaluates all three options
-      const swapValue = O.bank > 0 ? Math.abs(O.bank - P.bank) * 0.8 : 0;
+      const swapValue = O.bank > 0 ? (O.bank - P.bank) * 0.8 : -1000;
       const kingValue = P.temp * 2 * (P.temp >= 100 ? 1.2 : 0.8);
       const queenValue = (P.alert || P.latent > 0) ? 25 : 8;
       
@@ -1334,7 +1334,7 @@ function playJoker(){
   // AI decision logic for Joker play
   if (state.gameMode === 'ai' && attacker === 1) {
     // AI evaluates all three options
-    const swapValue = O.bank > 0 ? Math.abs(O.bank - P.bank) * 0.8 : -1000; // Negative value to ensure it's not chosen
+    const swapValue = O.bank > 0 ? (O.bank - P.bank) * 0.8 : -1000; // Positive if beneficial, negative if harmful
     const kingValue = P.temp * 2 * (P.temp >= 100 ? 1.2 : 0.8);
     const queenValue = (P.alert || P.latent > 0) ? 25 : 8;
     
