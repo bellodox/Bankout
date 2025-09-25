@@ -47,8 +47,8 @@ This guide is your all-in-one, deeply detailed reference to play, teach, judge, 
   - **Latent:** Count of Aces drawn off-alert; each threatens when a Jack would set Alert.
 
 - **Hand limit:**
-  - **Limit:** 3 cards (Q/K/X only).
-  - **Over-limit:** When a card would push you above 3, you must immediately choose discards down to 3. If no valid choice (e.g., time), discard by pre-agreed default (commonly oldest).
+  - **Limit:** 2 cards (Q/K/X only).
+  - **Over-limit:** When a card would push you above 2, you must immediately choose discards down to 2. If no valid choice (e.g., time), discard by pre-agreed default (commonly oldest).
 
 ---
 
@@ -77,7 +77,7 @@ This guide is your all-in-one, deeply detailed reference to play, teach, judge, 
      - **If not:** Bust immediately.
      - Note: Auto-Queen applies before finalizing “third Jack,” so it can prevent the 3rd-Jack bust by reducing Jacks this turn.
   4. **Apply the card’s normal effect** (Numbers add Loot, Q/K to hand, Joker per round).
-  5. **Enforce hand limit** (choose discards if >3).
+  5. **Enforce hand limit** (choose discards if >2).
   6. **Check end triggers** (King/Joker end-turn effects, round/match thresholds).
 
 - **Instant-speed windows (your turn only):**
@@ -172,7 +172,7 @@ This guide is your all-in-one, deeply detailed reference to play, teach, judge, 
 - **Multiple Jacks on Alert:** A Queen removes a single Jack instance. You remain on Alert until Jacks this turn reaches 0.
 - **Latent threat timing:** Latent Aces only threaten at the instant a Jack would (re)establish Alert; clearing Alert then (via Queen or wild-Queen) prevents the bust.
 - **Joker swap priority:** Swaps resolve and end the turn immediately (offense). If a counter is used (defense, Round 3), no swap occurs and the opponent’s turn ends.
-- **Illegal over-hand:** If a player forgets to discard down to 3 immediately on addition, judge instructs to discard down to 3 retroactively with minimal information gain (commonly oldest or random selection per event policy).
+- **Illegal over-hand:** If a player forgets to discard down to 2 immediately on addition, judge instructs to discard down to 2 retroactively with minimal information gain (commonly oldest or random selection per event policy).
 - **Slow play:** Judges may set reasonable decision timeboxes. Repeated delays can incur warnings and time penalties per tournament policy.
 
 ---

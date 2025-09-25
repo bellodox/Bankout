@@ -385,7 +385,7 @@ Unauthorized commercial use prohibited.
 <div id="discardModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="discardTitle">
     <div class="modal">
         <h2 id="discardTitle">Hand Full: Choose a Card to Discard</h2>
-        <p>Your hand is full. To make room for the new card, please choose one card to discard.</p>
+        <p>Your hand is full (maximum 2 cards). To make room for the new card, please choose one card to discard.</p>
         <div id="discardChoice" class="btnrow"></div>
     </div>
 </div>
@@ -1128,28 +1128,50 @@ function drawCard(){
     }
 
   } else if(card.t==='Q' || card.t==='K'){
-    if (P.hand.length >= 3) {
+    if (P.hand.length >= 2) {
         if (state.gameMode === 'ai' && state.active === 1) {
-          // AI hand management: prioritize keeping Queens for safety
-          let toDiscardIndex = -1;
+          // AI hand management: with smaller hand size, prioritize playing cards over discarding
+          // First try to play a card if beneficial
+          const shouldPlayQueen = (P.alert || P.latent > 0) && P.hand.includes('Q');
+          const shouldPlayKing = P.temp >= 100 && P.hand.includes('K');
           
-          // Try to discard Kings first, then non-Queen cards
-          for (let i = 0; i < P.hand.length; i++) {
-            if (P.hand[i] !== 'Q') {
-              toDiscardIndex = i;
-              break;
+          if (shouldPlayQueen) {
+            // Play Queen proactively
+            const qIndex = P.hand.indexOf('Q');
+            P.hand.splice(qIndex, 1);
+            if (P.alert && P.jacksThisTurn > 0) {
+              P.jacksThisTurn = Math.max(0, P.jacksThisTurn - 1);
+              if (P.jacksThisTurn === 0) P.alert = false;
             }
+            log(`${playerName} auto-played Queen to make room for ${card.t}.`);
+            P.hand.push(card.t);
+          } else if (shouldPlayKing) {
+            // Play King proactively
+            const kIndex = P.hand.indexOf('K');
+            P.hand.splice(kIndex, 1);
+            const gain = P.temp * 2;
+            P.bank += gain;
+            if (state.mode === 'blitz') state.totalPot += gain;
+            log(`${playerName} auto-played King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}.`);
+            P.temp = 0;
+            resetTurnState(P);
+            P.hand.push(card.t);
+          } else {
+            // Fallback to discarding - prioritize keeping Queens
+            let toDiscardIndex = -1;
+            for (let i = 0; i < P.hand.length; i++) {
+              if (P.hand[i] !== 'Q') {
+                toDiscardIndex = i;
+                break;
+              }
+            }
+            if (toDiscardIndex === -1) toDiscardIndex = 0;
+            
+            const toDiscard = P.hand[toDiscardIndex];
+            P.hand.splice(toDiscardIndex, 1);
+            P.hand.push(card.t);
+            log(`${playerName} auto-discarded ${toDiscard} to make room for ${card.t}.`);
           }
-          
-          // If all cards are Queens, discard the first one
-          if (toDiscardIndex === -1) {
-            toDiscardIndex = 0;
-          }
-          
-          const toDiscard = P.hand[toDiscardIndex];
-          P.hand.splice(toDiscardIndex, 1);
-          P.hand.push(card.t);
-          log(`${playerName} auto-discarded ${toDiscard} to make room for ${card.t}.`);
         } else {
           showDiscardChoiceModal(card.t);
           return;
@@ -1233,22 +1255,58 @@ function drawCard(){
     }
   } else if (state.round === 3) {
       // Round 3: Joker goes to hand
-      if (P.hand.length >= 3) {
+      if (P.hand.length >= 2) {
         if (state.gameMode === 'ai' && state.active === 1) {
-          // AI hand management
-          let toDiscardIndex = -1;
-          for (let i = 0; i < P.hand.length; i++) {
-            if (P.hand[i] !== 'Q') {
-              toDiscardIndex = i;
-              break;
-            }
-          }
-          if (toDiscardIndex === -1) toDiscardIndex = 0;
+          // AI hand management: with smaller hand size, prioritize playing cards over discarding
+          // First try to play a card if beneficial
+          const shouldPlayQueen = (P.alert || P.latent > 0) && P.hand.includes('Q');
+          const shouldPlayKing = P.temp >= 100 && P.hand.includes('K');
+          const shouldPlayJoker = P.hand.includes('X') && state.round >= 2;
           
-          const toDiscard = P.hand[toDiscardIndex];
-          P.hand.splice(toDiscardIndex, 1);
-          P.hand.push('X');
-          log(`${playerName} auto-discarded ${toDiscard} to make room for Joker.`);
+          if (shouldPlayQueen) {
+            // Play Queen proactively
+            const qIndex = P.hand.indexOf('Q');
+            P.hand.splice(qIndex, 1);
+            if (P.alert && P.jacksThisTurn > 0) {
+              P.jacksThisTurn = Math.max(0, P.jacksThisTurn - 1);
+              if (P.jacksThisTurn === 0) P.alert = false;
+            }
+            log(`${playerName} auto-played Queen to make room for Joker.`);
+            P.hand.push('X');
+          } else if (shouldPlayKing) {
+            // Play King proactively
+            const kIndex = P.hand.indexOf('K');
+            P.hand.splice(kIndex, 1);
+            const gain = P.temp * 2;
+            P.bank += gain;
+            if (state.mode === 'blitz') state.totalPot += gain;
+            log(`${playerName} auto-played King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}.`);
+            P.temp = 0;
+            resetTurnState(P);
+            P.hand.push('X');
+          } else if (shouldPlayJoker) {
+            // Play Joker proactively
+            const xIndex = P.hand.indexOf('X');
+            P.hand.splice(xIndex, 1);
+            // AI will evaluate Joker options in its next decision
+            log(`${playerName} auto-played Joker to make room for new Joker.`);
+            P.hand.push('X');
+          } else {
+            // Fallback to discarding - prioritize keeping Queens
+            let toDiscardIndex = -1;
+            for (let i = 0; i < P.hand.length; i++) {
+              if (P.hand[i] !== 'Q') {
+                toDiscardIndex = i;
+                break;
+              }
+            }
+            if (toDiscardIndex === -1) toDiscardIndex = 0;
+            
+            const toDiscard = P.hand[toDiscardIndex];
+            P.hand.splice(toDiscardIndex, 1);
+            P.hand.push('X');
+            log(`${playerName} auto-discarded ${toDiscard} to make room for Joker.`);
+          }
         } else {
           showDiscardChoiceModal('X');
           return;
@@ -1711,33 +1769,35 @@ function evaluateActionEV(action, risks, player, opponent) {
   switch (action) {
     case 'draw':
       ev = (1 - risks.p_bust) * risks.e_number - risks.p_bust * player.temp;
-      // Queen safety bonus - ABSOLUTELY EXTREME value for safety, but NOT when Alert is active
+      // Queen safety bonus - reduced with smaller hand size
       if (player.hand.includes('Q') && !player.alert) {
-        ev += 100; // Massive bonus for Queen safety - draw relentlessly
-        rationale = 'Queen provides ABSOLUTE safety';
+        ev += 40; // Reduced bonus for Queen safety (was 100)
+        rationale = 'Queen provides safety';
       } else if (player.hand.includes('Q') && player.alert) {
         // When Alert is active, Queen safety is theoretical - reduce draw EV
-        ev -= 50; // Penalty for drawing while Alert with Queen (should play Queen instead)
-        rationale = 'Alert active - should play Queen instead of drawing';
+        ev -= 25; // Reduced penalty for drawing while Alert with Queen (was 50)
+        rationale = 'Alert active - consider playing Queen';
       }
-      // Huge bonus for low-risk draws
+      // Bonus for low-risk draws
       if (risks.p_bust < 0.3) {
-        ev += 20;
-        rationale += ' - extremely low risk';
+        ev += 15;
+        rationale += ' - low risk';
       }
-      // Massive penalty for banking when Queen available
+      // Reduced penalty for banking when Queen available
       if (player.hand.includes('Q')) {
-        ev += 50; // Huge bonus to absolutely discourage banking with Queen
+        ev += 20; // Reduced bonus to discourage banking with Queen (was 50)
       }
       break;
       
     case 'bank':
-      // Banking is ABSOLUTELY FORBIDDEN when Queen available - negative EV
+      // Banking is less restricted with smaller hand size
       if (player.hand.includes('Q')) {
-        ev = Math.max(player.temp * 0.1, player.temp - 50) - 100; // Negative EV with Queen
-        rationale = 'ABSOLUTELY NO BANKING WITH QUEEN PROTECTION';
+        // Allow banking with Queen but with reduced EV
+        const baseBankEV = player.temp < 20 ? player.temp - 5 : Math.max(player.temp * 0.2, player.temp - 10);
+        ev = baseBankEV - 30; // Reduced penalty (was -100)
+        rationale = 'Bank with Queen protection (reduced)';
       } else {
-        // Less conservative banking - scale with loot amount
+        // Standard banking
         const baseBankEV = player.temp < 20 ? player.temp - 10 : Math.max(player.temp * 0.3, player.temp - 20);
         ev = baseBankEV;
         
@@ -1754,16 +1814,22 @@ function evaluateActionEV(action, risks, player, opponent) {
       
     case 'king':
       const kingGain = player.temp * 2;
-      // Endgame bonus if close to target - but ABSOLUTE penalty for Kings with Queen protection
+      // Less restrictive King usage with smaller hand size
       if (player.hand.includes('Q')) {
-        ev = -50; // Negative EV for Kings when Queen available
-        rationale = 'ABSOLUTELY NO KING WITH QUEEN PROTECTION';
+        // Allow King usage with Queen but with reduced EV
+        const endgameBonus = (player.bank + kingGain >= TARGET) ? 1.5 :
+                            (player.temp >= 300) ? 1.4 :
+                            (player.temp >= 200) ? 1.0 :
+                            (player.temp >= 100) ? 0.6 :
+                            (player.temp >= 50) ? 0.3 : 0.1; // Reduced penalty for small Kings
+        ev = kingGain * endgameBonus - 20; // Reduced penalty (was -50)
+        rationale = `Double-and-bank with Queen protection`;
       } else {
         const endgameBonus = (player.bank + kingGain >= TARGET) ? 2.0 :
                             (player.temp >= 300) ? 1.8 :
                             (player.temp >= 200) ? 1.2 :
                             (player.temp >= 100) ? 0.8 :
-                            (player.temp >= 50) ? 0.5 : 0.2; // EXTREMELY severe penalty for small Kings
+                            (player.temp >= 50) ? 0.5 : 0.2;
         ev = kingGain * endgameBonus;
         rationale = `Double-and-bank ${fmt(player.temp)} → ${fmt(kingGain)}`;
       }
@@ -1776,9 +1842,9 @@ function evaluateActionEV(action, risks, player, opponent) {
       break;
       
     case 'play_queen_now':
-      // Extremely high value for proactive Queen play when danger exists
-      ev = 200; // Very high EV to prioritize Queen play
-      rationale = 'PROACTIVE QUEEN PLAY TO PREVENT BUST';
+      // High value for proactive Queen play when danger exists
+      ev = 100; // Reduced EV for proactive Queen play (was 200)
+      rationale = 'Proactive Queen play to prevent bust';
       break;
       
     case 'joker':

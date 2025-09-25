@@ -33,9 +33,9 @@ Here’s a **table‑ready cheat sheet** for *Bankout*. It’s designed to be qu
 ---
 
 ## ✋ Hand Rules
-- Only Q, K, X go to hand  
-- Max 3 cards  
-- If >3, choose discards immediately  
+- Only Q, K, X go to hand
+- Max 2 cards
+- If >2, choose discards immediately
 
 ---
 
@@ -79,7 +79,7 @@ Here’s a **table‑ready cheat sheet** for *Bankout*. It’s designed to be qu
 ## 🏆 Judge/Trainer Reminders
 - Auto‑Queen on latent Jack is **mandatory** if available.  
 - Counter Joker (R3): discard to cancel swap; both Jokers out; opponent’s turn ends.  
-- Hand limit = 3, enforce immediately.  
+- Hand limit = 2, enforce immediately.
 - Priority: Reveal → Bust checks → Latent → Effect → Hand limit → End checks.  
 
 ---
