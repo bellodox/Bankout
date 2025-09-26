@@ -44,9 +44,9 @@
 - **Bank:** Secured points this round.  
 - **Loot:** Unbanked points earned this turn.  
 - **Hand:** Holds only Queens, Kings, and (in Round 3) Jokers.  
-- **Alert:** Active after drawing at least one Jack this turn.  
-- **Jacks this turn:** Count of Jacks drawn this turn.  
-- **Latent Aces:** Count of Aces drawn off-alert that “arm” a pending danger.
+- **Alert:** Active when Jacks are present on the table.
+- **Jacks this turn:** Count of Jacks drawn this turn.
+- **Latent Aces:** Aces drawn off-alert that remain on the table as visual cues, "arming" a pending danger.
 
 ### Hand limit
 
@@ -55,7 +55,7 @@
 
 ### Discard and reshuffle
 
-- **Discard:** All resolved cards go to a common discard pile.  
+- **Discard:** All resolved cards go to a common discard pile. Jacks and Aces remain on the table as visual cues until resolved by a Queen or bust.
 - **Reshuffle:** When the deck empties, shuffle the discard to form a new deck and continue.
 
 ---
@@ -76,8 +76,8 @@
 
 ### Turn ends when
 
-- **You bank**, or you **bust**, or you **play a King**, or you **resolve a Joker that ends the turn** (swap or wild-King), or you **voluntarily end**.  
-- **On end/bust:** Reset per-turn states (Loot, Alert, Jacks this turn, Latent) and pass play.
+- **You bank**, or you **bust**, or you **play a King**, or you **resolve a Joker that ends the turn** (swap or wild-King), or you **voluntarily end**.
+- **On end/bust:** Reset per-turn states (Loot, Jacks this turn) and pass play. Jacks and Aces remain on the table as visual cues until resolved by a Queen or bust.
 
 ---
 
@@ -162,7 +162,8 @@
 
 ### Visibility
 
-- **Public on draw:** Numbers, Jacks, Aces, Jokers (and all visible totals).  
+- **Public on draw:** Numbers, Jacks, Aces, Jokers (and all visible totals).
+- **Persistent visual cues:** Jacks and Aces remain on the table as visual cues until resolved.
 - **Hidden until played:** Queens, Kings, and (Round 3) Jokers in hand.
 
 ---

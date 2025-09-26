@@ -244,6 +244,8 @@ Unauthorized commercial use prohibited.
           <div><div class="badge warn">Loot</div><strong id="tempA">$0</strong></div>
         </div>
         <div class="row"><span class="badge">Hand</span><div id="handA" class="cardbar"></div></div>
+        <div class="row"><span class="badge">Jacks on table</span><div id="jacksOnTableA" class="cardbar"></div></div>
+        <div class="row"><span class="badge">Aces on table</span><div id="acesOnTableA" class="cardbar"></div></div>
         <div class="row"><span class="badge">Rounds won</span><div id="winsA" class="cardbar"></div></div>
       </div>
       <div class="col">
@@ -253,6 +255,8 @@ Unauthorized commercial use prohibited.
           <div><div class="badge warn">Loot</div><strong id="tempB">$0</strong></div>
         </div>
         <div class="row"><span class="badge">Hand</span><div id="handB" class="cardbar"></div></div>
+        <div class="row"><span class="badge">Jacks on table</span><div id="jacksOnTableB" class="cardbar"></div></div>
+        <div class="row"><span class="badge">Aces on table</span><div id="acesOnTableB" class="cardbar"></div></div>
         <div class="row"><span class="badge">Rounds won</span><div id="winsB" class="cardbar"></div></div>
       </div>
     </div>
@@ -427,8 +431,8 @@ const state = {
   deck: [],
   discard: [],
   players: [
-    {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,drawnCards:[],name:''},
-    {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,drawnCards:[],name:''},
+    {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,drawnCards:[],jacksOnTable:[],acesOnTable:[],name:''},
+    {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,drawnCards:[],jacksOnTable:[],acesOnTable:[],name:''},
   ],
   sudden: false,
   ended: false,
@@ -466,6 +470,10 @@ const el = {
   tempB: document.getElementById('tempB'),
   handA: document.getElementById('handA'),
   handB: document.getElementById('handB'),
+  jacksOnTableA: document.getElementById('jacksOnTableA'),
+  jacksOnTableB: document.getElementById('jacksOnTableB'),
+  acesOnTableA: document.getElementById('acesOnTableA'),
+  acesOnTableB: document.getElementById('acesOnTableB'),
   winsA: document.getElementById('winsA'),
   winsB: document.getElementById('winsB'),
   lastDraw: document.getElementById('lastDraw'),
@@ -691,6 +699,18 @@ function render(){
   A.hand.forEach(h=>{ el.handA.appendChild(chip(h, h.toLowerCase())); });
   el.handB.innerHTML = '';
   B.hand.forEach(h=>{ el.handB.appendChild(chip(h, h.toLowerCase())); });
+  
+  // Render Jacks on table
+  el.jacksOnTableA.innerHTML = '';
+  A.jacksOnTable.forEach(jack => { el.jacksOnTableA.appendChild(chip('J', 'danger')); });
+  el.jacksOnTableB.innerHTML = '';
+  B.jacksOnTable.forEach(jack => { el.jacksOnTableB.appendChild(chip('J', 'danger')); });
+  
+  // Render Aces on table
+  el.acesOnTableA.innerHTML = '';
+  A.acesOnTable.forEach(ace => { el.acesOnTableA.appendChild(chip('A', 'warn')); });
+  el.acesOnTableB.innerHTML = '';
+  B.acesOnTable.forEach(ace => { el.acesOnTableB.appendChild(chip('A', 'warn')); });
 
   // Rounds won display - visual star indicators
   el.winsA.innerHTML = '';
@@ -780,6 +800,7 @@ function resetTurnState(p){
   p.alert = false;
   p.jacksThisTurn = 0;
   p.latent = 0;
+  // Note: jacksOnTable and acesOnTable are NOT cleared here - they persist across turns
 }
 
 /* ========= Match / Round Control ========= */
@@ -798,14 +819,14 @@ function newMatch(mode, jokersOn, gameMode) {
     const playerAName = localStorage.getItem('playerAName') || 'Player A';
     const playerBName = localStorage.getItem('playerBName') || 'Player B';
     state.players = [
-      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,drawnCards:[],name:playerAName},
-      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,drawnCards:[],name:playerBName},
+      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,drawnCards:[],jacksOnTable:[],acesOnTable:[],name:playerAName},
+      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,drawnCards:[],jacksOnTable:[],acesOnTable:[],name:playerBName},
     ];
   } else {
     const humanName = localStorage.getItem('humanName') || 'You';
     state.players = [
-      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,drawnCards:[],name:humanName},
-      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,drawnCards:[],name:'AI'},
+      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,drawnCards:[],jacksOnTable:[],acesOnTable:[],name:humanName},
+      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,drawnCards:[],jacksOnTable:[],acesOnTable:[],name:'AI'},
     ];
   }
   
@@ -880,7 +901,7 @@ function endRound_Bankout(winnerIdx){
   }
   state.round += 1;
   state.players.forEach(p=>{
-    p.bank = 0; p.temp = 0; p.hand=[]; p.alert=false; p.jacksThisTurn=0; p.latent=0;
+    p.bank = 0; p.temp = 0; p.hand=[]; p.alert=false; p.jacksThisTurn=0; p.latent=0; p.jacksOnTable=[]; p.acesOnTable=[];
   });
   state.active = state.firstPlayer === 0 ? (state.round % 2 === 1 ? 0 : 1) : (state.round % 2 === 1 ? 1 : 0);
   state.deck = buildDeck();
@@ -939,7 +960,7 @@ function endRound_Blitz(){
   }
   state.round += 1;
   state.players.forEach(p=>{
-    p.temp = 0; p.hand = []; p.alert=false; p.jacksThisTurn=0; p.latent=0;
+    p.temp = 0; p.hand = []; p.alert=false; p.jacksThisTurn=0; p.latent=0; p.jacksOnTable=[]; p.acesOnTable=[];
   });
   state.active = state.firstPlayer === 0 ? (state.round % 2 === 1 ? 0 : 1) : (state.round % 2 === 1 ? 1 : 0);
   state.deck = buildDeck();
@@ -989,7 +1010,7 @@ function startSuddenDeath(){
   state.deck = buildDeck(); // numbers + jacks only
   state.discard = [];
   state.ended = false;
-  state.players.forEach(p=>{ p.temp=0; p.hand=[]; p.alert=false; p.jacksThisTurn=0; p.latent=0; p.drawnCards=[]; });
+  state.players.forEach(p=>{ p.temp=0; p.hand=[]; p.alert=false; p.jacksThisTurn=0; p.latent=0; p.drawnCards=[]; p.jacksOnTable=[]; p.acesOnTable=[]; });
   el.lastDraw.textContent = '—';
   
   // Hide pot display in Sudden Death
@@ -1100,55 +1121,39 @@ function drawCard(){
     log(`${playerName} drew ${card.v}. Loot now ${fmt(P.temp)}.`);
 
   } else if(card.t==='J'){
+    // Add Jack to on-table array instead of drawnCards
+    P.jacksOnTable.push(card);
     P.jacksThisTurn += 1;
-    P.alert = true;
-    // Track Jack for end-of-turn discard (don't discard immediately)
-    P.drawnCards.push(card);
-    log(`${playerName} drew Jack. Alert on. Jacks this turn: ${P.jacksThisTurn}.`);
+    P.alert = P.jacksOnTable.length > 0; // Alert is true if any Jacks are on table
+    log(`${playerName} drew Jack. Alert on. Jacks this turn: ${P.jacksThisTurn}. Jacks on table: ${P.jacksOnTable.length}.`);
 
-    if (P.latent > 0) {
+    if (P.acesOnTable.length > 0) {
       const qIndex = P.hand.indexOf('Q');
       if (qIndex > -1) {
         P.hand.splice(qIndex, 1);
         // Add Queen to discard pile after auto-playing
         state.discard.push({t: 'Q'});
         P.jacksThisTurn = Math.max(0, P.jacksThisTurn - 1);
-        if (P.jacksThisTurn === 0) {
-          P.alert = false;
-        }
-        P.latent -= 1;
         
-        // Find and immediately discard the Jack that caused the alert
-        // Search from the end of drawnCards since it was the most recent card
-        let jackDiscarded = false;
-        for(let i = P.drawnCards.length - 1; i >= 0; i--) {
-          if(P.drawnCards[i].t === 'J') {
-            const jack = P.drawnCards.splice(i, 1)[0];
-            state.discard.push(jack);
-            log(`Jack discarded due to Queen cancel.`);
-            jackDiscarded = true;
-            break;
-          }
-        }
+        // Remove the most recent Jack from on-table array
+        const resolvedJack = P.jacksOnTable.pop();
+        state.discard.push(resolvedJack);
         
-        // Find and immediately discard the first latent Ace
-        let aceDiscarded = false;
-        for(let i = 0; i < P.drawnCards.length; i++) {
-          if(P.drawnCards[i].t === 'A') {
-            const ace = P.drawnCards.splice(i, 1)[0];
-            state.discard.push(ace);
-            log(`Latent Ace resolved — Ace discarded.`);
-            aceDiscarded = true;
-            break;
-          }
-        }
+        // Remove the oldest latent Ace from on-table array
+        const resolvedAce = P.acesOnTable.shift();
+        state.discard.push(resolvedAce);
         
-        log(`Latent Ace triggered — auto-played Queen to cancel the Jack. Queen, Jack, and Ace discarded. Latent aces remaining: ${P.latent}.`);
+        // Update alert state based on remaining Jacks
+        P.alert = P.jacksOnTable.length > 0;
+        
+        log(`Latent Ace triggered — auto-played Queen to cancel the Jack. Queen, Jack, and Ace discarded. Latent aces remaining: ${P.acesOnTable.length}.`);
       } else {
         log(`Latent Ace triggered by Jack — no Queen in hand. BUST! Lost ${fmt(P.temp)}.`);
         P.temp = 0;
-        // Add the bust card to drawnCards for proper discard in switchTurn
-        P.drawnCards.push(card);
+        // Discard all on-table cards on bust
+        state.discard.push(...P.jacksOnTable, ...P.acesOnTable);
+        P.jacksOnTable = [];
+        P.acesOnTable = [];
         switchTurn();
         render();
         return;
@@ -1158,8 +1163,10 @@ function drawCard(){
     if(P.jacksThisTurn>=3){
       log(`Third Jack — ${playerName} busts. Lost ${fmt(P.temp)}.`);
       P.temp = 0;
-      // Add the bust card to drawnCards for proper discard in switchTurn
-      P.drawnCards.push(card);
+      // Discard all on-table cards on bust
+      state.discard.push(...P.jacksOnTable, ...P.acesOnTable);
+      P.jacksOnTable = [];
+      P.acesOnTable = [];
       switchTurn();
     }
 
@@ -1167,14 +1174,16 @@ function drawCard(){
     if(P.alert){
       log(`${playerName} drew Ace on alert — bust. Lost ${fmt(P.temp)}.`);
       P.temp = 0;
-      // Add the bust card to drawnCards for proper discard in switchTurn
-      P.drawnCards.push(card);
+      // Discard all on-table cards on bust
+      state.discard.push(...P.jacksOnTable, ...P.acesOnTable);
+      P.jacksOnTable = [];
+      P.acesOnTable = [];
       switchTurn();
     }else{
-      P.latent += 1;
-      // Track Ace for end-of-turn discard
-      P.drawnCards.push(card);
-      log(`${playerName} armed a latent Ace.`);
+      // Add Ace to on-table array instead of drawnCards
+      P.acesOnTable.push(card);
+      P.latent = P.acesOnTable.length; // Latent count is now the number of Aces on table
+      log(`${playerName} armed a latent Ace. Latent aces: ${P.acesOnTable.length}.`);
     }
 
   } else if(card.t==='Q' || card.t==='K'){
@@ -1395,22 +1404,25 @@ function playQueen(){
   state.discard.push({t: 'Q'});
   if(P.alert && P.jacksThisTurn>0){
     P.jacksThisTurn = Math.max(0,P.jacksThisTurn-1);
+    
+    // Remove the most recent Jack from on-table array
+    if (P.jacksOnTable.length > 0) {
+      const resolvedJack = P.jacksOnTable.pop();
+      state.discard.push(resolvedJack);
+    }
+    
+    // Remove the oldest latent Ace from on-table array if available
+    if (P.acesOnTable.length > 0) {
+      const resolvedAce = P.acesOnTable.shift();
+      state.discard.push(resolvedAce);
+      P.latent = P.acesOnTable.length;
+    }
+    
     if(P.jacksThisTurn===0){
       P.alert=false;
-      if(P.latent>0){ P.latent -= 1; }
-      
-      // Find and immediately discard the Jack that caused the alert
-      // Search from the end of drawnCards since it was the most recent card
-      for(let i = P.drawnCards.length - 1; i >= 0; i--) {
-        if(P.drawnCards[i].t === 'J') {
-          const jack = P.drawnCards.splice(i, 1)[0];
-          state.discard.push(jack);
-          log(`Queen played — alert cleared. Jack discarded. Queen discarded.`);
-          break;
-        }
-      }
+      log(`Queen played — alert cleared. Jack and Ace (if any) discarded. Queen discarded.`);
     }else{
-      log(`Queen played — alert reduced to ${P.jacksThisTurn}. Queen discarded.`);
+      log(`Queen played — alert reduced to ${P.jacksThisTurn}. Jack and Ace (if any) discarded. Queen discarded.`);
     }
   }else{
     log(`Queen played — no alert to clear. Queen discarded.`);
@@ -1704,17 +1716,19 @@ function switchTurn(){
       P.temp = 0;
   }
   
-  // Discard all cards drawn during this turn
+  // Discard all cards drawn during this turn (Numbers, Queens, Kings, Jokers)
   if (P.drawnCards.length > 0) {
     state.discard.push(...P.drawnCards);
     log(`Discarded ${P.drawnCards.length} card(s) from this turn: ${P.drawnCards.map(c => c.t + (c.v ? c.v : '')).join(', ')}`);
     P.drawnCards = [];
   }
   
+  // Note: Jacks and Aces on table persist across turns - they are NOT discarded here
+  // Only reset the turn counters, not the on-table arrays
   P.jacksThisTurn = 0;
-  P.alert = false;
+  P.alert = P.jacksOnTable.length > 0; // Alert persists if Jacks remain on table
   state.active = 1 - state.active;
-  log(`Turn switched to ${getPlayerName(state.active)}.`);
+  log(`Turn switched to ${getPlayerName(state.active)}. Jacks on table: ${P.jacksOnTable.length}, Aces on table: ${P.acesOnTable.length}.`);
   render();
   
   // Auto-start AI turn if applicable
@@ -1861,14 +1875,14 @@ function calculateBustRisk(counts, player) {
   }
   
   // Latent Ace risk (if no Queen to auto-play) - dynamic penalty based on deck size
-  if (player.latent > 0 && !player.hand.includes('Q')) {
+  if (player.acesOnTable.length > 0 && !player.hand.includes('Q')) {
     const deckSize = state.deck.length;
     const deckRiskFactor = Math.max(0.1, Math.min(0.8, 0.8 * (deckSize / 52))); // Scale penalty with deck size
     p_bust += deckRiskFactor; // Dynamic penalty based on remaining cards
   }
   
   // Additional risk for Alert + latent combination
-  if (player.alert && player.latent > 0) {
+  if (player.alert && player.acesOnTable.length > 0) {
     p_bust += 0.3; // Extra danger combination
   }
   
@@ -1956,13 +1970,13 @@ function evaluateActionEV(action, risks, player, opponent) {
       
     case 'queen':
       // High value if alert or latent
-      ev = (player.alert || player.latent > 0) ? 25 : 8;
+      ev = (player.alert || player.acesOnTable.length > 0) ? 25 : 8;
       rationale = player.alert ? 'Clear alert' : 'Disarm latent Ace';
       break;
       
     case 'play_queen_now':
       // Only high value if there's actual danger (alert or high latent risk)
-      if (player.alert || player.latent > 0) {
+      if (player.alert || player.acesOnTable.length > 0) {
         ev = 25; // Value for clearing actual danger
         rationale = 'Proactive Queen play to prevent bust';
       } else {
@@ -1998,7 +2012,7 @@ function aiDecideAction(risks, player, opponent) {
   if (player.hand.includes('Q')) {
     possibleActions.push('queen');
     // Proactively play Queen when Alert is active or high latent risk
-    if (player.alert || player.latent > 0) {
+    if (player.alert || player.acesOnTable.length > 0) {
       possibleActions.push('play_queen_now'); // High priority Queen play
     }
   }
@@ -2041,7 +2055,7 @@ function aiDecideAction(risks, player, opponent) {
         if (action === 'draw') {
           finalEV *= 2.0;
           // Reduce latent Ace penalty when behind in Blitz
-          if (player.latent > 0 && !player.hand.includes('Q')) {
+          if (player.acesOnTable.length > 0 && !player.hand.includes('Q')) {
             finalEV += 30; // Bonus to counteract latent risk when behind
           }
         }
