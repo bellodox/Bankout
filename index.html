@@ -1117,7 +1117,33 @@ function drawCard(){
           P.alert = false;
         }
         P.latent -= 1;
-        log(`Latent Ace triggered — auto-played Queen to cancel the Jack. Latent aces remaining: ${P.latent}.`);
+        
+        // Find and immediately discard the Jack that caused the alert
+        // Search from the end of drawnCards since it was the most recent card
+        let jackDiscarded = false;
+        for(let i = P.drawnCards.length - 1; i >= 0; i--) {
+          if(P.drawnCards[i].t === 'J') {
+            const jack = P.drawnCards.splice(i, 1)[0];
+            state.discard.push(jack);
+            log(`Jack discarded due to Queen cancel.`);
+            jackDiscarded = true;
+            break;
+          }
+        }
+        
+        // Find and immediately discard the first latent Ace
+        let aceDiscarded = false;
+        for(let i = 0; i < P.drawnCards.length; i++) {
+          if(P.drawnCards[i].t === 'A') {
+            const ace = P.drawnCards.splice(i, 1)[0];
+            state.discard.push(ace);
+            log(`Latent Ace resolved — Ace discarded.`);
+            aceDiscarded = true;
+            break;
+          }
+        }
+        
+        log(`Latent Ace triggered — auto-played Queen to cancel the Jack. Queen, Jack, and Ace discarded. Latent aces remaining: ${P.latent}.`);
       } else {
         log(`Latent Ace triggered by Jack — no Queen in hand. BUST! Lost ${fmt(P.temp)}.`);
         P.temp = 0;
@@ -1169,7 +1195,7 @@ function drawCard(){
               P.jacksThisTurn = Math.max(0, P.jacksThisTurn - 1);
               if (P.jacksThisTurn === 0) P.alert = false;
             }
-            log(`${playerName} auto-played Queen to make room for ${card.t}.`);
+            log(`${playerName} auto-played Queen to make room for ${card.t}. Queen discarded.`);
             P.hand.push(card.t);
           } else if (shouldPlayKing) {
             // Play King proactively
@@ -1180,7 +1206,7 @@ function drawCard(){
             const gain = P.temp * 2;
             P.bank += gain;
             if (state.mode === 'blitz') state.totalPot += gain;
-            log(`${playerName} auto-played King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}.`);
+            log(`${playerName} auto-played King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. King discarded.`);
             P.temp = 0;
             resetTurnState(P);
             P.hand.push(card.t);
@@ -1200,7 +1226,7 @@ function drawCard(){
             // Add discarded card to discard pile
             state.discard.push({t: toDiscard});
             P.hand.push(card.t);
-            log(`${playerName} auto-discarded ${toDiscard} to make room for ${card.t}.`);
+            log(`${playerName} auto-discarded ${toDiscard} to make room for ${card.t}. ${toDiscard} discarded.`);
           }
         } else {
           showDiscardChoiceModal(card.t);
@@ -1303,7 +1329,7 @@ function drawCard(){
               P.jacksThisTurn = Math.max(0, P.jacksThisTurn - 1);
               if (P.jacksThisTurn === 0) P.alert = false;
             }
-            log(`${playerName} auto-played Queen to make room for Joker.`);
+            log(`${playerName} auto-played Queen to make room for Joker. Queen discarded.`);
             P.hand.push('X');
           } else if (shouldPlayKing) {
             // Play King proactively
@@ -1314,7 +1340,7 @@ function drawCard(){
             const gain = P.temp * 2;
             P.bank += gain;
             if (state.mode === 'blitz') state.totalPot += gain;
-            log(`${playerName} auto-played King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}.`);
+            log(`${playerName} auto-played King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. King discarded.`);
             P.temp = 0;
             resetTurnState(P);
             P.hand.push('X');
@@ -1325,7 +1351,7 @@ function drawCard(){
             // Add Joker to discard pile after auto-playing
             state.discard.push({t: 'X'});
             // AI will evaluate Joker options in its next decision
-            log(`${playerName} auto-played Joker to make room for new Joker.`);
+            log(`${playerName} auto-played Joker to make room for new Joker. Joker discarded.`);
             P.hand.push('X');
           } else {
             // Fallback to discarding - prioritize keeping Queens
@@ -1343,7 +1369,7 @@ function drawCard(){
             // Add discarded card to discard pile
             state.discard.push({t: toDiscard});
             P.hand.push('X');
-            log(`${playerName} auto-discarded ${toDiscard} to make room for Joker.`);
+            log(`${playerName} auto-discarded ${toDiscard} to make room for Joker. ${toDiscard} discarded.`);
           }
         } else {
           showDiscardChoiceModal('X');

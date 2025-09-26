@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Fixed latent Ace bust scenario
   - Fixed third Jack bust scenario
   - Fixed Ace-on-alert bust scenario
+- Latent Ace auto-resolution to properly discard Jack and Ace when Queen is auto-played
 
 ## [1.0.0] - 2025-09-24
 
