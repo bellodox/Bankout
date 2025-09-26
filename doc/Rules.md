@@ -250,7 +250,7 @@ Playing from hand on your turn:
   - R2: on draw → swap (opp > 0), King effect, or Queen effect; swap and King end turn; Queen continues turn.
   - R3: to hand; offense = swap (opp > 0), King effect, or Queen effect; defense = counter (cancel swap; both Jokers discarded; opponent's turn ends).
 - **Hand limit:** Max 2 (Q/K/X).
-- **Bust:** Third Jack; Ace on Alert; latent-without-Queen.  
+- **Bust:** Third Jack; Ace on Alert; latent-without-Queen; three latent Aces.
 - **Bankout win:** First to $1,000 wins the round; first to 2 rounds wins match.  
 - **Blitz win:** Highest cumulative after 3 rounds; if tied, Sudden Death (Numbers + Jacks).
 

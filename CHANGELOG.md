@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Three Latent Aces Bust Rule**: New bust condition where drawing a third Ace while having 2 latent Aces results in immediate bust
 - Comprehensive card discard test suite (`test_card_discard.js`) for regression testing
 - Enhanced verification reporting for production readiness
 

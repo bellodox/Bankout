@@ -1180,10 +1180,21 @@ function drawCard(){
       P.acesOnTable = [];
       switchTurn();
     }else{
-      // Add Ace to on-table array instead of drawnCards
-      P.acesOnTable.push(card);
-      P.latent = P.acesOnTable.length; // Latent count is now the number of Aces on table
-      log(`${playerName} armed a latent Ace. Latent aces: ${P.acesOnTable.length}.`);
+      // Check for Three Latent Aces bust condition
+      if (P.acesOnTable.length === 2) {
+        log(`${playerName} drew third latent Ace — bust. Lost ${fmt(P.temp)}.`);
+        P.temp = 0;
+        // Discard all on-table cards on bust
+        state.discard.push(...P.jacksOnTable, ...P.acesOnTable);
+        P.jacksOnTable = [];
+        P.acesOnTable = [];
+        switchTurn();
+      } else {
+        // Add Ace to on-table array instead of drawnCards
+        P.acesOnTable.push(card);
+        P.latent = P.acesOnTable.length; // Latent count is now the number of Aces on table
+        log(`${playerName} armed a latent Ace. Latent aces: ${P.acesOnTable.length}.`);
+      }
     }
 
   } else if(card.t==='Q' || card.t==='K'){
