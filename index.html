@@ -427,8 +427,8 @@ const state = {
   deck: [],
   discard: [],
   players: [
-    {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,name:''},
-    {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,name:''},
+    {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,drawnCards:[],name:''},
+    {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,drawnCards:[],name:''},
   ],
   sudden: false,
   ended: false,
@@ -798,14 +798,14 @@ function newMatch(mode, jokersOn, gameMode) {
     const playerAName = localStorage.getItem('playerAName') || 'Player A';
     const playerBName = localStorage.getItem('playerBName') || 'Player B';
     state.players = [
-      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,name:playerAName},
-      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,name:playerBName},
+      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,drawnCards:[],name:playerAName},
+      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,drawnCards:[],name:playerBName},
     ];
   } else {
     const humanName = localStorage.getItem('humanName') || 'You';
     state.players = [
-      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,name:humanName},
-      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,name:'AI'},
+      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,drawnCards:[],name:humanName},
+      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,drawnCards:[],name:'AI'},
     ];
   }
   
@@ -989,7 +989,7 @@ function startSuddenDeath(){
   state.deck = buildDeck(); // numbers + jacks only
   state.discard = [];
   state.ended = false;
-  state.players.forEach(p=>{ p.temp=0; p.hand=[]; p.alert=false; p.jacksThisTurn=0; p.latent=0; });
+  state.players.forEach(p=>{ p.temp=0; p.hand=[]; p.alert=false; p.jacksThisTurn=0; p.latent=0; p.drawnCards=[]; });
   el.lastDraw.textContent = '—';
   
   // Hide pot display in Sudden Death
@@ -1021,12 +1021,16 @@ function resolveDiscard(cardToDiscard) {
     
     if (cardToDiscard === cardType) {
         log(`Chose to discard the newly drawn ${cardType}.`);
+        // Add the discarded card to the discard pile
+        state.discard.push({t: cardType});
     } else {
         const idx = P.hand.indexOf(cardToDiscard);
         if (idx > -1) {
             P.hand.splice(idx, 1);
             P.hand.push(cardType);
             log(`Discarded ${cardToDiscard} to make room for ${cardType}.`);
+            // Add the discarded card to the discard pile
+            state.discard.push({t: cardToDiscard});
         }
     }
     
@@ -1044,13 +1048,23 @@ function drawCard(){
       endRound_Blitz();
       return;
     } else {
-      log('Deck empty — reshuffling current round.');
-      state.deck = shuffle(state.discard.splice(0));
-      if(state.deck.length===0){ log('No cards to reshuffle.'); return; }
+      log('Deck empty — reshuffling discard pile.');
+      
+      // The discard pile should only contain cards that have been played/discarded
+      // Cards in players' hands (K, Q, X) and active cards (J, A) are NOT in the discard pile
+      // So we can simply reshuffle the entire discard pile as-is
+      state.deck = shuffle([...state.discard]);
+      state.discard = [];
+      
+      // Recalculate deck counts for AI
+      recalculateDeckCounts();
+      
+      log(`Reshuffled ${state.deck.length} cards from discard pile.`);
+      
+      if (state.deck.length === 0) { log('No cards to reshuffle.'); return; }
     }
   }
   const card = state.deck.pop();
-  state.discard.push(card);
   const P = state.players[state.active];
   const playerName = getPlayerName(state.active);
 
@@ -1082,17 +1096,22 @@ function drawCard(){
 
   if(card.t==='N'){
     P.temp += card.v;
+    P.drawnCards.push(card); // Track number card for end-of-turn discard
     log(`${playerName} drew ${card.v}. Loot now ${fmt(P.temp)}.`);
 
   } else if(card.t==='J'){
     P.jacksThisTurn += 1;
     P.alert = true;
+    // Track Jack for end-of-turn discard (don't discard immediately)
+    P.drawnCards.push(card);
     log(`${playerName} drew Jack. Alert on. Jacks this turn: ${P.jacksThisTurn}.`);
 
     if (P.latent > 0) {
       const qIndex = P.hand.indexOf('Q');
       if (qIndex > -1) {
         P.hand.splice(qIndex, 1);
+        // Add Queen to discard pile after auto-playing
+        state.discard.push({t: 'Q'});
         P.jacksThisTurn = Math.max(0, P.jacksThisTurn - 1);
         if (P.jacksThisTurn === 0) {
           P.alert = false;
@@ -1102,7 +1121,8 @@ function drawCard(){
       } else {
         log(`Latent Ace triggered by Jack — no Queen in hand. BUST! Lost ${fmt(P.temp)}.`);
         P.temp = 0;
-        resetTurnState(P);
+        // Add the bust card to drawnCards for proper discard in switchTurn
+        P.drawnCards.push(card);
         switchTurn();
         render();
         return;
@@ -1112,7 +1132,8 @@ function drawCard(){
     if(P.jacksThisTurn>=3){
       log(`Third Jack — ${playerName} busts. Lost ${fmt(P.temp)}.`);
       P.temp = 0;
-      resetTurnState(P);
+      // Add the bust card to drawnCards for proper discard in switchTurn
+      P.drawnCards.push(card);
       switchTurn();
     }
 
@@ -1120,10 +1141,13 @@ function drawCard(){
     if(P.alert){
       log(`${playerName} drew Ace on alert — bust. Lost ${fmt(P.temp)}.`);
       P.temp = 0;
-      resetTurnState(P);
+      // Add the bust card to drawnCards for proper discard in switchTurn
+      P.drawnCards.push(card);
       switchTurn();
     }else{
       P.latent += 1;
+      // Track Ace for end-of-turn discard
+      P.drawnCards.push(card);
       log(`${playerName} armed a latent Ace.`);
     }
 
@@ -1139,6 +1163,8 @@ function drawCard(){
             // Play Queen proactively
             const qIndex = P.hand.indexOf('Q');
             P.hand.splice(qIndex, 1);
+            // Add Queen to discard pile after auto-playing
+            state.discard.push({t: 'Q'});
             if (P.alert && P.jacksThisTurn > 0) {
               P.jacksThisTurn = Math.max(0, P.jacksThisTurn - 1);
               if (P.jacksThisTurn === 0) P.alert = false;
@@ -1149,6 +1175,8 @@ function drawCard(){
             // Play King proactively
             const kIndex = P.hand.indexOf('K');
             P.hand.splice(kIndex, 1);
+            // Add King to discard pile after auto-playing
+            state.discard.push({t: 'K'});
             const gain = P.temp * 2;
             P.bank += gain;
             if (state.mode === 'blitz') state.totalPot += gain;
@@ -1169,6 +1197,8 @@ function drawCard(){
             
             const toDiscard = P.hand[toDiscardIndex];
             P.hand.splice(toDiscardIndex, 1);
+            // Add discarded card to discard pile
+            state.discard.push({t: toDiscard});
             P.hand.push(card.t);
             log(`${playerName} auto-discarded ${toDiscard} to make room for ${card.t}.`);
           }
@@ -1267,6 +1297,8 @@ function drawCard(){
             // Play Queen proactively
             const qIndex = P.hand.indexOf('Q');
             P.hand.splice(qIndex, 1);
+            // Add Queen to discard pile after auto-playing
+            state.discard.push({t: 'Q'});
             if (P.alert && P.jacksThisTurn > 0) {
               P.jacksThisTurn = Math.max(0, P.jacksThisTurn - 1);
               if (P.jacksThisTurn === 0) P.alert = false;
@@ -1277,6 +1309,8 @@ function drawCard(){
             // Play King proactively
             const kIndex = P.hand.indexOf('K');
             P.hand.splice(kIndex, 1);
+            // Add King to discard pile after auto-playing
+            state.discard.push({t: 'K'});
             const gain = P.temp * 2;
             P.bank += gain;
             if (state.mode === 'blitz') state.totalPot += gain;
@@ -1288,6 +1322,8 @@ function drawCard(){
             // Play Joker proactively
             const xIndex = P.hand.indexOf('X');
             P.hand.splice(xIndex, 1);
+            // Add Joker to discard pile after auto-playing
+            state.discard.push({t: 'X'});
             // AI will evaluate Joker options in its next decision
             log(`${playerName} auto-played Joker to make room for new Joker.`);
             P.hand.push('X');
@@ -1304,6 +1340,8 @@ function drawCard(){
             
             const toDiscard = P.hand[toDiscardIndex];
             P.hand.splice(toDiscardIndex, 1);
+            // Add discarded card to discard pile
+            state.discard.push({t: toDiscard});
             P.hand.push('X');
             log(`${playerName} auto-discarded ${toDiscard} to make room for Joker.`);
           }
@@ -1327,12 +1365,24 @@ function playQueen(){
   const idx = P.hand.indexOf('Q');
   if(idx<0) return;
   P.hand.splice(idx,1);
+  // Add Queen to discard pile after playing
+  state.discard.push({t: 'Q'});
   if(P.alert && P.jacksThisTurn>0){
     P.jacksThisTurn = Math.max(0,P.jacksThisTurn-1);
     if(P.jacksThisTurn===0){
       P.alert=false;
       if(P.latent>0){ P.latent -= 1; }
-      log(`Queen played — alert cleared. Latent disarmed.`);
+      
+      // Find and immediately discard the Jack that caused the alert
+      // Search from the end of drawnCards since it was the most recent card
+      for(let i = P.drawnCards.length - 1; i >= 0; i--) {
+        if(P.drawnCards[i].t === 'J') {
+          const jack = P.drawnCards.splice(i, 1)[0];
+          state.discard.push(jack);
+          log(`Queen played — alert cleared. Jack discarded.`);
+          break;
+        }
+      }
     }else{
       log(`Queen played — alert reduced to ${P.jacksThisTurn}.`);
     }
@@ -1348,6 +1398,8 @@ function playKing(){
   const idx = P.hand.indexOf('K');
   if(idx<0) return;
   P.hand.splice(idx,1);
+  // Add King to discard pile after playing
+  state.discard.push({t: 'K'});
   const gain = P.temp*2;
   P.bank += gain;
   
@@ -1374,6 +1426,8 @@ function playJoker(){
   if(idx<0) return;
 
   P.hand.splice(idx,1);
+  // Add Joker to discard pile after playing
+  state.discard.push({t: 'X'});
 
   // Show three-choice modal for human players
   if (state.gameMode !== 'ai' || attacker === 0) {
@@ -1484,7 +1538,11 @@ el.counterYesBtn.addEventListener('click', ()=>{
   if(!state.pendingCounter) return;
   const O = state.players[state.pendingCounter.defenderIdx];
   const jIdx = O.hand.indexOf('X');
-  if(jIdx>=0) O.hand.splice(jIdx,1);
+  if(jIdx>=0) {
+    O.hand.splice(jIdx,1);
+    // Add Joker to discard pile after countering
+    state.discard.push({t: 'X'});
+  }
   log(`Counter Joker — swap canceled. Both Jokers discarded.`);
   state.pendingCounter = null;
   closeModal('counterModal');
@@ -1619,6 +1677,14 @@ function switchTurn(){
       log(`${getPlayerName(state.active)} ended turn, losing unbanked ${fmt(P.temp)}.`);
       P.temp = 0;
   }
+  
+  // Discard all cards drawn during this turn
+  if (P.drawnCards.length > 0) {
+    state.discard.push(...P.drawnCards);
+    log(`Discarded ${P.drawnCards.length} card(s) from this turn: ${P.drawnCards.map(c => c.t + (c.v ? c.v : '')).join(', ')}`);
+    P.drawnCards = [];
+  }
+  
   P.jacksThisTurn = 0;
   P.alert = false;
   state.active = 1 - state.active;
@@ -1685,6 +1751,32 @@ function executeAIDecision(action, ai, human) {
       setTimeout(() => {
         if (!state.ended && !state.matchOver) {
           setTimeout(aiTurn, Math.random() * 1000 + 500);
+        }
+        
+        function recalculateDeckCounts() {
+            const counts = {
+                aces: 0,
+                jacks: 0,
+                queens: 0,
+                kings: 0,
+                jokers: 0,
+                numbers: { count: 0, sum: 0 }
+            };
+        
+            for (const card of state.deck) {
+                switch (card.t) {
+                    case 'A': counts.aces++; break;
+                    case 'J': counts.jacks++; break;
+                    case 'Q': counts.queens++; break;
+                    case 'K': counts.kings++; break;
+                    case 'X': counts.jokers++; break;
+                    case 'N':
+                        counts.numbers.count++;
+                        counts.numbers.sum += card.v;
+                        break;
+                }
+            }
+            state.deckCounts = counts;
         }
       }, 300);
       break;
