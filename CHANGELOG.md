@@ -10,8 +10,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - **Three Latent Aces Bust Rule**: New bust condition where drawing a third Ace while having 2 latent Aces results in immediate bust
-- Comprehensive card discard test suite (`test_card_discard.js`) for regression testing
-- Enhanced verification reporting for production readiness
 
 ### Fixed
 - Card movement logic bug that caused premature clearing of `drawnCards` in bust scenarios
@@ -19,6 +17,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Fixed third Jack bust scenario
   - Fixed Ace-on-alert bust scenario
 - Latent Ace auto-resolution to properly discard Jack and Ace when Queen is auto-played
+
+### Todo (Planned Features)
+- Comprehensive game flow test suite for regression testing
+- Mobile-responsive UI enhancements
+- Game statistics and analytics tracking
+- Multi-language support
+- Sound effects and audio enhancements
 
 ## [1.0.0] - 2025-09-24
 
@@ -38,11 +43,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Queen Value**: Dramatically increased strategic importance due to hand limit reduction
 - **King Timing**: More strategic usage required for optimal finishing power
 - **Joker Commitment**: Higher cost for holding Jokers with limited hand space
+- **Discard Modal Text**: Updated to reflect 2-card limit
 
 ### Fixed
 - All edge cases and timing windows verified and resolved
 - Probability calculations aligned with Analysis.md specifications
 - UI/UX implementation validated against design documentation
+- Documentation files updated to reflect new hand limit (`Rules.md`, `Analysis.md`, `Guide.md`, `Cheatsheet.md`)
 
 ## [0.9.0] - 2025-09-23
 
@@ -54,6 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Deck State Tracking**: Real-time card counting for probability calculations
 - **Risk Assessment**: Advanced bust probability calculations with Queen safety bonuses
 - **Action Evaluation**: Comprehensive EV scoring for all possible actions
+
 
 ### Changed
 - **Banking Philosophy**: Extremely conservative - only banks when absolutely necessary
