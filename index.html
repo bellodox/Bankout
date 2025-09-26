@@ -1768,7 +1768,7 @@ function evaluateActionEV(action, risks, player, opponent) {
   
   switch (action) {
     case 'draw':
-      ev = risks.e_number - risks.p_bust * player.temp;
+      ev = (1 - risks.p_bust) * risks.e_number - risks.p_bust * player.temp;
       // Queen safety bonus - reduced with smaller hand size
       if (player.hand.includes('Q') && !player.alert) {
         ev += 40; // Reduced bonus for Queen safety (was 100)
@@ -1842,9 +1842,14 @@ function evaluateActionEV(action, risks, player, opponent) {
       break;
       
     case 'play_queen_now':
-      // High value for proactive Queen play when danger exists
-      ev = 100; // Reduced EV for proactive Queen play (was 200)
-      rationale = 'Proactive Queen play to prevent bust';
+      // Only high value if there's actual danger (alert or high latent risk)
+      if (player.alert || player.latent > 0) {
+        ev = 25; // Value for clearing actual danger
+        rationale = 'Proactive Queen play to prevent bust';
+      } else {
+        ev = -50; // Negative EV for wasting Queen when no danger
+        rationale = 'Wasting Queen - no immediate threat';
+      }
       break;
       
     case 'joker':
