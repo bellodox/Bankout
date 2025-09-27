@@ -56,12 +56,14 @@ Unauthorized commercial use prohibited.
   .badge.warn{color:#ffd58a;border-color:#a70;background:#261a00}
   .badge.danger{color:#ffb3b3;border-color:#b33;background:#2a1111}
   #alertBadge, #jacksBadge, #latentBadge { flex: 1; min-width: 110px; text-align: center; }
+  .row .badge + .cardbar { margin-left: 4px; margin-right: 8px; }
+  .col > .row:not(:last-child) { padding-bottom: 8px; }
   .kpi{display:flex;flex-wrap:wrap;justify-content:space-around;gap:12px;padding:10px;border:1px dashed #2a3140;border-radius:8px; align-items: stretch;}
   .kpi > div { flex: 1; min-width: 80px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
   .kpi strong{font-size:16px}
   .log{height:260px;overflow:auto;background:#0f131a;border:1px solid #20283a;border-radius:8px;padding:8px;font-family:'Roboto Mono', monospace; font-size: 13px;}
   .log p{margin:0 0 6px}
-  .cardbar{display:flex;gap:6px;flex-wrap:wrap}
+  .cardbar{display:flex;gap:6px;flex-wrap:wrap; min-height: 28px;}
   .chip{padding:4px 10px;border-radius:999px;border:1px solid #2a3140;background:var(--card);font-size:12px}
   .chip.info{border-color:#2a5fb3}
   .chip.good{border-color:#2a5; background:#142017; color:#98ffa7}
@@ -197,11 +199,8 @@ Unauthorized commercial use prohibited.
       <div><div class="badge ok">Total Pot</div><strong id="potLbl">$0</strong></div>
     </div>
     <div class="col">
-      <label>Alerts</label>
       <div class="row">
         <div id="alertBadge" class="badge">Alert: off</div>
-        <div id="jacksBadge" class="badge">Jacks this turn: 0</div>
-        <div id="latentBadge" class="badge">Latent Ace: none</div>
       </div>
     </div>
     <div class="grid-2">
@@ -244,8 +243,7 @@ Unauthorized commercial use prohibited.
           <div><div class="badge warn">Loot</div><strong id="tempA">$0</strong></div>
         </div>
         <div class="row"><span class="badge">Hand</span><div id="handA" class="cardbar"></div></div>
-        <div class="row"><span class="badge">Jacks on table</span><div id="jacksOnTableA" class="cardbar"></div></div>
-        <div class="row"><span class="badge">Aces on table</span><div id="acesOnTableA" class="cardbar"></div></div>
+        <div class="row"><span class="badge">Alerts</span><div id="jacksOnTableA" class="cardbar"></div><div id="acesOnTableA" class="cardbar"></div></div>
         <div class="row"><span class="badge">Rounds won</span><div id="winsA" class="cardbar"></div></div>
       </div>
       <div class="col">
@@ -255,8 +253,7 @@ Unauthorized commercial use prohibited.
           <div><div class="badge warn">Loot</div><strong id="tempB">$0</strong></div>
         </div>
         <div class="row"><span class="badge">Hand</span><div id="handB" class="cardbar"></div></div>
-        <div class="row"><span class="badge">Jacks on table</span><div id="jacksOnTableB" class="cardbar"></div></div>
-        <div class="row"><span class="badge">Aces on table</span><div id="acesOnTableB" class="cardbar"></div></div>
+        <div class="row"><span class="badge">Alerts</span><div id="jacksOnTableB" class="cardbar"></div><div id="acesOnTableB" class="cardbar"></div></div>
         <div class="row"><span class="badge">Rounds won</span><div id="winsB" class="cardbar"></div></div>
       </div>
     </div>
@@ -770,10 +767,10 @@ function render(){
   el.winsB.appendChild(winStarsB);
 
   const P = state.players[state.active];
-  el.alertBadge.textContent = 'Alert: ' + (P.alert?'on':'off');
-  el.alertBadge.className = 'badge ' + (P.alert?'warn':'');
-  el.jacksBadge.textContent = 'Jacks this turn: ' + P.jacksThisTurn;
-  el.latentBadge.textContent = 'Latent Aces: ' + (P.latent>0 ? P.latent : 'none');
+  // Show Alert as "on" when either alert is active OR there are Aces on table
+  const isAlertActive = P.alert || P.acesOnTable.length > 0;
+  el.alertBadge.textContent = 'Alert: ' + (isAlertActive?'on':'off');
+  el.alertBadge.className = 'badge ' + (isAlertActive?'warn':'');
 
   const yourHand = state.players[state.active].hand;
   const modalOpen = !!state.pendingWild || !!state.pendingCounter || !!state.pendingDiscard;
