@@ -75,7 +75,7 @@ This guide is your all-in-one, deeply detailed reference to play, teach, judge, 
   3. **Mandatory latent trigger on Jack:** If Latent > 0:
      - **If you have a Queen:** Auto-play one Queen immediately (see Queen).
      - **If not:** Bust immediately.
-     - Note: Auto-Queen applies before finalizing “third Jack,” so it can prevent the 3rd-Jack bust by reducing Jacks this turn.
+     - Note: Auto-Queen applies before finalizing "third Jack on table," so it can prevent the 3rd-Jack bust by reducing Jacks this turn.
   4. **Apply the card’s normal effect** (Numbers add Loot, Q/K to hand, Joker per round).
   5. **Enforce hand limit** (choose discards if >2).
   6. **Check end triggers** (King/Joker end-turn effects, round/match thresholds).
@@ -162,14 +162,14 @@ This guide is your all-in-one, deeply detailed reference to play, teach, judge, 
   - **Blitz:** Highest cumulative Bank after 3 rounds wins and collects the entire accumulated pot.
   - **Sudden Death (Blitz tie):**
     - **Deck:** Numbers + Jacks only.
-    - **Bust:** On third Jack in one turn.
+    - **Bust:** On third Jack on table.
     - **Win:** First to bank $1,000; if no one reaches $1,000, higher Bank wins.
 
 ---
 
 ## Edge cases and rulings
 
-- **Auto-Queen before third-Jack bust:** On Jack with Latent > 0, the auto-Queen reduces Jacks this turn by 1 before evaluating “third Jack,” potentially avoiding bust.
+- **Auto-Queen before third-Jack bust:** On Jack with Latent > 0, the auto-Queen reduces Jacks this turn by 1 before evaluating "third Jack on table," potentially avoiding bust.
 - **Multiple Jacks on Alert:** A Queen removes a single Jack instance. You remain on Alert until Jacks this turn reaches 0.
 - **Latent threat timing:** Latent Aces only threaten at the instant a Jack would (re)establish Alert; clearing Alert then (via Queen or wild-Queen) prevents the bust.
 - **Joker swap priority:** Swaps resolve and end the turn immediately (offense). If a counter is used (defense, Round 3), no swap occurs and the opponent’s turn ends.
@@ -252,7 +252,7 @@ This guide is your all-in-one, deeply detailed reference to play, teach, judge, 
 ## Training tools and judge guidance
 
 - **For teachers:**
-  - **Onboarding script:** "Numbers make money. Jacks put you on Alert; third Jack busts. Any Ace while on Alert busts. Queens remove one Jack and can disarm latent Aces. Kings double-and-bank, ending your turn. Jokers offer three choices: swap banks (if opponent has money), double-and-bank like a King, or remove a Jack like a Queen."
+  - **Onboarding script:** "Numbers make money. Jacks put you on Alert; third Jack on table busts. Any Ace while on Alert busts. Queens remove one Jack and can disarm latent Aces. Kings double-and-bank, ending your turn. Jokers offer three choices: swap banks (if opponent has money), double-and-bank like a King, or remove a Jack like a Queen."
   - **Table aids:** Use a die for Jacks-this-turn, a token for Alert, and a sideways card for Latent Aces.
 
 - **For judges:**
@@ -312,5 +312,5 @@ This guide is your all-in-one, deeply detailed reference to play, teach, judge, 
 - **King:** Double-and-bank Loot; end turn.
 - **Joker (ON):** R2 immediate on draw (swap/King/Queen); R3 to hand (offense: swap/King/Queen; defense: counter-swap).
 - **Hand limit:** 2 (Q/K/X).
-- **Busts:** Third Jack; Ace on Alert; latent-without-Queen; three latent Aces.
+- **Busts:** Third Jack on table; Ace on Alert; latent-without-Queen; three latent Aces on table.
 - **Ends:** Bankout: first to bank $1,000 wins round; first to 2 wins match. Blitz: highest total after 3 rounds; Sudden Death for ties.

@@ -8,12 +8,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **Third Jack and Three Latent Aces Bust Rules**: Updated to check based on total cards "on the table" rather than per-turn counting
+  - Third Jack bust now triggers when player has 3 Jacks on table (from any turn)
+  - Three Latent Aces bust now triggers when player has 3 Aces on table (from any turn)
+  - All documentation updated to reflect the correct rules
+
 ### Todo (Planned Features)
 - Comprehensive game flow test suite for regression testing
 - Mobile-responsive UI enhancements
 - Game statistics and analytics tracking
 - Multi-language support
 - Sound effects and audio enhancements
+
+## [1.1.1] - 2025-09-27
+
+### Fixed
+- **Third Jack Bust Condition**: Corrected implementation to trigger bust based on total Jacks "on the table" rather than per-turn count.
+- **Three Latent Aces Bust Condition**: Updated implementation to trigger bust based on total Aces "on the table" when drawing a third Ace off-alert.
+- **Documentation Synchronization**: Ensured all documentation files accurately reflect the "on the table" counting rules for bust conditions.
 
 ## [1.1.0] - 2025-09-27
 

@@ -95,7 +95,7 @@
     - **If you have a Queen in hand:** Auto-play one Queen (see Queen below).  
     - **If you do not have a Queen:** Bust immediately.
   - **Then apply Jack:** Jacks this turn += 1; set Alert = true.
-  - **Third Jack in the same turn:** Bust immediately.
+  - **Third Jack on the table:** Bust immediately.
 
 > Priority note: The latent trigger (and any auto-Queen) resolves before evaluating the “third Jack” bust, so the Queen’s -1 to Jacks this turn can prevent the third-Jack bust.
 
@@ -154,9 +154,10 @@
 
 ### Bust conditions
 
-- **Third Jack** in the same turn.  
-- **Any Ace drawn while on Alert.**  
+- **Third Jack** on the table.
+- **Any Ace drawn while on Alert.**
 - **Latent Ace triggered by a Jack when you have no Queen to auto-play.**
+- **Three Latent Aces** on the table.
 
 > Bust effect: Lose Loot (Bank unchanged), reset per-turn state, end your turn.
 
@@ -250,8 +251,8 @@ Playing from hand on your turn:
   - R2: on draw → swap (opp > 0), King effect, or Queen effect; swap and King end turn; Queen continues turn.
   - R3: to hand; offense = swap (opp > 0), King effect, or Queen effect; defense = counter (cancel swap; both Jokers discarded; opponent's turn ends).
 - **Hand limit:** Max 2 (Q/K/X).
-- **Bust:** Third Jack; Ace on Alert; latent-without-Queen; three latent Aces.
-- **Bankout win:** First to $1,000 wins the round; first to 2 rounds wins match.  
+- **Bust:** Third Jack on table; Ace on Alert; latent-without-Queen; three latent Aces on table.
+- **Bankout win:** First to $1,000 wins the round; first to 2 rounds wins match.
 - **Blitz win:** Highest cumulative after 3 rounds; if tied, Sudden Death (Numbers + Jacks).
 
 ---

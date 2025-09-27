@@ -29,7 +29,7 @@ This analysis is the next step after the ruleset and the guide. It digs into for
 Order matters; leverage hinges on it:
 
 1. Reveal card.
-2. Immediate bust checks: Ace while Alert; third Jack (subject to latent mitigation).
+2. Immediate bust checks: Ace while Alert; third Jack on table (subject to latent mitigation).
 3. Mandatory latent trigger on Jack:
    - If Latent > 0 and you have a Queen: auto-Queen resolves now.
    - Else: bust.
@@ -39,7 +39,7 @@ Order matters; leverage hinges on it:
 
 Implications:
 - A held Queen “front-loads” safety vs. both Ace-on-Alert and latent-trigger busts.
-- Auto-Queen can reduce JacksThisTurn before the “third Jack” resolves, preventing that bust. This is the single most valuable timing nuance in the system.
+- Auto-Queen can reduce JacksThisTurn before the "third Jack on table" resolves, preventing that bust. This is the single most valuable timing nuance in the system.
 
 ### 2.3 Tempo and initiative
 
