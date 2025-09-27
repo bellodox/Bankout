@@ -1150,8 +1150,11 @@ function drawCard(){
       } else {
         log(`Latent Ace triggered by Jack — no Queen in hand. BUST! Lost ${fmt(P.temp)}.`);
         P.temp = 0;
-        // Discard all on-table cards on bust
-        state.discard.push(...P.jacksOnTable, ...P.acesOnTable);
+        // Add all Jacks from jacksOnTable to drawnCards for proper logging
+        P.drawnCards.push(...P.jacksOnTable);
+        // Add all Aces from acesOnTable to drawnCards for proper logging
+        P.drawnCards.push(...P.acesOnTable);
+        // Clear on-table arrays (switchTurn will handle discarding)
         P.jacksOnTable = [];
         P.acesOnTable = [];
         switchTurn();
@@ -1163,8 +1166,9 @@ function drawCard(){
     if(P.jacksThisTurn>=3){
       log(`Third Jack — ${playerName} busts. Lost ${fmt(P.temp)}.`);
       P.temp = 0;
-      // Discard all on-table cards on bust
-      state.discard.push(...P.jacksOnTable, ...P.acesOnTable);
+      // Add all Jacks from jacksOnTable to drawnCards for proper logging
+      P.drawnCards.push(...P.jacksOnTable);
+      // Clear on-table arrays (switchTurn will handle discarding)
       P.jacksOnTable = [];
       P.acesOnTable = [];
       switchTurn();
@@ -1174,8 +1178,13 @@ function drawCard(){
     if(P.alert){
       log(`${playerName} drew Ace on alert — bust. Lost ${fmt(P.temp)}.`);
       P.temp = 0;
-      // Discard all on-table cards on bust
-      state.discard.push(...P.jacksOnTable, ...P.acesOnTable);
+      // Add all Jacks from jacksOnTable to drawnCards for proper logging
+      P.drawnCards.push(...P.jacksOnTable);
+      // Add all Aces from acesOnTable to drawnCards for proper logging
+      P.drawnCards.push(...P.acesOnTable);
+      // Add the Ace that caused the bust to drawnCards for proper logging
+      P.drawnCards.push(card);
+      // Clear on-table arrays (switchTurn will handle discarding)
       P.jacksOnTable = [];
       P.acesOnTable = [];
       switchTurn();
@@ -1184,8 +1193,13 @@ function drawCard(){
       if (P.acesOnTable.length === 2) {
         log(`${playerName} drew third latent Ace — bust. Lost ${fmt(P.temp)}.`);
         P.temp = 0;
-        // Discard all on-table cards on bust
-        state.discard.push(...P.jacksOnTable, ...P.acesOnTable);
+        // Add all Jacks from jacksOnTable to drawnCards for proper logging
+        P.drawnCards.push(...P.jacksOnTable);
+        // Add all Aces from acesOnTable to drawnCards for proper logging
+        P.drawnCards.push(...P.acesOnTable);
+        // Add the Ace that caused the bust to drawnCards for proper logging
+        P.drawnCards.push(card);
+        // Clear on-table arrays (switchTurn will handle discarding)
         P.jacksOnTable = [];
         P.acesOnTable = [];
         switchTurn();
