@@ -1,6 +1,6 @@
 # Bankout: A Game of Great Risk and Even Greater Reward
 **Copyright © 2025 VWN - All Rights Reserved**
-*PROPRIETARY SOFTWARE - NON-COMMERCIAL USE ONLY*
+*PROPRIETARY SOFTWARE - NON-COMMERCIAL USE ONLY* 
 
 ## ⚠️ INTELLECTUAL PROPERTY NOTICE
 This game and all its components are protected by multiple layers of intellectual property rights:
@@ -175,4 +175,5 @@ All contributions require:
 
 ---
 **WARNING: UNAUTHORIZED COMMERCIAL USE WILL RESULT IN LEGAL ACTION**
+
 *This game represents significant investment in design, development, and intellectual property protection. Respect the creators' rights.*
