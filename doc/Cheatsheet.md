@@ -24,9 +24,10 @@ Here’s a **table‑ready cheat sheet** for *Bankout*. It’s designed to be qu
 ---
 
 ## ⚠️ Bust Conditions
-- 3rd Jack in one turn  
-- Ace drawn while Alert = true  
-- Latent Ace triggered by Jack with no Queen  
+- 3rd Jack in one turn
+- Ace drawn while Alert = true
+- Latent Ace triggered by Jack with no Queen
+- Three Latent Aces (drawing third Ace while already having 2 latent Aces off Alert)
 
 **Bust = lose Temp, keep Bank, reset turn.**
 
@@ -56,10 +57,10 @@ Here’s a **table‑ready cheat sheet** for *Bankout*. It’s designed to be qu
 ---
 
 ## 🧮 Risk Math (Quick)
-- Avg Number ≈ $6  
-- Bust risk ≈ (Aces left / deck) + (if 2 Jacks already, Jacks left / deck)  
-- **Draw if:** Temp < ((1 − p_bust)/p_bust) × 6  
-- **Snap King if:** Temp ≥ 6 / p_bust  
+- Avg Number ≈ $6
+- Bust risk ≈ (Aces left / deck) + (if 2 Jacks already, Jacks left / deck) + (if 2 latent Aces already, Aces left / deck)
+- **Draw if:** Temp < ((1 − p_bust)/p_bust) × 6
+- **Snap King if:** Temp ≥ 6 / p_bust
 
 ---
 

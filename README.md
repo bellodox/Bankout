@@ -64,13 +64,13 @@ This game and all its components are protected by multiple layers of intellectua
 - **Latent Trigger**: Activates when Jack would establish alert
 
 ### Queens (Q) - "Decoy" Cards
-- **Hand Management**: Save to hand (max 3 cards)
+- **Hand Management**: Save to hand (max 2 cards)
 - **Effect**: Remove one Jack instance, clear alert if possible
 - **Auto-Play**: Mandatory when latent Ace triggered
 - **Visibility**: Hidden until played
 
 ### Kings (K) - "Insider" Cards
-- **Hand Management**: Save to hand (max 3 cards)  
+- **Hand Management**: Save to hand (max 2 cards)
 - **Effect**: Double current loot and bank immediately
 - **Turn Ends**: After playing
 - **Visibility**: Hidden until played
@@ -96,7 +96,7 @@ This game and all its components are protected by multiple layers of intellectua
 2. Immediate bust checks (Ace on alert, third Jack)
 3. Mandatory latent trigger (auto-Queen or bust)
 4. Apply card's normal effect
-5. Enforce hand limit (max 3 cards)
+5. Enforce hand limit (max 2 cards)
 6. Check turn/round end conditions
 
 ## 🏆 Victory Conditions

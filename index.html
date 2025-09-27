@@ -19,7 +19,7 @@ Unauthorized commercial use prohibited.
     --card:#1f2430;--btn:#21262d;--btn-h:#2b313a;--ok:#2ea043;
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--text);font:14px/1.4 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;}
+  body{margin:0;background:var(--bg);background-image: radial-gradient(circle at top left, rgba(57, 211, 83, 0.1), transparent 30%), radial-gradient(circle at bottom right, rgba(88, 166, 255, 0.1), transparent 30%);color:var(--text);font:14px/1.4 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;}
   .hidden { display: none !important; }
   header{padding:16px 20px;background:linear-gradient(90deg,#0f131a,#151b24);border-bottom:1px solid #202635}
   h1{margin:0;font-size:20px;letter-spacing:.3px}
@@ -27,14 +27,47 @@ Unauthorized commercial use prohibited.
   @media(min-width: 960px) {
     main { grid-template-columns: 320px 1fr; }
   }
-  .panel{background:var(--panel);border:1px solid #20283a;border-radius:10px;padding:12px; display: flex; flex-direction: column; gap: 12px;}
+  .panel{background:var(--panel);border:1px solid var(--accent);border-radius:10px;padding:12px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 0 20px rgba(57, 211, 83, 0.2);}
   .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
   .col{display:flex;flex-direction:column;gap:6px}
   .settings-col { gap: 1rem; margin-bottom: 1rem; }
   .settings-col label { font-weight: 600; }
-  .settings-col .row { background-color: var(--bg); padding: 8px; border-radius: 6px;}
+  .settings-col .row { background-color: transparent; padding: 0; border-radius: 6px;}
   label{font-size:12px;color:var(--muted); margin: 0;}
-  input[type="radio"] { margin-right: 4px; }
+  .settings-col .row {
+    display: flex;
+    gap: 8px;
+    background-color: transparent;
+    padding: 0;
+}
+
+.settings-col .row label {
+    background-color: var(--btn);
+    border: 1px solid #2a3140;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    flex: 1;
+    text-align: center;
+    font-weight: normal;
+}
+
+.settings-col .row label:hover {
+    background-color: var(--btn-h);
+    border-color: var(--accent);
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+.settings-col .row input[type="radio"]:checked + label {
+    background-color: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    font-weight: 600;
+}
   button{
     background:var(--btn);border:1px solid #2a3140;color:var(--text);padding:8px 10px;border-radius:8px; font-family: inherit; font-size: 14px;
   }
@@ -120,11 +153,47 @@ Unauthorized commercial use prohibited.
   .modal p { margin: 0 0 10px 0; color: var(--muted); }
   .modal .btnrow{display:flex;gap:10px;justify-content:flex-end;margin-top:10px}
 
-  .welcome-modal { text-align: center; padding: 2rem 2.5rem; }
-  .welcome-title { font-size: 2.5rem; font-weight: 700; color: #9e6a00; margin-bottom: 0.5rem; }
-  .welcome-text { font-size: 1rem; color: var(--muted); max-width: 40ch; margin: 0 auto 1rem auto; min-height: 6em; }
-  .welcome-divider { height: 1px; background: var(--panel-border); margin: 1.5rem auto; width: 80%; }
-  .start-heist-btn { font-size: 1.2rem !important; padding: 12px 24px !important; width: 100%; }
+  .welcome-modal { 
+    text-align: center; 
+    padding: 2.5rem 3rem; 
+    border: 1px solid var(--accent);
+    box-shadow: 0 0 20px rgba(57, 211, 83, 0.2);
+  }
+  .welcome-title { 
+    font-size: 3rem; 
+    font-weight: 700; 
+    color: var(--accent); 
+    margin-bottom: 1rem; 
+    text-shadow: 0 0 10px rgba(57, 211, 83, 0.5);
+  }
+  .welcome-text { 
+    font-size: 1rem; 
+    color: var(--muted); 
+    max-width: 45ch; 
+    margin: 0 auto 1.5rem auto; 
+    min-height: 6em; 
+  }
+  .welcome-divider { 
+    height: 1px; 
+    background: var(--accent); 
+    margin: 2rem auto; 
+    width: 60%; 
+    opacity: 0.5;
+  }
+  .start-heist-btn { 
+    font-size: 1.4rem !important; 
+    padding: 14px 28px !important; 
+    width: 100%;
+    transition: all 0.3s ease;
+    background-color: var(--accent) !important;
+    border-color: var(--accent) !important;
+    color: var(--bg) !important;
+  }
+  .start-heist-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(57, 211, 83, 0.3);
+    filter: brightness(1.1);
+  }
 </style>
 </head>
 <body>
@@ -139,22 +208,28 @@ Unauthorized commercial use prohibited.
         <div class="settings-col">
             <label>Format</label>
             <div class="row">
-                <label><input type="radio" name="welcome-mode" value="bankout" checked /> Bankout</label>
-                <label><input type="radio" name="welcome-mode" value="blitz" /> Blitz</label>
+                <input type="radio" id="welcome-mode-bankout" name="welcome-mode" value="bankout" checked />
+                <label for="welcome-mode-bankout">Bankout</label>
+                <input type="radio" id="welcome-mode-blitz" name="welcome-mode" value="blitz" />
+                <label for="welcome-mode-blitz">Blitz</label>
             </div>
         </div>
         <div class="settings-col">
             <label>Jokers</label>
             <div class="row">
-                <label><input type="radio" name="welcome-jokers" value="on" checked /> On</label>
-                <label><input type="radio" name="welcome-jokers" value="off" /> Off</label>
+                <input type="radio" id="welcome-jokers-on" name="welcome-jokers" value="on" checked />
+                <label for="welcome-jokers-on">On</label>
+                <input type="radio" id="welcome-jokers-off" name="welcome-jokers" value="off" />
+                <label for="welcome-jokers-off">Off</label>
             </div>
         </div>
         <div class="settings-col">
             <label>Game Mode</label>
             <div class="row">
-                <label><input type="radio" name="welcome-mode-type" value="pvp" checked /> Player A vs Player B</label>
-                <label><input type="radio" name="welcome-mode-type" value="ai" /> Player vs AI</label>
+                <input type="radio" id="welcome-mode-type-pvp" name="welcome-mode-type" value="pvp" checked />
+                <label for="welcome-mode-type-pvp">Player A vs Player B</label>
+                <input type="radio" id="welcome-mode-type-ai" name="welcome-mode-type" value="ai" />
+                <label for="welcome-mode-type-ai">Player vs AI</label>
             </div>
         </div>
         <div id="welcome-names-pvp" class="settings-col hidden">

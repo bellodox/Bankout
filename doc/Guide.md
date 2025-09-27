@@ -150,6 +150,7 @@ This guide is your all-in-one, deeply detailed reference to play, teach, judge, 
   - **Third Jack** in a single turn.
   - **Ace drawn while Alert = true.**
   - **Latent triggered on a Jack with no Queen available to auto-play.**
+  - **Three Latent Aces:** Drawing a third Ace while already having 2 latent Aces (off Alert).
 
 - **Bust effects:**
   - **Loot:** Lost (Bank unchanged).
@@ -190,9 +191,13 @@ This guide is your all-in-one, deeply detailed reference to play, teach, judge, 
     \[
     p_\text{thirdJ} \approx \frac{j}{N}.
     \]
+  - **Three-Latent-Aces risk:** If you have 2 latent Aces already and \(a\) Aces remain in \(N\) cards,
+    \[
+    p_\text{threeLatentAces} \approx \frac{a}{N}.
+    \]
   - **Combined next-draw bust risk (approx):**
     \[
-    p_\text{bust} \approx p_\text{Ace on Alert} + p_\text{thirdJ}.
+    p_\text{bust} \approx p_\text{Ace on Alert} + p_\text{thirdJ} + p_\text{threeLatentAces}.
     \]
 
 - **Draw-or-bank threshold (no King):**
@@ -306,6 +311,6 @@ This guide is your all-in-one, deeply detailed reference to play, teach, judge, 
 - **Queen:** -1 Jack; -1 Latent; clear Alert at 0; turn continues.
 - **King:** Double-and-bank Loot; end turn.
 - **Joker (ON):** R2 immediate on draw (swap/King/Queen); R3 to hand (offense: swap/King/Queen; defense: counter-swap).
-- **Hand limit:** 3 (Q/K/X).
-- **Busts:** Third Jack; Ace on Alert; latent-without-Queen.
+- **Hand limit:** 2 (Q/K/X).
+- **Busts:** Third Jack; Ace on Alert; latent-without-Queen; three latent Aces.
 - **Ends:** Bankout: first to bank $1,000 wins round; first to 2 wins match. Blitz: highest total after 3 rounds; Sudden Death for ties.
