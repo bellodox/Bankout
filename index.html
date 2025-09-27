@@ -1274,7 +1274,7 @@ function drawCard(){
   // Joker handling - different behavior based on round
   if (state.round === 2) {
     // Round 2: Joker resolves immediately with three-choice modal
-    log(`${playerName} drew Joker in Round 2 — resolving immediately.`);
+    log(`${playerName} drew Joker in Round 2 — resolving immediately. Joker discarded.`);
     
     const O = state.players[1 - state.active]; // Opponent
     
@@ -1310,7 +1310,7 @@ function drawCard(){
         // Swap banks
         const a = P.bank, b = O.bank;
         P.bank = b; O.bank = a;
-        log(`AI uses Round 2 Joker to swap banks.`);
+        log(`AI uses Round 2 Joker to swap banks. Joker discarded.`);
         resetTurnState(P);
         switchTurn();
       } else if (bestOption === kingValue) {
@@ -1323,7 +1323,7 @@ function drawCard(){
           state.totalPot += gain;
         }
         
-        log(`AI uses Round 2 Joker as King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends.`);
+        log(`AI uses Round 2 Joker as King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends. Joker discarded.`);
         P.temp = 0;
         resetTurnState(P);
         if (maybeEndRound()) return;
@@ -1333,11 +1333,11 @@ function drawCard(){
         if (P.alert && P.jacksThisTurn > 0) {
           P.jacksThisTurn = Math.max(0, P.jacksThisTurn - 1);
           if (P.jacksThisTurn === 0) P.alert = false;
-          log('AI uses Round 2 Joker as Queen to clear alert.');
+          log('AI uses Round 2 Joker as Queen to clear alert. Joker discarded.');
           render();
           setTimeout(aiTurn, 1000);
         } else {
-          log('AI uses Round 2 Joker as Queen (no alert to clear).');
+          log('AI uses Round 2 Joker as Queen (no alert to clear). Joker discarded.');
           render();
           setTimeout(aiTurn, 1000);
         }
@@ -1524,7 +1524,7 @@ function playJoker(){
       // Swap banks
       const a = P.bank, b = O.bank;
       P.bank = b; O.bank = a;
-      log(`AI uses Joker to swap banks.`);
+      log(`AI uses Joker to swap banks. Joker discarded.`);
       resetTurnState(P);
       switchTurn();
     } else if (bestOption === kingValue) {
@@ -1537,7 +1537,7 @@ function playJoker(){
         state.totalPot += gain;
       }
       
-      log(`AI uses Joker as King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends.`);
+      log(`AI uses Joker as King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends. Joker discarded.`);
       P.temp = 0;
       resetTurnState(P);
       if (maybeEndRound()) return;
@@ -1547,11 +1547,11 @@ function playJoker(){
       if (P.alert && P.jacksThisTurn > 0) {
         P.jacksThisTurn = Math.max(0, P.jacksThisTurn - 1);
         if (P.jacksThisTurn === 0) P.alert = false;
-        log('AI uses Joker as Queen to clear alert.');
+        log('AI uses Joker as Queen to clear alert. Joker discarded.');
         render();
         setTimeout(aiTurn, 1000);
       } else {
-        log('AI uses Joker as Queen (no alert to clear).');
+        log('AI uses Joker as Queen (no alert to clear). Joker discarded.');
         render();
         setTimeout(aiTurn, 1000);
       }
@@ -1567,7 +1567,7 @@ el.wildQueenBtn.addEventListener('click', ()=>{
   if(P.alert && P.jacksThisTurn>0){
     P.jacksThisTurn = Math.max(0,P.jacksThisTurn-1);
     if(P.jacksThisTurn===0){ P.alert=false; }
-    log(`Joker wild — Queen: alert reduced.`);
+    log(`Joker wild — Queen: alert reduced. Joker discarded.`);
   } else {
     log(`Joker wild — Queen: no alert to clear.`);
   }
@@ -1587,7 +1587,7 @@ el.wildKingBtn.addEventListener('click', ()=>{
     state.totalPot += gain;
   }
   
-  log(`Joker wild — King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends.`);
+  log(`Joker wild — King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends. Joker discarded.`);
   P.temp = 0;
   resetTurnState(P);
   state.pendingWild = null;
@@ -1624,7 +1624,7 @@ el.interpretKingBtn.addEventListener('click', ()=>{
     state.totalPot += gain;
   }
   
-  log(`Joker interpreted as King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends.`);
+  log(`Joker interpreted as King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends. Joker discarded.`);
   P.temp = 0;
   resetTurnState(P);
   state.pendingInterpret = null;
@@ -1640,9 +1640,9 @@ el.interpretQueenBtn.addEventListener('click', ()=>{
   if(P.alert && P.jacksThisTurn>0){
     P.jacksThisTurn = Math.max(0,P.jacksThisTurn-1);
     if(P.jacksThisTurn===0){ P.alert=false; }
-    log(`Joker interpreted as Queen: alert reduced.`);
+    log(`Joker interpreted as Queen: alert reduced. Joker discarded.`);
   } else {
-    log(`Joker interpreted as Queen: no alert to clear.`);
+    log(`Joker interpreted as Queen: no alert to clear. Joker discarded.`);
   }
   state.pendingInterpret = null;
   closeModal('jokerInterpretModal');
@@ -1655,7 +1655,7 @@ el.counterNoBtn.addEventListener('click', ()=>{
   const O = state.players[state.pendingCounter.defenderIdx];
   const a = P.bank, b = O.bank;
   P.bank = b; O.bank = a;
-  log(`Joker swap resolves — banks swapped.`);
+  log(`Joker swap resolves — banks swapped. Joker discarded.`);
   state.pendingCounter = null;
   closeModal('counterModal');
   switchTurn();
@@ -1668,7 +1668,7 @@ el.jokerSwapBtn.addEventListener('click', ()=>{
   const O = state.players[state.pendingInterpret.defenderIdx];
   const a = P.bank, b = O.bank;
   P.bank = b; O.bank = a;
-  log(`Joker — swapped banks. Turn ends.`);
+  log(`Joker — swapped banks. Turn ends. Joker discarded.`);
   state.pendingInterpret = null;
   closeModal('jokerChoiceModal');
   resetTurnState(P);
@@ -1687,7 +1687,7 @@ el.jokerKingBtn.addEventListener('click', ()=>{
     state.totalPot += gain;
   }
   
-  log(`Joker interpreted as King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends.`);
+  log(`Joker interpreted as King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends. Joker discarded.`);
   P.temp = 0;
   state.pendingInterpret = null;
   closeModal('jokerChoiceModal');
@@ -1703,9 +1703,9 @@ el.jokerQueenBtn.addEventListener('click', ()=>{
   if(P.alert && P.jacksThisTurn>0){
     P.jacksThisTurn = Math.max(0,P.jacksThisTurn-1);
     if(P.jacksThisTurn===0){ P.alert=false; }
-    log(`Joker interpreted as Queen: alert reduced.`);
+    log(`Joker interpreted as Queen: alert reduced. Joker discarded.`);
   } else {
-    log(`Joker interpreted as Queen: no alert to clear.`);
+    log(`Joker interpreted as Queen: no alert to clear. Joker discarded.`);
   }
   state.pendingInterpret = null;
   closeModal('jokerChoiceModal');
