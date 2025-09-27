@@ -44,18 +44,18 @@
 - **Bank:** Secured points this round.  
 - **Loot:** Unbanked points earned this turn.  
 - **Hand:** Holds only Queens, Kings, and (in Round 3) Jokers.  
-- **Alert:** Active after drawing at least one Jack this turn.  
-- **Jacks this turn:** Count of Jacks drawn this turn.  
-- **Latent Aces:** Count of Aces drawn off-alert that “arm” a pending danger.
+- **Alert:** Active when Jacks are present on the table.
+- **Jacks this turn:** Count of Jacks drawn this turn.
+- **Latent Aces:** Aces drawn off-alert that remain on the table as visual cues, "arming" a pending danger.
 
 ### Hand limit
 
-- **Limit:** Maximum of 3 cards in hand (Q, K, X only).  
-- **Enforcement:** If adding a card would push you above 3, immediately choose which card(s) to discard back to 3. If no choice is made (e.g., timer/invalid), discard by pre-agreed default (commonly the oldest).
+- **Limit:** Maximum of 2 cards in hand (Q, K, X only).
+- **Enforcement:** If adding a card would push you above 2, immediately choose which card(s) to discard back to 2. If no choice is made (e.g., timer/invalid), discard by pre-agreed default (commally the oldest).
 
 ### Discard and reshuffle
 
-- **Discard:** All resolved cards go to a common discard pile.  
+- **Discard:** All resolved cards go to a common discard pile. Jacks and Aces remain on the table as visual cues until resolved by a Queen or bust.
 - **Reshuffle:** When the deck empties, shuffle the discard to form a new deck and continue.
 
 ---
@@ -76,8 +76,8 @@
 
 ### Turn ends when
 
-- **You bank**, or you **bust**, or you **play a King**, or you **resolve a Joker that ends the turn** (swap or wild-King), or you **voluntarily end**.  
-- **On end/bust:** Reset per-turn states (Loot, Alert, Jacks this turn, Latent) and pass play.
+- **You bank**, or you **bust**, or you **play a King**, or you **resolve a Joker that ends the turn** (swap or wild-King), or you **voluntarily end**.
+- **On end/bust:** Reset per-turn states (Loot, Jacks this turn) and pass play. Jacks and Aces remain on the table as visual cues until resolved by a Queen or bust.
 
 ---
 
@@ -162,7 +162,8 @@
 
 ### Visibility
 
-- **Public on draw:** Numbers, Jacks, Aces, Jokers (and all visible totals).  
+- **Public on draw:** Numbers, Jacks, Aces, Jokers (and all visible totals).
+- **Persistent visual cues:** Jacks and Aces remain on the table as visual cues until resolved.
 - **Hidden until played:** Queens, Kings, and (Round 3) Jokers in hand.
 
 ---
@@ -202,7 +203,7 @@ When you draw a card, resolve in this order:
    - Auto-Queen’s -1 to Jacks this turn can prevent a third-Jack bust.  
 4. **Apply the card’s normal effect:**  
    - Numbers add to Loot; Queens/Kings to hand; Jokers resolve per round (R2 immediate; R3 to hand).  
-5. **Enforce hand limit:** If hand > 3, choose discards to return to 3.  
+5. **Enforce hand limit:** If hand > 2, choose discards to return to 2.
 6. **Check turn/round ends:**  
    - King and Joker swap/wild-King end turn; banking ends turn.  
    - Check Bankout/Blitz thresholds as applicable.
@@ -248,8 +249,8 @@ Playing from hand on your turn:
   - R1: none.  
   - R2: on draw → swap (opp > 0), King effect, or Queen effect; swap and King end turn; Queen continues turn.
   - R3: to hand; offense = swap (opp > 0), King effect, or Queen effect; defense = counter (cancel swap; both Jokers discarded; opponent's turn ends).
-- **Hand limit:** Max 3 (Q/K/X).  
-- **Bust:** Third Jack; Ace on Alert; latent-without-Queen.  
+- **Hand limit:** Max 2 (Q/K/X).
+- **Bust:** Third Jack; Ace on Alert; latent-without-Queen; three latent Aces.
 - **Bankout win:** First to $1,000 wins the round; first to 2 rounds wins match.  
 - **Blitz win:** Highest cumulative after 3 rounds; if tied, Sudden Death (Numbers + Jacks).
 

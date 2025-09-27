@@ -7,9 +7,9 @@ This analysis is the next step after the ruleset and the guide. It digs into for
 ## 1) Design aims and strategic texture
 
 - **Core tension:** Convert volatile, compounding Loot into secure Bank while navigating Alert/Latent traps and swingy Jokers. The decision density lives in timing (draw/bank/Queen/King/Joker), not rules complexity.
-- **Skill expression:** 
-  - Micro: Priority windows (auto-Queen, wild-Queen), precise thresholds, hand limit management.
-  - Macro: Tempo control, target setting, opponent denial (anti-wild, anti-King windows), Round 3 Joker mind games.
+- **Skill expression:**
+  - Micro: Priority windows (auto-Queen, wild-Queen), precise thresholds, hand limit management (now more critical with 2-card limit).
+  - Macro: Tempo control, target setting, opponent denial (anti-wild, anti-King windows), Round 3 Joker mind games, resource prioritization under tighter constraints.
 - **Distinct metas:** 
   - Bankout emphasizes windows and race math to $1,000.
   - Blitz emphasizes scoreboard management across three rounds (risk budgeting, variance control).
@@ -21,7 +21,7 @@ This analysis is the next step after the ruleset and the guide. It digs into for
 
 ### 2.1 State variables (per player)
 
-- Bank; Loot; Hand ∈ {Q, K, X} (max 3); Alert ∈ {0,1}; JacksThisTurn ∈ ℕ; Latent ∈ ℕ.
+- Bank; Loot; Hand ∈ {Q, K, X} (max 2); Alert ∈ {0,1}; JacksThisTurn ∈ ℕ; Latent ∈ ℕ.
 - All reset per-turn except Bank/Hand.
 
 ### 2.2 Priority stack on draw
@@ -58,8 +58,9 @@ Use estimates as directional tools; refine with visible counts.
 - Early-deck bust components:
   - Ace-on-Alert: with 4 Aces in N cards, p ≈ 4/N.
   - Third Jack: with j Jacks left and you already have 2 this turn, p ≈ j/N.
-  - Next-draw bust risk (approx): p_bust ≈ p_Ace_on_Alert + p_thirdJack.
-  - Queens reduce p_bust largely by removing the Ace-on-Alert channel (by clearing Alert on trigger).
+  - Three Latent Aces: with a Aces left and you already have 2 latent Aces, p ≈ a/N.
+  - Next-draw bust risk (approx): p_bust ≈ p_Ace_on_Alert + p_thirdJack + p_threeLatentAces.
+  - Queens reduce p_bust largely by removing the Ace-on-Alert channel (by clearing Alert on trigger) and by clearing latent Aces (via Jack triggers).
 
 ### 3.2 Draw-or-bank threshold (no King)
 
@@ -82,8 +83,9 @@ Use:
 
 ### 3.4 Latent management value
 
-- Each Queen in hand is roughly “one saved bust and a safety draw window,” especially under latent.
-- Holding >1 Queen can turn long runs from gambles into controlled advances—beware hand limit squeezing out Kings/Jokers.
+- Each Queen in hand is roughly "one saved bust and a safety draw window," especially under latent.
+- Holding >1 Queen becomes extremely valuable but rare—beware hand limit squeezing out Kings/Jokers in the tighter 2-card constraint.
+- The "Three Latent Aces" bust rule increases the importance of Queen management, as Queens are the only way to clear latent Aces (via Jack triggers) and prevent this new bust condition.
 
 ---
 
@@ -150,6 +152,8 @@ Heuristics:
   - You’re safer: auto-Queen disarms; continue to grow L, but mind hand limit.
 - Latent > 0, no Queen:
   - Treat next Jack as near-certain bust; bank/King now unless L is very low and deck is Jack-light.
+- Two Latent Aces:
+  - Treat next Ace as near-certain bust (Three Latent Aces rule); bank/King now or play Queen if available to reduce latent count.
 
 ### 7.2 Endgame patterns (Bankout)
 
@@ -166,7 +170,7 @@ Heuristics:
 
 ## 8) Hand-limit management and sequencing
 
-- Avoid clogging with triple-Queens if a King is likely valuable; but two Queens plus one King is a premium posture.
+- Avoid clogging with dual-Queens if a King is likely valuable; Queen + King is the premium posture.
 - After drawing Q/K/X in R3, immediately evaluate which card is least pivotal for your plan; precommit discard priorities to avoid time loss.
 - Typical priority: Keep one Queen if Latent is possible; keep King if L is close to snap threshold; keep Joker if R3 and you’re ahead (defense) or behind (offense).
 
@@ -174,11 +178,14 @@ Heuristics:
 
 ## 9) Common misplays and how to fix them
 
-- Holding King “too long”: If L has crossed 6/p_bust, snap King—greed loses more Loot than it gains.
-- Burning Queen reactively only: Learn proactive clears when L is high; safe windows are worth more than saving Queens for “maybe later.”
-- Ignoring deny-wild: Leaving opponent at $0 into a Joker-rich phase is how games flip.
-- Overdrawing under Latent without Queen: Treat it as a loaded trap—bank/King unless counts are extraordinarily favorable.
-- R3 swap without mapping counter: Blind swaps can hand tempo to a defended opponent; confirm they’re hand-empty or force the counter when it still benefits you (e.g., to end their turn).
+- **Holding King "too long":** With tighter hand constraints, snap King decisions become more urgent—delaying risks hand clogging.
+- **Queen management:** Proactive Queen play becomes essential—you can't afford to hold multiple Queens "just in case" with only 2 slots.
+- **Ignoring deny-wild:** Critical in 2-card meta—leaving opponent at $0 prevents devastating Joker swaps.
+- **Overdrawing under Latent:** Extremely dangerous with reduced Queen safety net—treat as near-certain bust without Queen protection.
+- **Accumulating Latent Aces:** With the "Three Latent Aces" rule, drawing multiple Aces becomes a direct bust risk. Avoid reaching two latent Aces without a plan to clear them.
+- **R3 Joker play:** Requires precise timing—blind swaps can be catastrophic with limited defensive options.
+- **New pitfall: Hand clogging:** Getting stuck with suboptimal card combinations that prevent drawing valuable new cards.
+- **Resource chicken:** With only 2 slots, the cost of holding a Joker for defense becomes much higher—may need to play it proactively.
 
 ---
 
@@ -188,14 +195,16 @@ Heuristics:
 
 - Drill 1 (Alert discipline): Simulate 10 draws with 2–3 Jacks preset; ask when to bank versus draw using p_bust estimates.
 - Drill 2 (Latent timing): Set Latent = 1; practice auto-Queen windows on Jack reveals.
-- Drill 3 (King thresholds): Give L and p_bust; ask “draw or King?” across 12 scenarios.
-- Drill 4 (R3 Counter Joker): Roleplay offense vs. defense; evaluate when ending the opponent’s turn via counter is better than keeping your Joker.
+- Drill 2a (Three Latent Aces): Set Latent = 2; practice decision-making when facing potential Three Latent Aces bust.
+- Drill 3 (King thresholds): Give L and p_bust; ask "draw or King?" across 12 scenarios.
+- Drill 4 (R3 Counter Joker): Roleplay offense vs. defense; evaluate when ending the opponent's turn via counter is better than keeping your Joker.
 
 ### 10.2 Coaching cues
 
 - “What ends your turn profitably right now?” (King/bank vs. hope)
 - “Are you denying their best Joker line?” (Anti-wild, counter held)
-- “What’s p_bust next draw?” (Name it, decide with threshold)
+- "What's p_bust next draw?" (Name it, decide with threshold)
+- "How many latent Aces do I have?" (Critical for Three Latent Aces risk assessment)
 
 ---
 
@@ -204,7 +213,7 @@ Heuristics:
 - Priority rulings:
   - On Jack with Latent > 0: auto-Queen is mandatory if available; it resolves before third-Jack bust.
   - Wild choice is immediate; no number substitute.
-- Hand-limit infractions: Remedy to 3 cards with minimal info gain (oldest/random by event policy). Repeated offense → penalties.
+- Hand-limit infractions: Remedy to 2 cards with minimal info gain (oldest/random by event policy). Repeated offense → penalties.
 - Slow play: Use consistent decision windows; escalate from reminders to warnings.
 - Communication: Players must announce Alert state and JacksThisTurn when asked; Queens/Kings/Jokers stay hidden until played.
 
@@ -230,7 +239,7 @@ Impact rule of thumb:
 
 - States: A(n) = Aces remaining; J(n) = Jacks remaining; N = cards remaining; JT = JacksThisTurn; LA = Latent; QH = #Queens in hand.
 - Short EV checks:
-  - p_Ace ≈ A(n)/N; p_3rdJ ≈ (JT ≥ 2 ? J(n)/N : 0); p_bust ≈ p_Ace + p_3rdJ.
+  - p_Ace ≈ A(n)/N; p_3rdJ ≈ (JT ≥ 2 ? J(n)/N : 0); p_threeLatentAces ≈ (LA ≥ 2 ? A(n)/N : 0); p_bust ≈ p_Ace + p_3rdJ + p_threeLatentAces.
   - Draw if L < ((1 − p_bust)/p_bust)·E[Number]; snap King if L ≥ E[Number]/p_bust.
 
 ---
@@ -246,9 +255,10 @@ Impact rule of thumb:
 
 ## 15) Final checklist before each draw
 
-- What’s p_bust now? (Ace-on-Alert + third-Jack)
+- What's p_bust now? (Ace-on-Alert + third-Jack + three-latent-Aces)
+- How many latent Aces do I have? (Critical for Three Latent Aces risk)
 - Do I hold Queen? If Latent triggers, am I safe?
 - Is L at bank or snap-King threshold?
 - Does a small bank deny their wild Joker?
-- If I draw a hand card, who gets squeezed by the 3-card limit?
+- If I draw a hand card, who gets squeezed by the 2-card limit?
 - If I pass the turn, do I pass initiative or force theirs to end (via counter/wild denial)?

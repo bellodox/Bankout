@@ -18,69 +18,347 @@ Unauthorized commercial use prohibited.
     --bg:#0e1116;--panel:#161b22;--muted:#8b949e;--text:#e6edf3;--accent:#39d353;--danger:#ff6b6b;--warn:#e3b341;--info:#58a6ff;
     --card:#1f2430;--btn:#21262d;--btn-h:#2b313a;--ok:#2ea043;
   }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--text);font:14px/1.4 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;}
+  *{
+    box-sizing:border-box
+  }
+  body{
+    margin:0;
+    background:var(--bg);
+    background-image: radial-gradient(circle at top left, rgba(57, 211, 83, 0.1), transparent 30%), radial-gradient(circle at bottom right, rgba(88, 166, 255, 0.1), transparent 30%);
+    color:var(--text);
+    font:14px/1.4 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
   .hidden { display: none !important; }
-  header{padding:16px 20px;background:linear-gradient(90deg,#0f131a,#151b24);border-bottom:1px solid #202635}
-  h1{margin:0;font-size:20px;letter-spacing:.3px}
-  main{max-width:1200px;margin:0 auto;padding:16px;display:grid;gap:16px;grid-template-columns:1fr;}
+  header{
+    padding:16px 20px;
+    background:linear-gradient(90deg,#0f131a,#151b24);
+    border-bottom:1px solid #202635
+  }
+  h1{
+    margin:0;
+    font-size:20px;
+    letter-spacing:.3px
+  }
+  main{
+    max-width:1200px;
+    margin:0 auto;
+    padding:16px;
+    display:grid;
+    gap:16px;
+    grid-template-columns:1fr;
+  }
   @media(min-width: 960px) {
     main { grid-template-columns: 320px 1fr; }
   }
-  .panel{background:var(--panel);border:1px solid #20283a;border-radius:10px;padding:12px; display: flex; flex-direction: column; gap: 12px;}
-  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  .col{display:flex;flex-direction:column;gap:6px}
-  .settings-col { gap: 1rem; margin-bottom: 1rem; }
-  .settings-col label { font-weight: 600; }
-  .settings-col .row { background-color: var(--bg); padding: 8px; border-radius: 6px;}
-  label{font-size:12px;color:var(--muted); margin: 0;}
-  input[type="radio"] { margin-right: 4px; }
-  button{
-    background:var(--btn);border:1px solid #2a3140;color:var(--text);padding:8px 10px;border-radius:8px; font-family: inherit; font-size: 14px;
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--accent);
+    border-radius:10px;
+    padding:12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 0 20px rgba(57, 211, 83, 0.2);
   }
-  button{cursor:pointer}
-  button:hover:not(:disabled){background:var(--btn-h)}
-  button:disabled { opacity: 0.5; cursor: not-allowed; }
-  button.primary{background:#1f6feb;border-color:#2b7cec}
-  button.primary:hover:not(:disabled){background:#2a7bf7}
-  button.good{background:var(--ok);border-color:#319c54}
-  button.good:hover:not(:disabled){filter:brightness(1.05)}
-  button.warn{background:#9e6a00;border-color:#c58900}
-  button.warn:hover:not(:disabled){filter:brightness(1.05)}
-  button.danger{background:#b11;border-color:#d33}
-  button.danger:hover:not(:disabled){filter:brightness(1.05)}
-  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-  .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;border:1px solid #2a3140;background:#1a1f2a;color:var(--muted)}
-  .badge.ok{color:#98ffa7;border-color:#2a5; background:#142017}
-  .badge.warn{color:#ffd58a;border-color:#a70;background:#261a00}
-  .badge.danger{color:#ffb3b3;border-color:#b33;background:#2a1111}
-  #alertBadge, #jacksBadge, #latentBadge { flex: 1; min-width: 110px; text-align: center; }
-  .kpi{display:flex;flex-wrap:wrap;justify-content:space-around;gap:12px;padding:10px;border:1px dashed #2a3140;border-radius:8px; align-items: stretch;}
-  .kpi > div { flex: 1; min-width: 80px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
-  .kpi strong{font-size:16px}
-  .log{height:260px;overflow:auto;background:#0f131a;border:1px solid #20283a;border-radius:8px;padding:8px;font-family:'Roboto Mono', monospace; font-size: 13px;}
-  .log p{margin:0 0 6px}
-  .cardbar{display:flex;gap:6px;flex-wrap:wrap}
-  .chip{padding:4px 10px;border-radius:999px;border:1px solid #2a3140;background:var(--card);font-size:12px}
-  .chip.info{border-color:#2a5fb3}
-  .chip.good{border-color:#2a5; background:#142017; color:#98ffa7}
-  .chip.danger{border-color:#b33; background:#2a1111; color:#ffb3b3}
-  .chip.warn{border-color:#a70; background:#261a00; color:#ffd58a}
-  .chip.queen{border-color:#7a3bd1}
-  .chip.king{border-color:#d19a3b}
-  .chip.joker{border-color:#3bd16b}
-  .chip.muted{opacity:0.6}
-  .spacer{height:6px}
-  .footer{color:var(--muted);font-size:12px;text-align:center;padding:10px}
-  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  .row{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    align-items:center
+  }
+  .col{
+    display:flex;
+    flex-direction:column;
+    gap:10px
+  }
+  .settings-col {
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .settings-col > label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
+    text-align: left;
+  }
+  .settings-col .row {
+    display: flex;
+    gap: 8px;
+    background-color: transparent;
+    padding: 0;
+    border-radius: 6px;
+  }
+  .settings-col .row label{
+    font-size:12px;
+    color:var(--muted);
+    margin: 0;
+    background-color: var(--btn);
+    border: 1px solid #2a3140;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    flex: 1;
+    text-align: center;
+    font-weight: normal;
+  }
+  .settings-col .row label:hover {
+    background-color: var(--btn-h);
+    border-color: var(--accent);
+  }
+  input[type="radio"] {
+    display: none;
+  }
+  .settings-col .row input[type="radio"]:checked + label {
+    background-color: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+  button{
+    background:var(--btn);
+    border:1px solid #2a3140;
+    color:var(--text);
+    padding:8px 10px;
+    border-radius:8px;
+    font-family: inherit;
+    font-size: 14px;
+  }
+  button{
+    cursor:pointer
+  }
+  button:hover:not(:disabled){
+    background:var(--btn-h)
+  }
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  button.primary{
+    background:var(--accent);
+    border-color:var(--accent);
+    color: var(--bg);
+  }
+  button.primary:hover:not(:disabled){
+    filter:brightness(1.1);
+  }
+  input[type="text"] {
+    background-color: var(--bg);
+    border: 1px solid #2a3140;
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 1rem;
+    width: 100%;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+  input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 10px rgba(57, 211, 83, 0.3);
+  }
+  .new-heist-btn {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+  }
+  .new-heist-btn:hover {
+    filter: brightness(1.1);
+  }
+  button.good{
+    background:var(--ok);
+    border-color:#319c54
+  }
+  button.good:hover:not(:disabled){
+    filter:brightness(1.05)
+  }
+  button.warn{
+    background:#9e6a00;
+    border-color:#c58900
+  }
+  button.warn:hover:not(:disabled){
+    filter:brightness(1.05)
+  }
+  button.danger{
+    background:#b11;
+    border-color:#d33
+  }
+  button.danger:hover:not(:disabled){
+    filter:brightness(1.05)
+  }
+  .grid-2{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px
+  }
+  .grid-3{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px
+  }
+  .badge{
+    display:inline-block;
+    padding:2px 8px;
+    border-radius:999px;
+    font-size:12px;
+    border:1px solid #2a3140;
+    background:#1a1f2a;
+    color:var(--muted)
+  }
+  .badge.ok{
+    color:#98ffa7;
+    border-color:#2a5;
+    background:#142017
+  }
+  .badge.warn{
+    color:#ffd58a;
+    border-color:#a70;
+    background:#261a00
+  }
+  .badge.danger{
+    color:#ffb3b3;
+    border-color:#b33;
+    background:#2a1111
+  }
+  #alertBadge, #jacksBadge, #latentBadge {
+    flex: 1;
+    min-width: 110px;
+    text-align: center;
+  }
+  .row .badge + .cardbar {
+    margin-left: 4px;
+    margin-right: 8px;
+  }
+  .col > .row:not(:last-child) {
+    padding-bottom: 8px;
+  }
+  .kpi{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:space-around;
+    gap:12px;
+    padding:10px;
+    border:1px dashed #2a3140;
+    border-radius:8px;
+    align-items: stretch;
+  }
+  .kpi > div {
+    flex: 1;
+    min-width: 80px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .kpi strong{
+    font-size:16px
+  }
+  .log{
+    height:260px;
+    overflow:auto;
+    background:#0f131a;
+    border:1px solid #20283a;
+    border-radius:8px;
+    padding:8px;
+    font-family:'Roboto Mono', monospace;
+    font-size: 13px;
+  }
+  .log p{
+    margin:0 0 6px
+  }
+  .cardbar{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    min-height: 28px;
+  }
+  .chip{
+    padding:4px 10px;
+    border-radius:999px;
+    border:1px solid #2a3140;
+    background:var(--card);
+    font-size:12px
+  }
+  .chip.info{
+    border-color:#2a5fb3
+  }
+  .chip.good{
+    border-color:#2a5;
+    background:#142017;
+    color:#98ffa7
+  }
+  .chip.danger{
+    border-color:#b33;
+    background:#2a1111;
+    color:#ffb3b3
+  }
+  .chip.warn{
+    border-color:#a70;
+    background:#261a00;
+    color:#ffd58a
+  }
+  .chip.queen{
+    border-color:#7a3bd1
+  }
+  .chip.king{
+    border-color:#d19a3b
+  }
+  .chip.joker{
+    border-color:#3bd16b
+  }
+  .chip.muted{
+    opacity:0.6
+  }
+  .spacer{
+    height:6px
+  }
+  .footer{
+    color:var(--muted);
+    font-size:12px;
+    text-align:center;
+    padding:10px
+  }
+  .sr-only{
+    position:absolute;
+    width:1px;
+    height:1px;
+    padding:0;
+    margin:-1px;
+    overflow:hidden;
+    clip:rect(0,0,0,0);
+    white-space:nowrap;
+    border:0
+  }
 
-  .game-board-area { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; text-align: center; }
-  .card-display { min-height: 140px; background: var(--bg); border-radius: 8px; padding: 8px; display: flex; align-items: center; justify-content: center; }
+  .game-board-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    text-align: center;
+  }
+  .card-display {
+    min-height: 140px;
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   .card {
-      background-color: var(--card); border: 1px solid #2a3140; border-radius: 10px; width: 90px; height: 125px;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-      font-weight: 600; font-size: 1.5em; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      background-color: var(--card);
+      border: 1px solid #2a3140;
+      border-radius: 10px;
+      width: 90px;
+      height: 125px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-weight: 600;
+      font-size: 1.5em;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
       transition: transform 0.3s, box-shadow 0.3s;
       position: relative;
   }
@@ -106,23 +384,85 @@ Unauthorized commercial use prohibited.
   }
 
   .modal-backdrop{
-    position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:9999; opacity: 0; transition: opacity 0.3s;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.6);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+    opacity: 0;
+    transition: opacity 0.3s;
   }
   .modal-backdrop.visible { display: flex; opacity: 1; }
   .modal{
-    background:#0f131a;border:1px solid #2a3140;border-radius:10px;max-width:460px;width:92%;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,0.5);
-    transform: scale(0.95); transition: transform 0.3s;
+    background:#0f131a;
+    border:1px solid #2a3140;
+    border-radius:10px;
+    max-width:460px;
+    width:92%;
+    padding:14px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.5);
+    transform: scale(0.95);
+    transition: transform 0.3s;
   }
   .modal-backdrop.visible .modal { transform: scale(1); }
-  .modal h2{margin:0 0 8px 0;font-size:16px}
-  .modal p { margin: 0 0 10px 0; color: var(--muted); }
-  .modal .btnrow{display:flex;gap:10px;justify-content:flex-end;margin-top:10px}
+  .modal h2{
+    margin:0 0 8px 0;
+    font-size:16px
+  }
+  .modal p {
+    margin: 0 0 10px 0;
+    color: var(--muted);
+  }
+  .modal .btnrow{
+    display:flex;
+    gap:10px;
+    justify-content:flex-end;
+    margin-top:10px
+  }
 
-  .welcome-modal { text-align: center; padding: 2rem 2.5rem; }
-  .welcome-title { font-size: 2.5rem; font-weight: 700; color: var(--accent); margin-bottom: 0.5rem; }
-  .welcome-text { font-size: 1rem; color: var(--muted); max-width: 40ch; margin: 0 auto 1rem auto; min-height: 6em; }
-  .welcome-divider { height: 1px; background: var(--panel-border); margin: 1.5rem auto; width: 80%; }
-  .start-heist-btn { font-size: 1.2rem !important; padding: 12px 24px !important; width: 100%; }
+  .welcome-modal {
+    text-align: center;
+    padding: 2.5rem 3rem;
+    border: 1px solid var(--accent);
+    box-shadow: 0 0 20px rgba(57, 211, 83, 0.2);
+  }
+  .welcome-title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    text-shadow: 0 0 10px rgba(57, 211, 83, 0.5);
+  }
+  .welcome-text {
+    font-size: 1rem;
+    color: var(--muted);
+    max-width: 45ch;
+    margin: 0 auto 1.5rem auto;
+    min-height: 6em;
+  }
+  .welcome-divider {
+    height: 1px;
+    background: var(--accent);
+    margin: 2rem auto;
+    width: 60%;
+    opacity: 0.5;
+  }
+  .start-heist-btn {
+    font-size: 1.4rem !important;
+    padding: 14px 28px !important;
+    width: 100%;
+    transition: all 0.3s ease;
+    background-color: var(--accent) !important;
+    border-color: var(--accent) !important;
+    color: var(--bg) !important;
+  }
+  .start-heist-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(57, 211, 83, 0.3);
+    filter: brightness(1.1);
+  }
 </style>
 </head>
 <body>
@@ -137,22 +477,28 @@ Unauthorized commercial use prohibited.
         <div class="settings-col">
             <label>Format</label>
             <div class="row">
-                <label><input type="radio" name="welcome-mode" value="bankout" checked /> Bankout</label>
-                <label><input type="radio" name="welcome-mode" value="blitz" /> Blitz</label>
+                <input type="radio" id="welcome-mode-bankout" name="welcome-mode" value="bankout" checked />
+                <label for="welcome-mode-bankout">Bankout</label>
+                <input type="radio" id="welcome-mode-blitz" name="welcome-mode" value="blitz" />
+                <label for="welcome-mode-blitz">Blitz</label>
             </div>
         </div>
         <div class="settings-col">
             <label>Jokers</label>
             <div class="row">
-                <label><input type="radio" name="welcome-jokers" value="on" checked /> On</label>
-                <label><input type="radio" name="welcome-jokers" value="off" /> Off</label>
+                <input type="radio" id="welcome-jokers-on" name="welcome-jokers" value="on" checked />
+                <label for="welcome-jokers-on">On</label>
+                <input type="radio" id="welcome-jokers-off" name="welcome-jokers" value="off" />
+                <label for="welcome-jokers-off">Off</label>
             </div>
         </div>
         <div class="settings-col">
             <label>Game Mode</label>
             <div class="row">
-                <label><input type="radio" name="welcome-mode-type" value="pvp" checked /> Player A vs Player B</label>
-                <label><input type="radio" name="welcome-mode-type" value="ai" /> Player vs AI</label>
+                <input type="radio" id="welcome-mode-type-pvp" name="welcome-mode-type" value="pvp" checked />
+                <label for="welcome-mode-type-pvp">Player A vs Player B</label>
+                <input type="radio" id="welcome-mode-type-ai" name="welcome-mode-type" value="ai" />
+                <label for="welcome-mode-type-ai">Player vs AI</label>
             </div>
         </div>
         <div id="welcome-names-pvp" class="settings-col hidden">
@@ -167,7 +513,7 @@ Unauthorized commercial use prohibited.
             <input type="text" id="welcome-player-human" placeholder="Your Name" maxlength="20" />
         </div>
         <div class="btnrow" style="margin-top: 1.5rem;">
-            <button id="startGameBtn" class="primary start-heist-btn">Start Heist</button>
+            <button id="startGameBtn" class="new-heist-btn start-heist-btn">Start Heist</button>
         </div>
     </div>
 </div>
@@ -180,7 +526,7 @@ Unauthorized commercial use prohibited.
   <!-- Left: Setup and Controls -->
   <section class="panel">
     <div class="grid-2">
-      <button id="newMatchBtn" class="primary">New Match</button>
+      <button id="newMatchBtn" class="new-heist-btn">New Heist</button>
       <button id="settingsBtn">Settings</button>
     </div>
     <div class="spacer"></div>
@@ -197,11 +543,8 @@ Unauthorized commercial use prohibited.
       <div><div class="badge ok">Total Pot</div><strong id="potLbl">$0</strong></div>
     </div>
     <div class="col">
-      <label>Alerts</label>
       <div class="row">
         <div id="alertBadge" class="badge">Alert: off</div>
-        <div id="jacksBadge" class="badge">Jacks this turn: 0</div>
-        <div id="latentBadge" class="badge">Latent Ace: none</div>
       </div>
     </div>
     <div class="grid-2">
@@ -222,6 +565,28 @@ Unauthorized commercial use prohibited.
 
   <!-- Right: State, Hands, Log -->
   <section class="panel">
+    <div class="grid-2">
+      <div class="col">
+        <label id="playerALabel">Player A</label>
+        <div class="kpi">
+          <div><div class="badge">Bank</div><strong id="bankA">$0</strong></div>
+          <div><div class="badge warn">Loot</div><strong id="tempA">$0</strong></div>
+        </div>
+        <div class="row"><span class="badge">Hand</span><div id="handA" class="cardbar"></div></div>
+        <div class="row"><span class="badge">Alerts</span><div id="jacksOnTableA" class="cardbar"></div><div id="acesOnTableA" class="cardbar"></div></div>
+        <div class="row"><span class="badge">Rounds won</span><div id="winsA" class="cardbar"></div></div>
+      </div>
+      <div class="col">
+        <label id="playerBLabel">Player B</label>
+        <div class="kpi">
+          <div><div class="badge">Bank</div><strong id="bankB">$0</strong></div>
+          <div><div class="badge warn">Loot</div><strong id="tempB">$0</strong></div>
+        </div>
+        <div class="row"><span class="badge">Hand</span><div id="handB" class="cardbar"></div></div>
+        <div class="row"><span class="badge">Alerts</span><div id="jacksOnTableB" class="cardbar"></div><div id="acesOnTableB" class="cardbar"></div></div>
+        <div class="row"><span class="badge">Rounds won</span><div id="winsB" class="cardbar"></div></div>
+      </div>
+    </div>
     <div class="game-board-area">
         <div class="col">
             <label>Deck</label>
@@ -235,26 +600,6 @@ Unauthorized commercial use prohibited.
                 <div id="lastDraw" class="chip info">—</div>
             </div>
         </div>
-    </div>
-    <div class="grid-2">
-      <div class="col">
-        <label id="playerALabel">Player A</label>
-        <div class="kpi">
-          <div><div class="badge">Bank</div><strong id="bankA">$0</strong></div>
-          <div><div class="badge warn">Loot</div><strong id="tempA">$0</strong></div>
-        </div>
-        <div class="row"><span class="badge">Hand</span><div id="handA" class="cardbar"></div></div>
-        <div class="row"><span class="badge">Rounds won</span><div id="winsA" class="cardbar"></div></div>
-      </div>
-      <div class="col">
-        <label id="playerBLabel">Player B</label>
-        <div class="kpi">
-          <div><div class="badge">Bank</div><strong id="bankB">$0</strong></div>
-          <div><div class="badge warn">Loot</div><strong id="tempB">$0</strong></div>
-        </div>
-        <div class="row"><span class="badge">Hand</span><div id="handB" class="cardbar"></div></div>
-        <div class="row"><span class="badge">Rounds won</span><div id="winsB" class="cardbar"></div></div>
-      </div>
     </div>
 
     <div class="col">
@@ -280,27 +625,34 @@ Unauthorized commercial use prohibited.
 
 <!-- Modals -->
 <div id="settingsModal" class="modal-backdrop">
-    <div class="modal">
+    <div class="modal welcome-modal">
         <h2>Settings</h2>
+        <div class="welcome-divider"></div>
         <div class="settings-col">
             <label>Format</label>
             <div class="row">
-                <label><input type="radio" name="settings-mode" value="bankout" /> Bankout</label>
-                <label><input type="radio" name="settings-mode" value="blitz" /> Blitz</label>
+                <input type="radio" id="settings-mode-bankout" name="settings-mode" value="bankout" />
+                <label for="settings-mode-bankout">Bankout</label>
+                <input type="radio" id="settings-mode-blitz" name="settings-mode" value="blitz" />
+                <label for="settings-mode-blitz">Blitz</label>
             </div>
         </div>
         <div class="settings-col">
             <label>Jokers</label>
             <div class="row">
-                <label><input type="radio" name="settings-jokers" value="on" /> On</label>
-                <label><input type="radio" name="settings-jokers" value="off" /> Off</label>
+                <input type="radio" id="settings-jokers-on" name="settings-jokers" value="on" />
+                <label for="settings-jokers-on">On</label>
+                <input type="radio" id="settings-jokers-off" name="settings-jokers" value="off" />
+                <label for="settings-jokers-off">Off</label>
             </div>
         </div>
         <div class="settings-col">
             <label>Game Mode</label>
             <div class="row">
-                <label><input type="radio" name="settings-mode-type" value="pvp" /> Player A vs Player B</label>
-                <label><input type="radio" name="settings-mode-type" value="ai" /> Player vs AI</label>
+                <input type="radio" id="settings-mode-type-pvp" name="settings-mode-type" value="pvp" />
+                <label for="settings-mode-type-pvp">Player A vs Player B</label>
+                <input type="radio" id="settings-mode-type-ai" name="settings-mode-type" value="ai" />
+                <label for="settings-mode-type-ai">Player vs AI</label>
             </div>
         </div>
         <div id="settings-names-pvp" class="settings-col hidden">
@@ -314,9 +666,9 @@ Unauthorized commercial use prohibited.
             <label>Your Name</label>
             <input type="text" id="settings-player-human" placeholder="Your Name" maxlength="20" />
         </div>
-        <div class="btnrow">
+        <div class="btnrow" style="margin-top: 1.5rem;">
             <button id="settingsCloseBtn">Close</button>
-            <button id="settingsNewMatchBtn" class="primary">Start New Match</button>
+            <button id="settingsNewMatchBtn" class="primary start-heist-btn">New Heist</button>
         </div>
     </div>
 </div>
@@ -385,7 +737,7 @@ Unauthorized commercial use prohibited.
 <div id="discardModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="discardTitle">
     <div class="modal">
         <h2 id="discardTitle">Hand Full: Choose a Card to Discard</h2>
-        <p>Your hand is full. To make room for the new card, please choose one card to discard.</p>
+        <p>Your hand is full (maximum 2 cards). To make room for the new card, please choose one card to discard.</p>
         <div id="discardChoice" class="btnrow"></div>
     </div>
 </div>
@@ -427,8 +779,8 @@ const state = {
   deck: [],
   discard: [],
   players: [
-    {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,name:''},
-    {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,name:''},
+    {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,drawnCards:[],jacksOnTable:[],acesOnTable:[],name:''},
+    {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,drawnCards:[],jacksOnTable:[],acesOnTable:[],name:''},
   ],
   sudden: false,
   ended: false,
@@ -466,6 +818,10 @@ const el = {
   tempB: document.getElementById('tempB'),
   handA: document.getElementById('handA'),
   handB: document.getElementById('handB'),
+  jacksOnTableA: document.getElementById('jacksOnTableA'),
+  jacksOnTableB: document.getElementById('jacksOnTableB'),
+  acesOnTableA: document.getElementById('acesOnTableA'),
+  acesOnTableB: document.getElementById('acesOnTableB'),
   winsA: document.getElementById('winsA'),
   winsB: document.getElementById('winsB'),
   lastDraw: document.getElementById('lastDraw'),
@@ -651,7 +1007,12 @@ function getPlayerName(idx) {
 }
 
 function fmt(n){ return '$' + n.toString(); }
-function chip(txt, cls=''){ const s=document.createElement('span'); s.className='chip '+cls; s.textContent=txt; return s; }
+function chip(txt, cls=''){
+  const s=document.createElement('span');
+  s.className='chip '+cls;
+  s.textContent=txt;
+  return s;
+}
 
 function showModal(modalId) { document.getElementById(modalId).classList.add('visible'); }
 function closeModal(modalId) { document.getElementById(modalId).classList.remove('visible'); }
@@ -691,6 +1052,18 @@ function render(){
   A.hand.forEach(h=>{ el.handA.appendChild(chip(h, h.toLowerCase())); });
   el.handB.innerHTML = '';
   B.hand.forEach(h=>{ el.handB.appendChild(chip(h, h.toLowerCase())); });
+  
+  // Render Jacks on table
+  el.jacksOnTableA.innerHTML = '';
+  A.jacksOnTable.forEach(jack => { el.jacksOnTableA.appendChild(chip('J', 'danger')); });
+  el.jacksOnTableB.innerHTML = '';
+  B.jacksOnTable.forEach(jack => { el.jacksOnTableB.appendChild(chip('J', 'danger')); });
+  
+  // Render Aces on table
+  el.acesOnTableA.innerHTML = '';
+  A.acesOnTable.forEach(ace => { el.acesOnTableA.appendChild(chip('A', 'warn')); });
+  el.acesOnTableB.innerHTML = '';
+  B.acesOnTable.forEach(ace => { el.acesOnTableB.appendChild(chip('A', 'warn')); });
 
   // Rounds won display - visual star indicators
   el.winsA.innerHTML = '';
@@ -750,10 +1123,10 @@ function render(){
   el.winsB.appendChild(winStarsB);
 
   const P = state.players[state.active];
-  el.alertBadge.textContent = 'Alert: ' + (P.alert?'on':'off');
-  el.alertBadge.className = 'badge ' + (P.alert?'warn':'');
-  el.jacksBadge.textContent = 'Jacks this turn: ' + P.jacksThisTurn;
-  el.latentBadge.textContent = 'Latent Aces: ' + (P.latent>0 ? P.latent : 'none');
+  // Show Alert as "on" when either alert is active OR there are Aces on table
+  const isAlertActive = P.alert || P.acesOnTable.length > 0;
+  el.alertBadge.textContent = 'Alert: ' + (isAlertActive?'on':'off');
+  el.alertBadge.className = 'badge ' + (isAlertActive?'warn':'');
 
   const yourHand = state.players[state.active].hand;
   const modalOpen = !!state.pendingWild || !!state.pendingCounter || !!state.pendingDiscard;
@@ -780,6 +1153,7 @@ function resetTurnState(p){
   p.alert = false;
   p.jacksThisTurn = 0;
   p.latent = 0;
+  // Note: jacksOnTable and acesOnTable are NOT cleared here - they persist across turns
 }
 
 /* ========= Match / Round Control ========= */
@@ -798,14 +1172,14 @@ function newMatch(mode, jokersOn, gameMode) {
     const playerAName = localStorage.getItem('playerAName') || 'Player A';
     const playerBName = localStorage.getItem('playerBName') || 'Player B';
     state.players = [
-      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,name:playerAName},
-      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,name:playerBName},
+      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,drawnCards:[],jacksOnTable:[],acesOnTable:[],name:playerAName},
+      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,drawnCards:[],jacksOnTable:[],acesOnTable:[],name:playerBName},
     ];
   } else {
     const humanName = localStorage.getItem('humanName') || 'You';
     state.players = [
-      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,name:humanName},
-      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,name:'AI'},
+      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,drawnCards:[],jacksOnTable:[],acesOnTable:[],name:humanName},
+      {bank:0,temp:0,hand:[],wins:0,alert:false,jacksThisTurn:0,latent:0,drawnCards:[],jacksOnTable:[],acesOnTable:[],name:'AI'},
     ];
   }
   
@@ -880,7 +1254,7 @@ function endRound_Bankout(winnerIdx){
   }
   state.round += 1;
   state.players.forEach(p=>{
-    p.bank = 0; p.temp = 0; p.hand=[]; p.alert=false; p.jacksThisTurn=0; p.latent=0;
+    p.bank = 0; p.temp = 0; p.hand=[]; p.alert=false; p.jacksThisTurn=0; p.latent=0; p.jacksOnTable=[]; p.acesOnTable=[];
   });
   state.active = state.firstPlayer === 0 ? (state.round % 2 === 1 ? 0 : 1) : (state.round % 2 === 1 ? 1 : 0);
   state.deck = buildDeck();
@@ -939,7 +1313,7 @@ function endRound_Blitz(){
   }
   state.round += 1;
   state.players.forEach(p=>{
-    p.temp = 0; p.hand = []; p.alert=false; p.jacksThisTurn=0; p.latent=0;
+    p.temp = 0; p.hand = []; p.alert=false; p.jacksThisTurn=0; p.latent=0; p.jacksOnTable=[]; p.acesOnTable=[];
   });
   state.active = state.firstPlayer === 0 ? (state.round % 2 === 1 ? 0 : 1) : (state.round % 2 === 1 ? 1 : 0);
   state.deck = buildDeck();
@@ -989,7 +1363,7 @@ function startSuddenDeath(){
   state.deck = buildDeck(); // numbers + jacks only
   state.discard = [];
   state.ended = false;
-  state.players.forEach(p=>{ p.temp=0; p.hand=[]; p.alert=false; p.jacksThisTurn=0; p.latent=0; });
+  state.players.forEach(p=>{ p.temp=0; p.hand=[]; p.alert=false; p.jacksThisTurn=0; p.latent=0; p.drawnCards=[]; p.jacksOnTable=[]; p.acesOnTable=[]; });
   el.lastDraw.textContent = '—';
   
   // Hide pot display in Sudden Death
@@ -1021,12 +1395,16 @@ function resolveDiscard(cardToDiscard) {
     
     if (cardToDiscard === cardType) {
         log(`Chose to discard the newly drawn ${cardType}.`);
+        // Add the discarded card to the discard pile
+        state.discard.push({t: cardType});
     } else {
         const idx = P.hand.indexOf(cardToDiscard);
         if (idx > -1) {
             P.hand.splice(idx, 1);
             P.hand.push(cardType);
             log(`Discarded ${cardToDiscard} to make room for ${cardType}.`);
+            // Add the discarded card to the discard pile
+            state.discard.push({t: cardToDiscard});
         }
     }
     
@@ -1044,13 +1422,23 @@ function drawCard(){
       endRound_Blitz();
       return;
     } else {
-      log('Deck empty — reshuffling current round.');
-      state.deck = shuffle(state.discard.splice(0));
-      if(state.deck.length===0){ log('No cards to reshuffle.'); return; }
+      log('Deck empty — reshuffling discard pile.');
+      
+      // The discard pile should only contain cards that have been played/discarded
+      // Cards in players' hands (K, Q, X) and active cards (J, A) are NOT in the discard pile
+      // So we can simply reshuffle the entire discard pile as-is
+      state.deck = shuffle([...state.discard]);
+      state.discard = [];
+      
+      // Recalculate deck counts for AI
+      recalculateDeckCounts();
+      
+      log(`Reshuffled ${state.deck.length} cards from discard pile.`);
+      
+      if (state.deck.length === 0) { log('No cards to reshuffle.'); return; }
     }
   }
   const card = state.deck.pop();
-  state.discard.push(card);
   const P = state.players[state.active];
   const playerName = getPlayerName(state.active);
 
@@ -1082,27 +1470,46 @@ function drawCard(){
 
   if(card.t==='N'){
     P.temp += card.v;
+    P.drawnCards.push(card); // Track number card for end-of-turn discard
     log(`${playerName} drew ${card.v}. Loot now ${fmt(P.temp)}.`);
 
   } else if(card.t==='J'){
+    // Add Jack to on-table array instead of drawnCards
+    P.jacksOnTable.push(card);
     P.jacksThisTurn += 1;
-    P.alert = true;
-    log(`${playerName} drew Jack. Alert on. Jacks this turn: ${P.jacksThisTurn}.`);
+    P.alert = P.jacksOnTable.length > 0; // Alert is true if any Jacks are on table
+    log(`${playerName} drew Jack. Alert on. Jacks this turn: ${P.jacksThisTurn}. Jacks on table: ${P.jacksOnTable.length}.`);
 
-    if (P.latent > 0) {
+    if (P.acesOnTable.length > 0) {
       const qIndex = P.hand.indexOf('Q');
       if (qIndex > -1) {
         P.hand.splice(qIndex, 1);
+        // Add Queen to discard pile after auto-playing
+        state.discard.push({t: 'Q'});
         P.jacksThisTurn = Math.max(0, P.jacksThisTurn - 1);
-        if (P.jacksThisTurn === 0) {
-          P.alert = false;
-        }
-        P.latent -= 1;
-        log(`Latent Ace triggered — auto-played Queen to cancel the Jack. Latent aces remaining: ${P.latent}.`);
+        
+        // Remove the most recent Jack from on-table array
+        const resolvedJack = P.jacksOnTable.pop();
+        state.discard.push(resolvedJack);
+        
+        // Remove the oldest latent Ace from on-table array
+        const resolvedAce = P.acesOnTable.shift();
+        state.discard.push(resolvedAce);
+        
+        // Update alert state based on remaining Jacks
+        P.alert = P.jacksOnTable.length > 0;
+        
+        log(`Latent Ace triggered — auto-played Queen to cancel the Jack. Queen, Jack, and Ace discarded. Latent aces remaining: ${P.acesOnTable.length}.`);
       } else {
         log(`Latent Ace triggered by Jack — no Queen in hand. BUST! Lost ${fmt(P.temp)}.`);
         P.temp = 0;
-        resetTurnState(P);
+        // Add all Jacks from jacksOnTable to drawnCards for proper logging
+        P.drawnCards.push(...P.jacksOnTable);
+        // Add all Aces from acesOnTable to drawnCards for proper logging
+        P.drawnCards.push(...P.acesOnTable);
+        // Clear on-table arrays (switchTurn will handle discarding)
+        P.jacksOnTable = [];
+        P.acesOnTable = [];
         switchTurn();
         render();
         return;
@@ -1112,7 +1519,11 @@ function drawCard(){
     if(P.jacksThisTurn>=3){
       log(`Third Jack — ${playerName} busts. Lost ${fmt(P.temp)}.`);
       P.temp = 0;
-      resetTurnState(P);
+      // Add all Jacks from jacksOnTable to drawnCards for proper logging
+      P.drawnCards.push(...P.jacksOnTable);
+      // Clear on-table arrays (switchTurn will handle discarding)
+      P.jacksOnTable = [];
+      P.acesOnTable = [];
       switchTurn();
     }
 
@@ -1120,36 +1531,90 @@ function drawCard(){
     if(P.alert){
       log(`${playerName} drew Ace on alert — bust. Lost ${fmt(P.temp)}.`);
       P.temp = 0;
-      resetTurnState(P);
+      // Add all Jacks from jacksOnTable to drawnCards for proper logging
+      P.drawnCards.push(...P.jacksOnTable);
+      // Add all Aces from acesOnTable to drawnCards for proper logging
+      P.drawnCards.push(...P.acesOnTable);
+      // Add the Ace that caused the bust to drawnCards for proper logging
+      P.drawnCards.push(card);
+      // Clear on-table arrays (switchTurn will handle discarding)
+      P.jacksOnTable = [];
+      P.acesOnTable = [];
       switchTurn();
     }else{
-      P.latent += 1;
-      log(`${playerName} armed a latent Ace.`);
+      // Check for Three Latent Aces bust condition
+      if (P.acesOnTable.length === 2) {
+        log(`${playerName} drew third latent Ace — bust. Lost ${fmt(P.temp)}.`);
+        P.temp = 0;
+        // Add all Jacks from jacksOnTable to drawnCards for proper logging
+        P.drawnCards.push(...P.jacksOnTable);
+        // Add all Aces from acesOnTable to drawnCards for proper logging
+        P.drawnCards.push(...P.acesOnTable);
+        // Add the Ace that caused the bust to drawnCards for proper logging
+        P.drawnCards.push(card);
+        // Clear on-table arrays (switchTurn will handle discarding)
+        P.jacksOnTable = [];
+        P.acesOnTable = [];
+        switchTurn();
+      } else {
+        // Add Ace to on-table array instead of drawnCards
+        P.acesOnTable.push(card);
+        P.latent = P.acesOnTable.length; // Latent count is now the number of Aces on table
+        log(`${playerName} armed a latent Ace. Latent aces: ${P.acesOnTable.length}.`);
+      }
     }
 
   } else if(card.t==='Q' || card.t==='K'){
-    if (P.hand.length >= 3) {
+    if (P.hand.length >= 2) {
         if (state.gameMode === 'ai' && state.active === 1) {
-          // AI hand management: prioritize keeping Queens for safety
-          let toDiscardIndex = -1;
+          // AI hand management: with smaller hand size, prioritize playing cards over discarding
+          // First try to play a card if beneficial
+          const shouldPlayQueen = (P.alert || P.latent > 0) && P.hand.includes('Q');
+          const shouldPlayKing = P.temp >= 100 && P.hand.includes('K');
           
-          // Try to discard Kings first, then non-Queen cards
-          for (let i = 0; i < P.hand.length; i++) {
-            if (P.hand[i] !== 'Q') {
-              toDiscardIndex = i;
-              break;
+          if (shouldPlayQueen) {
+            // Play Queen proactively
+            const qIndex = P.hand.indexOf('Q');
+            P.hand.splice(qIndex, 1);
+            // Add Queen to discard pile after auto-playing
+            state.discard.push({t: 'Q'});
+            if (P.alert && P.jacksThisTurn > 0) {
+              P.jacksThisTurn = Math.max(0, P.jacksThisTurn - 1);
+              if (P.jacksThisTurn === 0) P.alert = false;
             }
+            log(`${playerName} auto-played Queen to make room for ${card.t}. Queen discarded.`);
+            P.hand.push(card.t);
+          } else if (shouldPlayKing) {
+            // Play King proactively
+            const kIndex = P.hand.indexOf('K');
+            P.hand.splice(kIndex, 1);
+            // Add King to discard pile after auto-playing
+            state.discard.push({t: 'K'});
+            const gain = P.temp * 2;
+            P.bank += gain;
+            if (state.mode === 'blitz') state.totalPot += gain;
+            log(`${playerName} auto-played King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. King discarded.`);
+            P.temp = 0;
+            resetTurnState(P);
+            P.hand.push(card.t);
+          } else {
+            // Fallback to discarding - prioritize keeping Queens
+            let toDiscardIndex = -1;
+            for (let i = 0; i < P.hand.length; i++) {
+              if (P.hand[i] !== 'Q') {
+                toDiscardIndex = i;
+                break;
+              }
+            }
+            if (toDiscardIndex === -1) toDiscardIndex = 0;
+            
+            const toDiscard = P.hand[toDiscardIndex];
+            P.hand.splice(toDiscardIndex, 1);
+            // Add discarded card to discard pile
+            state.discard.push({t: toDiscard});
+            P.hand.push(card.t);
+            log(`${playerName} auto-discarded ${toDiscard} to make room for ${card.t}. ${toDiscard} discarded.`);
           }
-          
-          // If all cards are Queens, discard the first one
-          if (toDiscardIndex === -1) {
-            toDiscardIndex = 0;
-          }
-          
-          const toDiscard = P.hand[toDiscardIndex];
-          P.hand.splice(toDiscardIndex, 1);
-          P.hand.push(card.t);
-          log(`${playerName} auto-discarded ${toDiscard} to make room for ${card.t}.`);
         } else {
           showDiscardChoiceModal(card.t);
           return;
@@ -1162,7 +1627,7 @@ function drawCard(){
   // Joker handling - different behavior based on round
   if (state.round === 2) {
     // Round 2: Joker resolves immediately with three-choice modal
-    log(`${playerName} drew Joker in Round 2 — resolving immediately.`);
+    log(`${playerName} drew Joker in Round 2 — resolving immediately. Joker discarded.`);
     
     const O = state.players[1 - state.active]; // Opponent
     
@@ -1198,7 +1663,7 @@ function drawCard(){
         // Swap banks
         const a = P.bank, b = O.bank;
         P.bank = b; O.bank = a;
-        log(`AI uses Round 2 Joker to swap banks.`);
+        log(`AI uses Round 2 Joker to swap banks. Joker discarded.`);
         resetTurnState(P);
         switchTurn();
       } else if (bestOption === kingValue) {
@@ -1211,7 +1676,7 @@ function drawCard(){
           state.totalPot += gain;
         }
         
-        log(`AI uses Round 2 Joker as King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends.`);
+        log(`AI uses Round 2 Joker as King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends. Joker discarded.`);
         P.temp = 0;
         resetTurnState(P);
         if (maybeEndRound()) return;
@@ -1221,11 +1686,11 @@ function drawCard(){
         if (P.alert && P.jacksThisTurn > 0) {
           P.jacksThisTurn = Math.max(0, P.jacksThisTurn - 1);
           if (P.jacksThisTurn === 0) P.alert = false;
-          log('AI uses Round 2 Joker as Queen to clear alert.');
+          log('AI uses Round 2 Joker as Queen to clear alert. Joker discarded.');
           render();
           setTimeout(aiTurn, 1000);
         } else {
-          log('AI uses Round 2 Joker as Queen (no alert to clear).');
+          log('AI uses Round 2 Joker as Queen (no alert to clear). Joker discarded.');
           render();
           setTimeout(aiTurn, 1000);
         }
@@ -1233,22 +1698,66 @@ function drawCard(){
     }
   } else if (state.round === 3) {
       // Round 3: Joker goes to hand
-      if (P.hand.length >= 3) {
+      if (P.hand.length >= 2) {
         if (state.gameMode === 'ai' && state.active === 1) {
-          // AI hand management
-          let toDiscardIndex = -1;
-          for (let i = 0; i < P.hand.length; i++) {
-            if (P.hand[i] !== 'Q') {
-              toDiscardIndex = i;
-              break;
-            }
-          }
-          if (toDiscardIndex === -1) toDiscardIndex = 0;
+          // AI hand management: with smaller hand size, prioritize playing cards over discarding
+          // First try to play a card if beneficial
+          const shouldPlayQueen = (P.alert || P.latent > 0) && P.hand.includes('Q');
+          const shouldPlayKing = P.temp >= 100 && P.hand.includes('K');
+          const shouldPlayJoker = P.hand.includes('X') && state.round >= 2;
           
-          const toDiscard = P.hand[toDiscardIndex];
-          P.hand.splice(toDiscardIndex, 1);
-          P.hand.push('X');
-          log(`${playerName} auto-discarded ${toDiscard} to make room for Joker.`);
+          if (shouldPlayQueen) {
+            // Play Queen proactively
+            const qIndex = P.hand.indexOf('Q');
+            P.hand.splice(qIndex, 1);
+            // Add Queen to discard pile after auto-playing
+            state.discard.push({t: 'Q'});
+            if (P.alert && P.jacksThisTurn > 0) {
+              P.jacksThisTurn = Math.max(0, P.jacksThisTurn - 1);
+              if (P.jacksThisTurn === 0) P.alert = false;
+            }
+            log(`${playerName} auto-played Queen to make room for Joker. Queen discarded.`);
+            P.hand.push('X');
+          } else if (shouldPlayKing) {
+            // Play King proactively
+            const kIndex = P.hand.indexOf('K');
+            P.hand.splice(kIndex, 1);
+            // Add King to discard pile after auto-playing
+            state.discard.push({t: 'K'});
+            const gain = P.temp * 2;
+            P.bank += gain;
+            if (state.mode === 'blitz') state.totalPot += gain;
+            log(`${playerName} auto-played King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. King discarded.`);
+            P.temp = 0;
+            resetTurnState(P);
+            P.hand.push('X');
+          } else if (shouldPlayJoker) {
+            // Play Joker proactively
+            const xIndex = P.hand.indexOf('X');
+            P.hand.splice(xIndex, 1);
+            // Add Joker to discard pile after auto-playing
+            state.discard.push({t: 'X'});
+            // AI will evaluate Joker options in its next decision
+            log(`${playerName} auto-played Joker to make room for new Joker. Joker discarded.`);
+            P.hand.push('X');
+          } else {
+            // Fallback to discarding - prioritize keeping Queens
+            let toDiscardIndex = -1;
+            for (let i = 0; i < P.hand.length; i++) {
+              if (P.hand[i] !== 'Q') {
+                toDiscardIndex = i;
+                break;
+              }
+            }
+            if (toDiscardIndex === -1) toDiscardIndex = 0;
+            
+            const toDiscard = P.hand[toDiscardIndex];
+            P.hand.splice(toDiscardIndex, 1);
+            // Add discarded card to discard pile
+            state.discard.push({t: toDiscard});
+            P.hand.push('X');
+            log(`${playerName} auto-discarded ${toDiscard} to make room for Joker. ${toDiscard} discarded.`);
+          }
         } else {
           showDiscardChoiceModal('X');
           return;
@@ -1269,17 +1778,32 @@ function playQueen(){
   const idx = P.hand.indexOf('Q');
   if(idx<0) return;
   P.hand.splice(idx,1);
+  // Add Queen to discard pile after playing
+  state.discard.push({t: 'Q'});
   if(P.alert && P.jacksThisTurn>0){
     P.jacksThisTurn = Math.max(0,P.jacksThisTurn-1);
+    
+    // Remove the most recent Jack from on-table array
+    if (P.jacksOnTable.length > 0) {
+      const resolvedJack = P.jacksOnTable.pop();
+      state.discard.push(resolvedJack);
+    }
+    
+    // Remove the oldest latent Ace from on-table array if available
+    if (P.acesOnTable.length > 0) {
+      const resolvedAce = P.acesOnTable.shift();
+      state.discard.push(resolvedAce);
+      P.latent = P.acesOnTable.length;
+    }
+    
     if(P.jacksThisTurn===0){
       P.alert=false;
-      if(P.latent>0){ P.latent -= 1; }
-      log(`Queen played — alert cleared. Latent disarmed.`);
+      log(`Queen played — alert cleared. Jack and Ace (if any) discarded. Queen discarded.`);
     }else{
-      log(`Queen played — alert reduced to ${P.jacksThisTurn}.`);
+      log(`Queen played — alert reduced to ${P.jacksThisTurn}. Jack and Ace (if any) discarded. Queen discarded.`);
     }
   }else{
-    log(`Queen played — no alert to clear.`);
+    log(`Queen played — no alert to clear. Queen discarded.`);
   }
   render();
 }
@@ -1290,6 +1814,8 @@ function playKing(){
   const idx = P.hand.indexOf('K');
   if(idx<0) return;
   P.hand.splice(idx,1);
+  // Add King to discard pile after playing
+  state.discard.push({t: 'K'});
   const gain = P.temp*2;
   P.bank += gain;
   
@@ -1298,7 +1824,7 @@ function playKing(){
     state.totalPot += gain;
   }
   
-  log(`King played — double-and-bank ${fmt(P.temp)} → ${fmt(gain)}. Turn ends.`);
+  log(`King played — double-and-bank ${fmt(P.temp)} → ${fmt(gain)}. King discarded. Turn ends.`);
   P.temp = 0;
   resetTurnState(P);
   if(maybeEndRound()){ render(); return; }
@@ -1316,6 +1842,8 @@ function playJoker(){
   if(idx<0) return;
 
   P.hand.splice(idx,1);
+  // Add Joker to discard pile after playing
+  state.discard.push({t: 'X'});
 
   // Show three-choice modal for human players
   if (state.gameMode !== 'ai' || attacker === 0) {
@@ -1349,7 +1877,7 @@ function playJoker(){
       // Swap banks
       const a = P.bank, b = O.bank;
       P.bank = b; O.bank = a;
-      log(`AI uses Joker to swap banks.`);
+      log(`AI uses Joker to swap banks. Joker discarded.`);
       resetTurnState(P);
       switchTurn();
     } else if (bestOption === kingValue) {
@@ -1362,7 +1890,7 @@ function playJoker(){
         state.totalPot += gain;
       }
       
-      log(`AI uses Joker as King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends.`);
+      log(`AI uses Joker as King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends. Joker discarded.`);
       P.temp = 0;
       resetTurnState(P);
       if (maybeEndRound()) return;
@@ -1372,11 +1900,11 @@ function playJoker(){
       if (P.alert && P.jacksThisTurn > 0) {
         P.jacksThisTurn = Math.max(0, P.jacksThisTurn - 1);
         if (P.jacksThisTurn === 0) P.alert = false;
-        log('AI uses Joker as Queen to clear alert.');
+        log('AI uses Joker as Queen to clear alert. Joker discarded.');
         render();
         setTimeout(aiTurn, 1000);
       } else {
-        log('AI uses Joker as Queen (no alert to clear).');
+        log('AI uses Joker as Queen (no alert to clear). Joker discarded.');
         render();
         setTimeout(aiTurn, 1000);
       }
@@ -1392,7 +1920,7 @@ el.wildQueenBtn.addEventListener('click', ()=>{
   if(P.alert && P.jacksThisTurn>0){
     P.jacksThisTurn = Math.max(0,P.jacksThisTurn-1);
     if(P.jacksThisTurn===0){ P.alert=false; }
-    log(`Joker wild — Queen: alert reduced.`);
+    log(`Joker wild — Queen: alert reduced. Joker discarded.`);
   } else {
     log(`Joker wild — Queen: no alert to clear.`);
   }
@@ -1412,7 +1940,7 @@ el.wildKingBtn.addEventListener('click', ()=>{
     state.totalPot += gain;
   }
   
-  log(`Joker wild — King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends.`);
+  log(`Joker wild — King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends. Joker discarded.`);
   P.temp = 0;
   resetTurnState(P);
   state.pendingWild = null;
@@ -1426,7 +1954,11 @@ el.counterYesBtn.addEventListener('click', ()=>{
   if(!state.pendingCounter) return;
   const O = state.players[state.pendingCounter.defenderIdx];
   const jIdx = O.hand.indexOf('X');
-  if(jIdx>=0) O.hand.splice(jIdx,1);
+  if(jIdx>=0) {
+    O.hand.splice(jIdx,1);
+    // Add Joker to discard pile after countering
+    state.discard.push({t: 'X'});
+  }
   log(`Counter Joker — swap canceled. Both Jokers discarded.`);
   state.pendingCounter = null;
   closeModal('counterModal');
@@ -1445,7 +1977,7 @@ el.interpretKingBtn.addEventListener('click', ()=>{
     state.totalPot += gain;
   }
   
-  log(`Joker interpreted as King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends.`);
+  log(`Joker interpreted as King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends. Joker discarded.`);
   P.temp = 0;
   resetTurnState(P);
   state.pendingInterpret = null;
@@ -1461,9 +1993,9 @@ el.interpretQueenBtn.addEventListener('click', ()=>{
   if(P.alert && P.jacksThisTurn>0){
     P.jacksThisTurn = Math.max(0,P.jacksThisTurn-1);
     if(P.jacksThisTurn===0){ P.alert=false; }
-    log(`Joker interpreted as Queen: alert reduced.`);
+    log(`Joker interpreted as Queen: alert reduced. Joker discarded.`);
   } else {
-    log(`Joker interpreted as Queen: no alert to clear.`);
+    log(`Joker interpreted as Queen: no alert to clear. Joker discarded.`);
   }
   state.pendingInterpret = null;
   closeModal('jokerInterpretModal');
@@ -1476,7 +2008,7 @@ el.counterNoBtn.addEventListener('click', ()=>{
   const O = state.players[state.pendingCounter.defenderIdx];
   const a = P.bank, b = O.bank;
   P.bank = b; O.bank = a;
-  log(`Joker swap resolves — banks swapped.`);
+  log(`Joker swap resolves — banks swapped. Joker discarded.`);
   state.pendingCounter = null;
   closeModal('counterModal');
   switchTurn();
@@ -1489,7 +2021,7 @@ el.jokerSwapBtn.addEventListener('click', ()=>{
   const O = state.players[state.pendingInterpret.defenderIdx];
   const a = P.bank, b = O.bank;
   P.bank = b; O.bank = a;
-  log(`Joker — swapped banks. Turn ends.`);
+  log(`Joker — swapped banks. Turn ends. Joker discarded.`);
   state.pendingInterpret = null;
   closeModal('jokerChoiceModal');
   resetTurnState(P);
@@ -1508,7 +2040,7 @@ el.jokerKingBtn.addEventListener('click', ()=>{
     state.totalPot += gain;
   }
   
-  log(`Joker interpreted as King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends.`);
+  log(`Joker interpreted as King: doubled and banked ${fmt(P.temp)} → ${fmt(gain)}. Turn ends. Joker discarded.`);
   P.temp = 0;
   state.pendingInterpret = null;
   closeModal('jokerChoiceModal');
@@ -1524,9 +2056,9 @@ el.jokerQueenBtn.addEventListener('click', ()=>{
   if(P.alert && P.jacksThisTurn>0){
     P.jacksThisTurn = Math.max(0,P.jacksThisTurn-1);
     if(P.jacksThisTurn===0){ P.alert=false; }
-    log(`Joker interpreted as Queen: alert reduced.`);
+    log(`Joker interpreted as Queen: alert reduced. Joker discarded.`);
   } else {
-    log(`Joker interpreted as Queen: no alert to clear.`);
+    log(`Joker interpreted as Queen: no alert to clear. Joker discarded.`);
   }
   state.pendingInterpret = null;
   closeModal('jokerChoiceModal');
@@ -1561,10 +2093,20 @@ function switchTurn(){
       log(`${getPlayerName(state.active)} ended turn, losing unbanked ${fmt(P.temp)}.`);
       P.temp = 0;
   }
+  
+  // Discard all cards drawn during this turn (Numbers, Queens, Kings, Jokers)
+  if (P.drawnCards.length > 0) {
+    state.discard.push(...P.drawnCards);
+    log(`Discarded ${P.drawnCards.length} card(s) from this turn: ${P.drawnCards.map(c => c.t + (c.v ? c.v : '')).join(', ')}`);
+    P.drawnCards = [];
+  }
+  
+  // Note: Jacks and Aces on table persist across turns - they are NOT discarded here
+  // Only reset the turn counters, not the on-table arrays
   P.jacksThisTurn = 0;
-  P.alert = false;
+  P.alert = P.jacksOnTable.length > 0; // Alert persists if Jacks remain on table
   state.active = 1 - state.active;
-  log(`Turn switched to ${getPlayerName(state.active)}.`);
+  log(`Turn switched to ${getPlayerName(state.active)}. Jacks on table: ${P.jacksOnTable.length}, Aces on table: ${P.acesOnTable.length}.`);
   render();
   
   // Auto-start AI turn if applicable
@@ -1628,6 +2170,7 @@ function executeAIDecision(action, ai, human) {
         if (!state.ended && !state.matchOver) {
           setTimeout(aiTurn, Math.random() * 1000 + 500);
         }
+        
       }, 300);
       break;
       
@@ -1667,6 +2210,32 @@ function trackDeckState() {
   return state.deckCounts;
 }
 
+function recalculateDeckCounts() {
+    const counts = {
+        aces: 0,
+        jacks: 0,
+        queens: 0,
+        kings: 0,
+        jokers: 0,
+        numbers: { count: 0, sum: 0 }
+    };
+
+    for (const card of state.deck) {
+        switch (card.t) {
+            case 'A': counts.aces++; break;
+            case 'J': counts.jacks++; break;
+            case 'Q': counts.queens++; break;
+            case 'K': counts.kings++; break;
+            case 'X': counts.jokers++; break;
+            case 'N':
+                counts.numbers.count++;
+                counts.numbers.sum += card.v;
+                break;
+        }
+    }
+    state.deckCounts = counts;
+}
+
 function calculateBustRisk(counts, player) {
   const deckSize = state.deck.length;
   if (deckSize === 0) return { p_bust: 0.5, e_number: 6, p_jack: 0.1 }; // Fallback
@@ -1684,14 +2253,14 @@ function calculateBustRisk(counts, player) {
   }
   
   // Latent Ace risk (if no Queen to auto-play) - dynamic penalty based on deck size
-  if (player.latent > 0 && !player.hand.includes('Q')) {
+  if (player.acesOnTable.length > 0 && !player.hand.includes('Q')) {
     const deckSize = state.deck.length;
     const deckRiskFactor = Math.max(0.1, Math.min(0.8, 0.8 * (deckSize / 52))); // Scale penalty with deck size
     p_bust += deckRiskFactor; // Dynamic penalty based on remaining cards
   }
   
   // Additional risk for Alert + latent combination
-  if (player.alert && player.latent > 0) {
+  if (player.alert && player.acesOnTable.length > 0) {
     p_bust += 0.3; // Extra danger combination
   }
   
@@ -1711,34 +2280,36 @@ function evaluateActionEV(action, risks, player, opponent) {
   switch (action) {
     case 'draw':
       ev = (1 - risks.p_bust) * risks.e_number - risks.p_bust * player.temp;
-      // Queen safety bonus - ABSOLUTELY EXTREME value for safety, but NOT when Alert is active
+      // Queen safety bonus - reduced with smaller hand size
       if (player.hand.includes('Q') && !player.alert) {
-        ev += 100; // Massive bonus for Queen safety - draw relentlessly
-        rationale = 'Queen provides ABSOLUTE safety';
+        ev += 40; // Reduced bonus for Queen safety (was 100)
+        rationale = 'Queen provides safety';
       } else if (player.hand.includes('Q') && player.alert) {
         // When Alert is active, Queen safety is theoretical - reduce draw EV
-        ev -= 50; // Penalty for drawing while Alert with Queen (should play Queen instead)
-        rationale = 'Alert active - should play Queen instead of drawing';
+        ev -= 25; // Reduced penalty for drawing while Alert with Queen (was 50)
+        rationale = 'Alert active - consider playing Queen';
       }
-      // Huge bonus for low-risk draws
+      // Bonus for low-risk draws
       if (risks.p_bust < 0.3) {
-        ev += 20;
-        rationale += ' - extremely low risk';
+        ev += 15;
+        rationale += ' - low risk';
       }
-      // Massive penalty for banking when Queen available
+      // Reduced penalty for banking when Queen available
       if (player.hand.includes('Q')) {
-        ev += 50; // Huge bonus to absolutely discourage banking with Queen
+        ev += 20; // Reduced bonus to discourage banking with Queen (was 50)
       }
       break;
       
     case 'bank':
-      // Banking is ABSOLUTELY FORBIDDEN when Queen available - negative EV
+      // Banking is less restricted with smaller hand size
       if (player.hand.includes('Q')) {
-        ev = Math.max(player.temp * 0.1, player.temp - 50) - 100; // Negative EV with Queen
-        rationale = 'ABSOLUTELY NO BANKING WITH QUEEN PROTECTION';
+        // Allow banking with Queen but with reduced EV
+        const baseBankEV = player.temp < 20 ? player.temp - 5 : Math.max(player.temp * 0.2, player.temp - 10);
+        ev = baseBankEV - 30; // Reduced penalty (was -100)
+        rationale = 'Bank with Queen protection (reduced)';
       } else {
-        // Less conservative banking - scale with loot amount
-        const baseBankEV = player.temp < 20 ? player.temp - 10 : Math.max(player.temp * 0.3, player.temp - 20);
+        // Standard banking - ensure EV is never negative when temp > 0
+        const baseBankEV = player.temp < 20 ? Math.max(player.temp - 2, 0) : Math.max(player.temp * 0.3, player.temp - 15);
         ev = baseBankEV;
         
         // Bonus for banking in Blitz mode to build the pot
@@ -1754,16 +2325,24 @@ function evaluateActionEV(action, risks, player, opponent) {
       
     case 'king':
       const kingGain = player.temp * 2;
-      // Endgame bonus if close to target - but ABSOLUTE penalty for Kings with Queen protection
+      // Less restrictive King usage with smaller hand size
       if (player.hand.includes('Q')) {
-        ev = -50; // Negative EV for Kings when Queen available
-        rationale = 'ABSOLUTELY NO KING WITH QUEEN PROTECTION';
+        // Allow King usage with Queen but with reduced EV
+        const endgameBonus = (player.bank + kingGain >= TARGET) ? 1.5 :
+                            (player.temp >= 300) ? 1.4 :
+                            (player.temp >= 200) ? 1.0 :
+                            (player.temp >= 100) ? 0.6 :
+                            (player.temp >= 50) ? 0.3 :
+                            0.1; // Reduced penalty for small Kings
+        ev = kingGain * endgameBonus - 20; // Reduced penalty (was -50)
+        rationale = `Double-and-bank with Queen protection`;
       } else {
         const endgameBonus = (player.bank + kingGain >= TARGET) ? 2.0 :
                             (player.temp >= 300) ? 1.8 :
                             (player.temp >= 200) ? 1.2 :
                             (player.temp >= 100) ? 0.8 :
-                            (player.temp >= 50) ? 0.5 : 0.2; // EXTREMELY severe penalty for small Kings
+                            (player.temp >= 50) ? 0.5 :
+                            0.2;
         ev = kingGain * endgameBonus;
         rationale = `Double-and-bank ${fmt(player.temp)} → ${fmt(kingGain)}`;
       }
@@ -1771,14 +2350,19 @@ function evaluateActionEV(action, risks, player, opponent) {
       
     case 'queen':
       // High value if alert or latent
-      ev = (player.alert || player.latent > 0) ? 25 : 8;
+      ev = (player.alert || player.acesOnTable.length > 0) ? 25 : 8;
       rationale = player.alert ? 'Clear alert' : 'Disarm latent Ace';
       break;
       
     case 'play_queen_now':
-      // Extremely high value for proactive Queen play when danger exists
-      ev = 200; // Very high EV to prioritize Queen play
-      rationale = 'PROACTIVE QUEEN PLAY TO PREVENT BUST';
+      // Only high value if there's actual danger (alert or high latent risk)
+      if (player.alert || player.acesOnTable.length > 0) {
+        ev = 25; // Value for clearing actual danger
+        rationale = 'Proactive Queen play to prevent bust';
+      } else {
+        ev = -50; // Negative EV for wasting Queen when no danger
+        rationale = 'Wasting Queen - no immediate threat';
+      }
       break;
       
     case 'joker':
@@ -1808,7 +2392,7 @@ function aiDecideAction(risks, player, opponent) {
   if (player.hand.includes('Q')) {
     possibleActions.push('queen');
     // Proactively play Queen when Alert is active or high latent risk
-    if (player.alert || player.latent > 0) {
+    if (player.alert || player.acesOnTable.length > 0) {
       possibleActions.push('play_queen_now'); // High priority Queen play
     }
   }
@@ -1851,7 +2435,7 @@ function aiDecideAction(risks, player, opponent) {
         if (action === 'draw') {
           finalEV *= 2.0;
           // Reduce latent Ace penalty when behind in Blitz
-          if (player.latent > 0 && !player.hand.includes('Q')) {
+          if (player.acesOnTable.length > 0 && !player.hand.includes('Q')) {
             finalEV += 30; // Bonus to counteract latent risk when behind
           }
         }
@@ -1941,17 +2525,28 @@ function init() {
 // Enhanced AI obfuscation and trade secret protection
 function obfuscateAILogic() {
   const patterns = [
-    'aiDecision', 'calculateBustRisk', 'evaluateActionEV', 'trackDeckState',
-    'deckCounts', 'p_bust', 'e_number', 'p_jack'
+    'aiDecision',
+    'calculateBustRisk',
+    'evaluateActionEV',
+    'trackDeckState',
+    'deckCounts',
+    'p_bust',
+    'e_number',
+    'p_jack'
   ];
   
   patterns.forEach(pattern => {
-    if (typeof window !== 'undefined') {
-      Object.defineProperty(window, pattern, {
-        configurable: false,
-        writable: false,
-        enumerable: false
-      });
+    if (typeof window !== 'undefined' && window[pattern] !== undefined) {
+      try {
+        Object.defineProperty(window, pattern, {
+          configurable: false,
+          writable: false,
+          enumerable: false
+        });
+      } catch (e) {
+        // If the property is already non-configurable, skip it
+        console.log(`Skipping obfuscation for ${pattern}: ${e.message}`);
+      }
     }
   });
 }

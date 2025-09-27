@@ -32,9 +32,10 @@ A player's turn consists of a simple choice, repeated until they decide to stop 
     *   They draw a **third Jack** in the same turn.
     *   They draw an **Ace while on Alert**.
     *   A **Latent Ace is triggered by a Jack** when they have no Queen in hand to auto-play.
+    *   They draw a **third Ace while already having 2 latent Aces** (off Alert).
     *   **Bust Effect:** The player's turn ends immediately. All money in their temporary loot pile for that turn is lost. Per-turn states (Loot, Alert, Jacks this turn, Latent) are reset. Play passes to the next player.
 
-4.  **Hand Limit:** Players can hold a maximum of 3 cards (Queens, Kings, Round 3 Jokers). If drawing a card would exceed this limit, the player must immediately choose a card to discard.
+4.  **Hand Limit:** Players can hold a maximum of 2 cards (Queens, Kings, Round 3 Jokers). If drawing a card would exceed this limit, the player must immediately choose a card to discard.
 
 5.  **Winning the Game:**
     *   **Bankout Mode:** The first player to reach or exceed a total banked score of $1,000 wins the round immediately. The first player to win 2 rounds wins the match.
@@ -113,7 +114,7 @@ When a card is drawn, resolve in this order:
     *   Auto-Queen’s -1 to Jacks this turn can prevent a third-Jack bust.
 4.  **Apply the card’s normal effect:**
     *   Numbers add to Loot; Queens/Kings to hand; Jokers resolve per round (R2 immediate; R3 to hand).
-5.  **Enforce hand limit:** If hand > 3, choose discards to return to 3.
+5.  **Enforce hand limit:** If hand > 2, choose discards to return to 2.
 6.  **Check turn/round ends:**
     *   King and Joker swap/wild-King end turn; banking ends turn.
     *   Check Bankout/Blitz thresholds as applicable.
