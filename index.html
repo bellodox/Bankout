@@ -1516,7 +1516,7 @@ function drawCard(){
       }
     }
 
-    if(P.jacksThisTurn>=3){
+    if(P.jacksOnTable.length>=3){
       log(`Third Jack — ${playerName} busts. Lost ${fmt(P.temp)}.`);
       P.temp = 0;
       // Add all Jacks from jacksOnTable to drawnCards for proper logging
@@ -1543,7 +1543,7 @@ function drawCard(){
       switchTurn();
     }else{
       // Check for Three Latent Aces bust condition
-      if (P.acesOnTable.length === 2) {
+      if (P.acesOnTable.length >= 2) {
         log(`${playerName} drew third latent Ace — bust. Lost ${fmt(P.temp)}.`);
         P.temp = 0;
         // Add all Jacks from jacksOnTable to drawnCards for proper logging
