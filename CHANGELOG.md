@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Todo (Planned Features)
+- Comprehensive game flow test suite for regression testing
+- Mobile-responsive UI enhancements
+- Game statistics and analytics tracking
+- Multi-language support
+- Sound effects and audio enhancements
+
+## [1.1.0] - 2025-09-27
+
 ### Added
 - **Three Latent Aces Bust Rule**: New bust condition where drawing a third Ace while having 2 latent Aces results in immediate bust
 
@@ -17,13 +26,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Fixed third Jack bust scenario
   - Fixed Ace-on-alert bust scenario
 - Latent Ace auto-resolution to properly discard Jack and Ace when Queen is auto-played
-
-### Todo (Planned Features)
-- Comprehensive game flow test suite for regression testing
-- Mobile-responsive UI enhancements
-- Game statistics and analytics tracking
-- Multi-language support
-- Sound effects and audio enhancements
 
 ## [1.0.0] - 2025-09-24
 
