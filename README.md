@@ -135,7 +135,7 @@ This software is licensed under a **PROPRIETARY NON-COMMERCIAL LICENSE**:
 
 ### Contributor Requirements
 All contributions require:
-1. **Signed CLA**: [`CONTRIBUTOR_LICENSE_AGREEMENT.md`](CONTRIBUTOR_LICENSE_AGREEMENT.md)
+1. **Signed CLA**: [`CONTRIBUTORS.md`](CONTRIBUTORS.md)
 2. **DCO**: Developer Certificate of Origin
 3. **IP Assignment**: All rights assigned to VWN
 
@@ -161,14 +161,15 @@ All contributions require:
 ## 📋 Files Overview
 
 - [`index.html`](index.html) - Main game file with HTML/CSS/JS
-- [`Rules.md`](Rules.md) - Complete rules and regulations
+- [`Rules.md`](/doc/Rules.md) - Complete rules and regulations
 - [`LICENSE.md`](LICENSE.md) - Proprietary license terms
-- [`CONTRIBUTOR_LICENSE_AGREEMENT.md`](CONTRIBUTOR_LICENSE_AGREEMENT.md) - Contributor agreement
-- [`Analysis.md`](Analysis.md) - Game balance and probability analysis
+- [`CONTRIBUTORST.md`](CONTRIBUTORS.md) - Contributor agreement
+- [`Analysis.md`](/doc/Analysis.md) - Game balance and probability analysis
 - [`Bankout_GDD.md`](Bankout_GDD.md) - Game design documentation
 
 ## 📞 Contact & Support
 
+**For Inquiries**: info@bankoutgame.com
 **For Licensing Inquiries**: legal@bankoutgame.com  
 **Game Issues**: [Open GitHub issue](https://github.com/bellodox/Bankout/issues)  
 **Commercial Licensing**: Contact for partnership opportunities
